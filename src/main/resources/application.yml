@@ -1,0 +1,18 @@
+#
+#spring:
+#  config:
+#    activate:
+#      on-profile: dev
+#  datasource:
+#    url: "jdbc:mysql://localhost/library"
+#    username: "root"
+#    password: "teo15"
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    properties :
+#      hibernate:
+#        show_sql: true
+#        format_sql:
+#        dialect : org.hibernate.dialect.MySQL8Dialect

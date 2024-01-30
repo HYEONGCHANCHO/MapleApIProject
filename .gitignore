@@ -5,6 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 .idea/
+.properties/
+.yml/
 
 ### STS ###
 .apt_generated
