@@ -16,14 +16,14 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
-    @PostMapping("/characters")
-    public void saveCharacter(@RequestBody CharacterCreateRequest request) {
-        characterService.saveCharacter(request);
-    }
-//
-//    @GetMapping("/maplestory/v1/id")
-//    public String getCharacterOcid(@RequestBody CharacterCreateRequest request){
-//        return;
+//    @PostMapping("/characters")
+//    public void saveCharacter(@RequestBody CharacterCreateRequest request) {
+//        characterService.saveCharacter(request);
 //    }
+//
+    @GetMapping("https://open.api.nexon.com/maplestory/v1/id")
+    public String getCharacterOcid(@RequestBody CharacterCreateRequest request){
+        return;
+    }
 
 }

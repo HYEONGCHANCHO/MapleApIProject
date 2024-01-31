@@ -11,21 +11,19 @@ import java.util.stream.Collectors;
 @Service
 public class CharacterService {
 
-    private final CharacterRepository characterRepository;
+//    private final CharacterRepository characterRepository;
 
-    public CharacterService(CharacterRepository characterRepository) {
-        this.characterRepository = characterRepository;
-    }
-
-    @Transactional
-    public void saveCharacter(CharacterCreateRequest request) {
-        characterRepository.save(new Characters(request.getName()));
-    }
+    public CharacterService() {}
 
 //    @Transactional
-//    public List<CharacterResponse> getCharacter(){
-//        return characterRepository.findAll().stream().map(CharacterResponse::new).collect(Collectors.toList());
+//    public void saveCharacter(CharacterCreateRequest request) {
+//        characterRepository.save(new Characters(request.getName()));
 //    }
+
+    @Transactional
+    public String CharactersResponse getCharacters(){
+        return ;
+    }
 
 
 }
