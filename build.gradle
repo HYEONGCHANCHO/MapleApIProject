@@ -61,6 +61,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'mysql:mysql-connector-java'
+//	implementation 'dev.spiralmoon:maplestory-openapi:2.4.0' // Replace with the latest version
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
