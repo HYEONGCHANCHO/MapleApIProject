@@ -4,15 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.RateLimiter;
 import com.mapleApiTest.projectOne.dto.character.request.GetChracterInfo;
-import com.mapleApiTest.projectOne.dto.character.request.GetChracterOcid;
+import com.mapleApiTest.projectOne.dto.character.request.GetCharacterOcid;
 import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class CharacterController {
@@ -33,36 +36,53 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
+//    @GetMapping("/maplestory/v1/id")
     @GetMapping("/maplestory/v1/id")
-    public ResponseEntity<String> getOcid(@RequestParam String characterName) {
+    public CompletableFuture<ResponseEntity<String>> getCharacterOcid(@RequestParam String characterName) {
+        GetCharacterOcid getCharacterOcid = new GetCharacterOcid(characterName);
+        String url = apiUrl + "/maplestory/v1/id";
+        System.out.println("여기여기");
 
-        GetChracterOcid getChracterOcid = new GetChracterOcid(characterName);
-        String Url = apiUrl + "/maplestory/v1/id";
-        return ResponseEntity.ok(characterService.getCharacterOcid(getChracterOcid, Url, apiKey));
+        // 비동기적으로 getCharacterOcidAsync 메소드 호출
+        CompletableFuture<String> resultFuture = characterService.getCharacterOcid(getCharacterOcid, url, apiKey);
 
+        // 작업이 완료될 때까지 대기하고 결과를 ResponseEntity로 감싸서 반환
+        return resultFuture.thenApply(ResponseEntity::ok);
     }
 
-    @GetMapping("/maplestory/v1/character/basic")
-    public ResponseEntity<CharacterInfo> getCharacterInfo(@RequestParam String name, String date) {
-        if (rateLimiter.tryAcquire()) {
+//    public ResponseEntity<String> getOcid(@RequestParam String characterName) {
+//
+//        GetChracterOcid getChracterOcid = new GetChracterOcid(characterName);
+//        String Url = apiUrl + "/maplestory/v1/id";
+//        System.out.println("여기여기");
+//        return ResponseEntity.ok(characterService.getCharacterOcid(getChracterOcid, Url, apiKey));
+//
+//    }
 
-            ResponseEntity<String> responseEntity = getOcid(name);
-            String responseBody = responseEntity.getBody();
+//    @GetMapping("/maplestory/v1/character/basic")
+//    @Async("characterThreadPool")
+//
+//    public ResponseEntity<CharacterInfo> getCharacterInfo(@RequestParam String name, String date) {
+//        if (rateLimiter.tryAcquire()) {
+//
+//            ResponseEntity<String> responseEntity = getOcid(name);
+//            String responseBody = responseEntity.getBody();
+//
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            try {
+//                JsonNode jsonNode = objectMapper.readTree(responseBody);
+//                String ocid = jsonNode.get("ocid").asText();
+//                GetChracterInfo getChracterInfo = new GetChracterInfo(name, date, ocid);
+//                String Url = apiUrl + "/maplestory/v1/character/basic";
+//                return ResponseEntity.ok(characterService.getCharacterInfo(getChracterInfo, Url, apiKey, ocid));
+//            } catch (Exception exception) {
+//                System.err.println("에러: " + exception.getMessage());
+//                return null;
+//            }
+//        }else {
+//                System.err.println("호출 제한 초과");
+//                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+//    }
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                JsonNode jsonNode = objectMapper.readTree(responseBody);
-                String ocid = jsonNode.get("ocid").asText();
-                GetChracterInfo getChracterInfo = new GetChracterInfo(name, date, ocid);
-                String Url = apiUrl + "/maplestory/v1/character/basic";
-                return ResponseEntity.ok(characterService.getCharacterInfo(getChracterInfo, Url, apiKey, ocid));
-            } catch (Exception exception) {
-                System.err.println("에러: " + exception.getMessage());
-                return null;
-            }
-        }else {
-                System.err.println("호출 제한 초과");
-                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }
-
-}}
+//}
+}

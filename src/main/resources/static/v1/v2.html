@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage Caching Example</title>
+</head>
+<body>
+
+<form id="searchForm">
+    <input type="text" id="nicknameInput" placeholder="닉네임 입력">
+    <button type="button" onclick="searchNickname()">검색</button>
+</form>
+
+<div id="resultContainer"></div>
+<script>
+function searchNickname() {
+    var characterName = document.getElementById('nicknameInput').value;
+    var storedValue = localStorage.getItem(characterName);
+
+    if (!storedValue) {
+// 서버에 GET 요청을 보내기
+    fetch('/maplestory/v1/id?characterName=' + encodeURIComponent(characterName))
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+        // 서버에서 받은 결과를 로컬 스토리지에 저장
+        localStorage.setItem(characterName, data);
+        console.log('Server response:', "음"+localStorage.getItem(characterName));
+
+        // 여기에서 서버의 응답 데이터를 처리하거나 다른 동작을 수행
+        document.getElementById('resultContainer').innerText = 'Server response: ' + data;
+
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+       } else {
+      // 해당 닉네임에 대응되는 값이 있을 경우 처리
+        console.log('Stored Value found for nickname:', characterName);
+        // 결과를 화면에 표시 또는 추가 동작 수행
+        document.getElementById('resultContainer').innerText = 'Stored Value found for nickname: ' + characterName + ' - ' + storedValue;
+    }
+    }
+</script>
+</body>
+</html>

@@ -2,26 +2,31 @@ package com.mapleApiTest.projectOne.service.character;
 
 
 import com.mapleApiTest.projectOne.dto.character.request.GetChracterInfo;
-import com.mapleApiTest.projectOne.dto.character.request.GetChracterOcid;
+import com.mapleApiTest.projectOne.dto.character.request.GetCharacterOcid;
 import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class CharacterService {
-    public String getCharacterOcid(GetChracterOcid request, String Url, String apiKey) {
+
+    @Async("characterThreadPool")
+    public CompletableFuture<String> getCharacterOcid(GetCharacterOcid request, String Url, String apiKey) {
         try {
             String fullUrl = UriComponentsBuilder.fromUriString(Url).queryParam("character_name", request.getName()).build().toUriString();
             HttpHeaders headers = new HttpHeaders();
             headers.set("x-nxopen-api-key", apiKey);
             ResponseEntity<String> responseEntity = new RestTemplate().exchange(fullUrl, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-            return responseEntity.getBody();
+            return CompletableFuture.completedFuture(responseEntity.getBody());
         } catch (Exception exception) {
             System.err.println("에러: " + exception.getMessage());
-            return null;
+            return CompletableFuture.completedFuture(null);
         }
     }
 
