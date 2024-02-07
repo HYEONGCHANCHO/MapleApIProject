@@ -39,8 +39,16 @@ public class CharacterService {
             headers.set("x-nxopen-api-key", apiKey);
 
             ResponseEntity<CharacterInfo> responseEntity = new RestTemplate().exchange(fullUrl, HttpMethod.GET, new HttpEntity<>(headers), CharacterInfo.class);
+            // 서버 응답에서 받은 CharacterInfo
+            CharacterInfo characterInfo = responseEntity.getBody();
 
-            return responseEntity.getBody();
+            // "ocid" 값을 클라이언트에서 원하는 값으로 설정
+            characterInfo.setOcid(ocid);
+
+            return characterInfo;
+
+
+//            return responseEntity.getBody();
         } catch (HttpClientErrorException e) {
             HttpStatus statusCode = e.getStatusCode();
             String responseBody = e.getResponseBodyAsString();

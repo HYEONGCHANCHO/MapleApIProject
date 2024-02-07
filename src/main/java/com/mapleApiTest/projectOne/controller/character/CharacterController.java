@@ -28,15 +28,12 @@ public class CharacterController {
 
     private final RateLimiter rateLimiter = RateLimiter.create(5.0);
 
-
-
     private final CharacterService characterService;
 
     public CharacterController(CharacterService characterService) {
         this.characterService = characterService;
     }
 
-//    @GetMapping("/maplestory/v1/id")
     @GetMapping("/maplestory/v1/id")
     public CompletableFuture<ResponseEntity<String>> getCharacterOcid(@RequestParam String characterName) {
         GetCharacterOcid getCharacterOcid = new GetCharacterOcid(characterName);
@@ -50,39 +47,36 @@ public class CharacterController {
         return resultFuture.thenApply(ResponseEntity::ok);
     }
 
-//    public ResponseEntity<String> getOcid(@RequestParam String characterName) {
-//
-//        GetChracterOcid getChracterOcid = new GetChracterOcid(characterName);
-//        String Url = apiUrl + "/maplestory/v1/id";
-//        System.out.println("여기여기");
-//        return ResponseEntity.ok(characterService.getCharacterOcid(getChracterOcid, Url, apiKey));
-//
-//    }
+    @GetMapping("/maplestory/v1/character/basic")
+    @Async("characterThreadPool")
 
-//    @GetMapping("/maplestory/v1/character/basic")
-//    @Async("characterThreadPool")
-//
-//    public ResponseEntity<CharacterInfo> getCharacterInfo(@RequestParam String name, String date) {
-//        if (rateLimiter.tryAcquire()) {
-//
-//            ResponseEntity<String> responseEntity = getOcid(name);
-//            String responseBody = responseEntity.getBody();
-//
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            try {
-//                JsonNode jsonNode = objectMapper.readTree(responseBody);
-//                String ocid = jsonNode.get("ocid").asText();
-//                GetChracterInfo getChracterInfo = new GetChracterInfo(name, date, ocid);
-//                String Url = apiUrl + "/maplestory/v1/character/basic";
-//                return ResponseEntity.ok(characterService.getCharacterInfo(getChracterInfo, Url, apiKey, ocid));
-//            } catch (Exception exception) {
-//                System.err.println("에러: " + exception.getMessage());
-//                return null;
-//            }
-//        }else {
-//                System.err.println("호출 제한 초과");
-//                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-//    }
+    public CompletableFuture<ResponseEntity<CharacterInfo>> getCharacterInfo(@RequestParam String ocid, String date) {
+        CompletableFuture<ResponseEntity<CharacterInfo>> resultFuture = new CompletableFuture<>();
 
-//}
+        if (rateLimiter.tryAcquire()) {
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                GetChracterInfo getChracterInfo = new GetChracterInfo(date, ocid);
+                String Url = apiUrl + "/maplestory/v1/character/basic";
+
+                System.out.println("여기여기222");
+
+
+                resultFuture.complete(ResponseEntity.ok(characterService.getCharacterInfo(getChracterInfo, Url, apiKey, ocid)));
+            } catch (Exception exception) {
+                System.err.println("에러: " + exception.getMessage());
+                return null;
+            }
+        }else {
+                System.err.println("호출 제한 초과");
+            resultFuture.complete(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build());
+
+        }
+        System.out.println("resultFuture ::"+ resultFuture);
+
+        return resultFuture;
+
+
+}
 }

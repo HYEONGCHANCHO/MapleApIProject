@@ -9,43 +9,122 @@
 
 <form id="searchForm">
     <input type="text" id="nicknameInput" placeholder="닉네임 입력">
+    <input type="date" id="dateInput" placeholder="날짜 선택">
     <button type="button" onclick="searchNickname()">검색</button>
 </form>
 
 <div id="resultContainer"></div>
 <script>
-function searchNickname() {
-    var characterName = document.getElementById('nicknameInput').value;
-    var storedValue = localStorage.getItem(characterName);
 
-    if (!storedValue) {
-// 서버에 GET 요청을 보내기
-    fetch('/maplestory/v1/id?characterName=' + encodeURIComponent(characterName))
+function displayCharacterInfo(characterInfo) {
+    var resultContainer = document.getElementById('resultContainer');
+    var jsonCharacterInfo = JSON.parse(characterInfo);
+    // Date
+    var dateElement = document.createElement('p');
+    dateElement.textContent = 'Date: ' + jsonCharacterInfo.date;
+    resultContainer.appendChild(dateElement);
+
+    // Character Name
+    var characterNameElement = document.createElement('p');
+    characterNameElement.textContent = 'Character Name: ' + jsonCharacterInfo.character_name;
+    resultContainer.appendChild(characterNameElement);
+
+    // World Name
+    var worldNameElement = document.createElement('p');
+    worldNameElement.textContent = 'World Name: ' + jsonCharacterInfo.world_name;
+    resultContainer.appendChild(worldNameElement);
+
+    // Character Class
+    var characterClassElement = document.createElement('p');
+    characterClassElement.textContent = 'Character Class: ' + jsonCharacterInfo.character_class;
+    resultContainer.appendChild(characterClassElement);
+
+    // Character Level
+    var characterLevelElement = document.createElement('p');
+    characterLevelElement.textContent = 'Character Level: ' + jsonCharacterInfo.character_level;
+    resultContainer.appendChild(characterLevelElement);
+
+    // Character Image
+    var characterImageElement = document.createElement('img');
+    characterImageElement.src = jsonCharacterInfo.character_image;
+    resultContainer.appendChild(characterImageElement);
+
+<!--    // OCID-->
+<!--    var ocidElement = document.createElement('p');-->
+<!--    ocidElement.textContent = 'OCID: ' + characterInfo.ocid;-->
+<!--    resultContainer.appendChild(ocidElement);-->
+}
+
+function getCharacterInfo(characterName,date,ocid){
+    console.log("캐릭터 인포 함수 시작");
+
+    fetch('/maplestory/v1/character/basic?ocid=' + ocid + '&date=' + date )
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
-        }
+
+        } return response.text();
+    })
+    .then(data => {
+        localStorage.setItem(characterName, data);
+        var characterInfo =localStorage.getItem(characterName);
+<!--        var characterInfo =JSON.parse(localStorage.getItem(characterName));-->
+        displayCharacterInfo(characterInfo);
+        return characterInfo;
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+       }
+
+
+function searchNickname() {
+    console.log("캐릭터 서치 함수시작");
+    var characterName = document.getElementById('nicknameInput').value;
+    var date = document.getElementById('dateInput').value;
+    var characterInfo = localStorage.getItem(characterName);
+
+    if (!characterInfo) {
+    console.log("캐릭터 서치 함수에서 데이터 못찾았을때 시작");
+    fetch('/maplestory/v1/id?characterName=' + encodeURIComponent(characterName))
+    .then(response => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
         return response.text();
     })
     .then(data => {
-        // 서버에서 받은 결과를 로컬 스토리지에 저장
-        localStorage.setItem(characterName, data);
-        console.log('Server response:', "음"+localStorage.getItem(characterName));
-
-        // 여기에서 서버의 응답 데이터를 처리하거나 다른 동작을 수행
-        document.getElementById('resultContainer').innerText = 'Server response: ' + data;
-
+        var parsedData = JSON.parse(data);
+        var ocid = parsedData.ocid;
+        getCharacterInfo(characterName,date,ocid);
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
        } else {
-      // 해당 닉네임에 대응되는 값이 있을 경우 처리
-        console.log('Stored Value found for nickname:', characterName);
-        // 결과를 화면에 표시 또는 추가 동작 수행
-        document.getElementById('resultContainer').innerText = 'Stored Value found for nickname: ' + characterName + ' - ' + storedValue;
+        console.log("캐릭터 서치 함수에서 데이터 찾았을때 시작");
+        characterInfo = localStorage.getItem(characterName);
+<!--        characterInfo = JSON.parse(localStorage.getItem(characterName));-->
+        var parsedData = JSON.parse(characterInfo);
+        var dateValue = parsedData.date;
+        var ocid = parsedData.ocid;
+        var isoDate = dateValue.split('T')[0];
+        if (isoDate !== date) {
+        console.log("캐릭터 서치 함수에서 데이터 찾았는데 날짜가 다를때");
+        getCharacterInfo(characterName,date,ocid);
+      } else {
+        characterInfo = localStorage.getItem(characterName);
+<!--        characterInfo = JSON.parse(localStorage.getItem(characterName));-->
+        console.log(characterInfo);
+        displayCharacterInfo(characterInfo);
+      }
     }
-    }
+}
+
+
+
+
+
 </script>
 </body>
 </html>

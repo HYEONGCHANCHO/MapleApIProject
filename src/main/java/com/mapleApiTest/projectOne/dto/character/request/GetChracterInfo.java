@@ -8,26 +8,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class GetChracterInfo {
 
 
-    private String name;
+//    private String name;
     private String date;
-    private String ocid;
+//    private String ocid;
 
 
-    public GetChracterInfo(String name, String date, String ocid) {
-        this.name = name;
+    public GetChracterInfo(String date, String ocid) {
+//        this.name = name;
         this.date = date;
-        this.ocid = ocid;
+//        this.ocid = ocid;
     }
 
-    public String getName() {
-        return name;
-    }
+//    public String getName() {
+//        return name;
+//    }
 
     public String getDate() {
         return date;
     }
 
-    public String getOcid() {
-        return ocid;
-    }
+//    public String getOcid() {
+//        return ocid;
+//    }
 }

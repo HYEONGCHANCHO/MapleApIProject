@@ -13,6 +13,7 @@ public class CharacterInfo {
     private int character_level;
     private String character_image;
 
+    private String ocid;
     public CharacterInfo() {
     }
 
@@ -38,6 +39,14 @@ public class CharacterInfo {
 
     public String getCharacter_image() {
         return character_image;
+    }
+
+    public String getOcid() {
+        return ocid;
+    }
+
+    public void setOcid(String ocid) {
+        this.ocid = ocid;
     }
 }
 
