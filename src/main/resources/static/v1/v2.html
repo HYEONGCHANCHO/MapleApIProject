@@ -18,10 +18,15 @@
 
 function displayCharacterInfo(characterInfo) {
     var resultContainer = document.getElementById('resultContainer');
+
+     while (resultContainer.firstChild) {
+        resultContainer.removeChild(resultContainer.firstChild);
+    }
+
     var jsonCharacterInfo = JSON.parse(characterInfo);
     // Date
     var dateElement = document.createElement('p');
-    dateElement.textContent = 'Date: ' + jsonCharacterInfo.date;
+    dateElement.textContent = 'Date: ' + jsonCharacterInfo.date.split('T')[0];
     resultContainer.appendChild(dateElement);
 
     // Character Name
@@ -49,10 +54,6 @@ function displayCharacterInfo(characterInfo) {
     characterImageElement.src = jsonCharacterInfo.character_image;
     resultContainer.appendChild(characterImageElement);
 
-<!--    // OCID-->
-<!--    var ocidElement = document.createElement('p');-->
-<!--    ocidElement.textContent = 'OCID: ' + characterInfo.ocid;-->
-<!--    resultContainer.appendChild(ocidElement);-->
 }
 
 function getCharacterInfo(characterName,date,ocid){
@@ -68,9 +69,8 @@ function getCharacterInfo(characterName,date,ocid){
     .then(data => {
         localStorage.setItem(characterName, data);
         var characterInfo =localStorage.getItem(characterName);
-<!--        var characterInfo =JSON.parse(localStorage.getItem(characterName));-->
         displayCharacterInfo(characterInfo);
-        return characterInfo;
+<!--        return characterInfo;-->
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);

@@ -36,6 +36,8 @@ public class CharacterController {
 
     @GetMapping("/maplestory/v1/id")
     public CompletableFuture<ResponseEntity<String>> getCharacterOcid(@RequestParam String characterName) {
+
+        if (rateLimiter.tryAcquire()) {
         GetCharacterOcid getCharacterOcid = new GetCharacterOcid(characterName);
         String url = apiUrl + "/maplestory/v1/id";
         System.out.println("여기여기");
@@ -45,6 +47,12 @@ public class CharacterController {
 
         // 작업이 완료될 때까지 대기하고 결과를 ResponseEntity로 감싸서 반환
         return resultFuture.thenApply(ResponseEntity::ok);
+        } else {
+            // 초당 호출 제한 초과 시 429 Too Many Requests 반환
+            return CompletableFuture.completedFuture(ResponseEntity.status(429).build());
+        }
+
+
     }
 
     @GetMapping("/maplestory/v1/character/basic")
