@@ -26,27 +26,27 @@ function displayCharacterInfo(characterInfo) {
     var jsonCharacterInfo = JSON.parse(characterInfo);
     // Date
     var dateElement = document.createElement('p');
-    dateElement.textContent = 'Date: ' + jsonCharacterInfo.date.split('T')[0];
+    dateElement.textContent = '기준일 : ' + jsonCharacterInfo.date.split('T')[0];
     resultContainer.appendChild(dateElement);
 
     // Character Name
     var characterNameElement = document.createElement('p');
-    characterNameElement.textContent = 'Character Name: ' + jsonCharacterInfo.character_name;
+    characterNameElement.textContent = '캐릭터 닉네임 : ' + jsonCharacterInfo.character_name;
     resultContainer.appendChild(characterNameElement);
 
     // World Name
     var worldNameElement = document.createElement('p');
-    worldNameElement.textContent = 'World Name: ' + jsonCharacterInfo.world_name;
+    worldNameElement.textContent = '캐릭터 서버 : ' + jsonCharacterInfo.world_name;
     resultContainer.appendChild(worldNameElement);
 
     // Character Class
     var characterClassElement = document.createElement('p');
-    characterClassElement.textContent = 'Character Class: ' + jsonCharacterInfo.character_class;
+    characterClassElement.textContent = '캐릭터 직업: ' + jsonCharacterInfo.character_class;
     resultContainer.appendChild(characterClassElement);
 
     // Character Level
     var characterLevelElement = document.createElement('p');
-    characterLevelElement.textContent = 'Character Level: ' + jsonCharacterInfo.character_level;
+    characterLevelElement.textContent = '캐릭터 레벨 : ' + jsonCharacterInfo.character_level;
     resultContainer.appendChild(characterLevelElement);
 
     // Character Image

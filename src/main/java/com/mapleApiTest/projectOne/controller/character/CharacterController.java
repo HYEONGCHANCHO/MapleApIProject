@@ -1,10 +1,9 @@
 package com.mapleApiTest.projectOne.controller.character;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.RateLimiter;
 import com.mapleApiTest.projectOne.dto.character.request.GetChracterInfo;
-import com.mapleApiTest.projectOne.dto.character.request.GetCharacterOcid;
+import com.mapleApiTest.projectOne.dto.character.request.GetCharactersOcid;
 import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,15 +34,15 @@ public class CharacterController {
     }
 
     @GetMapping("/maplestory/v1/id")
-    public CompletableFuture<ResponseEntity<String>> getCharacterOcid(@RequestParam String characterName) {
+    public CompletableFuture<ResponseEntity<String>> getCharacterOcid(@RequestParam String charactersName) {
 
         if (rateLimiter.tryAcquire()) {
-        GetCharacterOcid getCharacterOcid = new GetCharacterOcid(characterName);
+        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
         String url = apiUrl + "/maplestory/v1/id";
         System.out.println("여기여기");
 
         // 비동기적으로 getCharacterOcidAsync 메소드 호출
-        CompletableFuture<String> resultFuture = characterService.getCharacterOcid(getCharacterOcid, url, apiKey);
+        CompletableFuture<String> resultFuture = characterService.getCharacterOcid(getCharactersOcid, url, apiKey);
 
         // 작업이 완료될 때까지 대기하고 결과를 ResponseEntity로 감싸서 반환
         return resultFuture.thenApply(ResponseEntity::ok);

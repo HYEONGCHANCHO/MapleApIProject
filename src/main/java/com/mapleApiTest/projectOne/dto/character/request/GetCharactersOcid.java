@@ -1,11 +1,11 @@
 package com.mapleApiTest.projectOne.dto.character.request;
 
-public class GetCharacterOcid {
+public class GetCharactersOcid {
 
     private String name;
 
 
-    public GetCharacterOcid(String name) {
+    public GetCharactersOcid(String name) {
         this.name = name;
 
     }
