@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -27,7 +29,7 @@ public class CharacterController {
     @Value("${external.api.url}")
     private String apiUrl;
 
-    private final RateLimiter rateLimiter = RateLimiter.create(5.0);
+//    private final RateLimiter rateLimiter = RateLimiter.create(5.0);
 
     private final CharacterService characterService;
 
@@ -36,72 +38,32 @@ public class CharacterController {
     }
 
 
-//
-//    @GetMapping("/maplestory/v1/id")
-//    public Mono<String> yourApiEndpoint(@RequestParam String charactersName) {
-//        return characterService.getApiResponse(charactersName);
-//    }
-
-//
-//    @GetMapping("/maplestory/v1/id")
-//    public Mono<ResponseEntity<String>> getCharacterOcid(HttpServletRequest request, @RequestParam String charactersName) {
-//
-//        if (rateLimiter.tryAcquire()) {
-//            GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
-//            String url = request.getRequestURI();
-//            System.out.println("여기여기");
-//            System.out.println(url);
-//
-//            return characterService.getApiResponse(getCharactersOcid.getName())
-//                    .map(ResponseEntity::ok);
-//
-////
-////                    return characterService.getCharacterOcid(getCharactersOcid,url)
-////                    .map(ResponseEntity::ok);
-//            // 비동기적으로 getCharacterOcidAsync 메소드 호출
-////           String resultMono = characterService.getCharacterOcid(getCharactersOcid, url);
-////
-////            System.out.println(url+"ㅇㄴㅇ"+resultMono);
-////
-////            // 작업이 완료될 때까지 대기하고 결과를 ResponseEntity로 감싸서 반환
-////            return resultMono;
-//        } else {
-//            // 초당 호출 제한 초과 시 429 Too Many Requests 반환
-//            return null;
-//        }
-//    }
-//
-//
-//
-
-
-//        @GetMapping("/maplestory/v1/id")
-//    public Mono<String> yourApiEndpoint(@RequestParam String charactersName) {
-////        return characterService.getApiResponse(charactersName);
-//        return characterService.getCharacterOcid(charactersName);
-//    }
     @GetMapping("/maplestory/v1/id")
-    public Mono<String> getCharacterOcid(HttpServletRequest request, @RequestParam String charactersName) {
-
-        if (rateLimiter.tryAcquire()) {
+    public CompletableFuture<String> getCharacterOcid(HttpServletRequest request, @RequestParam String charactersName) {
         GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
         String Url = request.getRequestURI();
-        System.out.println("여기여기");
         System.out.println(Url);
             return characterService.getCharacterOcid(getCharactersOcid,Url);
 
-//                    Mono<String> resultMono = characterService.getCharacterOcid(charactersName);
-
-
-        // 비동기적으로 getCharacterOcidAsync 메소드 호출
-//        Mono<String> resultMono = characterService.getCharacterOcid(getCharactersOcid, url);
-        // 작업이 완료될 때까지 대기하고 결과를 ResponseEntity로 감싸서 반환
-//        return resultMono;
-        } else {
-            // 초당 호출 제한 초과 시 429 Too Many Requests 반환
-            return null;
-        }
     }
+
+    @GetMapping("/maplestory/v1/")
+    public Mono<String> getCharacterOcid2(HttpServletRequest request, @RequestParam String charactersName) {
+        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
+        String Url = request.getRequestURI()+"id";
+        return characterService.getCharacterOcid2(getCharactersOcid,Url);
+        }
+
+
+
+
+
+
+
+
+
+
+    /////////////////////////////////
 
 //    @GetMapping("/maplestory/v1/character/basic")
 //    @Async("characterThreadPool")
