@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,8 +33,7 @@ public class CharacterService {
     private final CharactersStatInfoRepository charactersStatInfoRepository;
     private final WebClient webClient;
 
-    private final RateLimiter rateLimiter = RateLimiter.create(5.0);
-
+    private final RateLimiter rateLimiter = RateLimiter.create(100.0 / 60.0); //분당 100회
     @Value("${external.api.key}")
     private String apiKey;
     @Value("${external.api.url}")
@@ -48,6 +48,7 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
+    @Transactional
     public CompletableFuture<String> getCharacterOcid(GetCharactersOcid request, String Url) {
         if (rateLimiter.tryAcquire()) {
         Optional<CharactersKey> charactersKeyOptional = charactersKeyRepository.findByCharactersName(request.getName());
@@ -56,10 +57,7 @@ public class CharacterService {
             String ocidValue = charactersKey.getOcid();
             System.out.println("Found ocid: " + ocidValue);
             return CompletableFuture.completedFuture(ocidValue);
-
-//            return Mono.just(ocidValue);
         } else {
-//            return
             Mono<String> monoResult = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("character_name", request.getName()).build()).retrieve().bodyToMono(String.class).flatMap(responseBody -> {
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
@@ -69,7 +67,8 @@ public class CharacterService {
                     return Mono.just(ocidValue);
                 } catch (Exception exception) {
                     System.err.println("에러: " + exception.getMessage());
-                    return Mono.error(exception);
+//                    return Mono.error(exception);
+                    return Mono.just("없는 이름");
                 }
             }).onErrorResume(exception -> {
                 System.err.println("에러: " + exception.getMessage());
@@ -82,7 +81,8 @@ public class CharacterService {
             return completableFutureResult;
         }
         } else {
-            return CompletableFuture.completedFuture("Rate limit exceeded");
+//            return CompletableFuture.completedFuture("Rate limit exceeded");
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
     public Mono<String> getCharacterOcid2(GetCharactersOcid request, String Url) {
@@ -114,6 +114,7 @@ public class CharacterService {
             }
         } else {
             return Mono.just("Rate limit exceeded");
+
         }
     }
 

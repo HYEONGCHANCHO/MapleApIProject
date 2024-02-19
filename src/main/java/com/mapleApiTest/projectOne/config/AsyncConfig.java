@@ -10,9 +10,9 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 public class AsyncConfig {
-    private int corePoolSize=1;
-    private int maxPoolSize=2;
-    private int queueCapacity=10;
+    private int corePoolSize=8;
+    private int maxPoolSize=16;
+    private int queueCapacity=50;
 
 
     @Bean(name = "characterThreadPool")
