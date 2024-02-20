@@ -9,7 +9,7 @@ public class CharactersKey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id = null;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String charactersName;
 
     @Column(nullable = false)

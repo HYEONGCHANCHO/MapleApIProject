@@ -47,12 +47,12 @@ public class CharacterController {
 
     }
 
-    @GetMapping("/maplestory/v1/")
-    public Mono<String> getCharacterOcid2(HttpServletRequest request, @RequestParam String charactersName) {
-        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
-        String Url = request.getRequestURI()+"id";
-        return characterService.getCharacterOcid2(getCharactersOcid,Url);
-        }
+//    @GetMapping("/maplestory/v1/")
+//    public Mono<String> getCharacterOcid2(HttpServletRequest request, @RequestParam String charactersName) {
+//        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
+//        String Url = request.getRequestURI()+"id";
+//        return characterService.getCharacterOcid2(getCharactersOcid,Url);
+//        }
 
 
 

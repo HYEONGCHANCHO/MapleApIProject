@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 public class AsyncConfig {
     private int corePoolSize=8;
     private int maxPoolSize=16;
-    private int queueCapacity=50;
+    private int queueCapacity=100;
 
 
     @Bean(name = "characterThreadPool")
