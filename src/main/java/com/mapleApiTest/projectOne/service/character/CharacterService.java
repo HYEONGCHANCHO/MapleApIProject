@@ -33,7 +33,6 @@ public class CharacterService {
     private final CharactersStatInfoRepository charactersStatInfoRepository;
     private final WebClient webClient;
 
-//    private final RateLimiter rateLimiter = RateLimiter.create(100.0 / 0);
     private final RateLimiter rateLimiter = RateLimiter.create(300.0 / 60.0); //분당 300회
     @Value("${external.api.key}")
     private String apiKey;
@@ -52,11 +51,12 @@ public class CharacterService {
     @Transactional
     public CompletableFuture<String> getCharacterOcid(GetCharactersOcid request, String Url) {
         if (rateLimiter.tryAcquire()) {
+
         Optional<CharactersKey> charactersKeyOptional = charactersKeyRepository.findByCharactersName(request.getName());
         if (charactersKeyOptional.isPresent()) {
             CharactersKey charactersKey = charactersKeyOptional.get();
             String ocidValue = charactersKey.getOcid();
-            System.out.println("Found ocid: " + ocidValue);
+//            System.out.println("Found ocid: " + ocidValue);
             return CompletableFuture.completedFuture(ocidValue);
         } else {
             Mono<String> monoResult = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("character_name", request.getName()).build()).retrieve().bodyToMono(String.class).flatMap(responseBody -> {
@@ -68,7 +68,6 @@ public class CharacterService {
                     return Mono.just(ocidValue);
                 } catch (Exception exception) {
                     System.err.println("에러: " + exception.getMessage());
-//                    return Mono.error(exception);
                     return Mono.just("없는 이름");
                 }
             }).onErrorResume(exception -> {
@@ -81,49 +80,11 @@ public class CharacterService {
 
             return completableFutureResult;
         }
+
         } else {
-//            return CompletableFuture.completedFuture("Rate limit exceeded");
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
-//    public Mono<String> getCharacterOcid2(GetCharactersOcid request, String Url) {
-//        if (rateLimiter.tryAcquire()) {
-//            Optional<CharactersKey> charactersKeyOptional = charactersKeyRepository.findByCharactersName(request.getName());
-//            if (charactersKeyOptional.isPresent()) {
-//                CharactersKey charactersKey = charactersKeyOptional.get();
-//                String ocidValue = charactersKey.getOcid();
-//                System.out.println("Found ocid: " + ocidValue);
-//            return Mono.just(ocidValue);
-//            } else {
-//            return webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("character_name", request.getName()).build()).retrieve().bodyToMono(String.class).flatMap(responseBody -> {
-//                    try {
-//                        ObjectMapper objectMapper = new ObjectMapper();
-//                        JsonNode jsonNode = objectMapper.readTree(responseBody);
-//                        String ocidValue = jsonNode.get("ocid").asText();
-//                        charactersKeyRepository.save(new CharactersKey(request.getName(), ocidValue));
-//                        return Mono.just(ocidValue);
-//                    } catch (Exception exception) {
-//                        System.err.println("에러: " + exception.getMessage());
-//                        return Mono.error(exception);
-//                    }
-//                }).onErrorResume(exception -> {
-//                    System.err.println("에러: " + exception.getMessage());
-//                    exception.printStackTrace(); // 추가된 부분
-//                    return Mono.error(exception);
-//                });
-//
-//            }
-//        } else {
-//            return Mono.error(new RuntimeException("Rate limit exceeded"));
-//
-//        }
-//    }
-//
-
-
-
-
-
 
 
 /////////////////////////////////////////////////
@@ -177,8 +138,6 @@ public class CharacterService {
                 return null;
             }
         }
-
-
     }
 }
 

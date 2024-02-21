@@ -29,8 +29,6 @@ public class CharacterController {
     @Value("${external.api.url}")
     private String apiUrl;
 
-//    private final RateLimiter rateLimiter = RateLimiter.create(5.0);
-
     private final CharacterService characterService;
 
     public CharacterController(CharacterService characterService) {
@@ -46,21 +44,6 @@ public class CharacterController {
             return characterService.getCharacterOcid(getCharactersOcid,Url);
 
     }
-
-//    @GetMapping("/maplestory/v1/")
-//    public Mono<String> getCharacterOcid2(HttpServletRequest request, @RequestParam String charactersName) {
-//        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
-//        String Url = request.getRequestURI()+"id";
-//        return characterService.getCharacterOcid2(getCharactersOcid,Url);
-//        }
-
-
-
-
-
-
-
-
 
 
     /////////////////////////////////

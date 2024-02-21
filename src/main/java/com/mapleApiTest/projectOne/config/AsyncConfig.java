@@ -14,7 +14,6 @@ public class AsyncConfig {
     private int maxPoolSize=16;
     private int queueCapacity=100;
 
-
     @Bean(name = "characterThreadPool")
     public Executor characterThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
