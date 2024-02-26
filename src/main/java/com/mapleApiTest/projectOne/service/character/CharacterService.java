@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -49,22 +50,23 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<String> getCharacterOcid(GetCharactersOcid request, String Url) {
+    public CompletableFuture<String> getCharacterOcid(String charactersName) {
         if (rateLimiter.tryAcquire()) {
 
-        Optional<CharactersKey> charactersKeyOptional = charactersKeyRepository.findByCharactersName(request.getName());
+           String Url = "/maplestory/v1/id";
+
+        Optional<CharactersKey> charactersKeyOptional = charactersKeyRepository.findByCharactersName(charactersName);
         if (charactersKeyOptional.isPresent()) {
             CharactersKey charactersKey = charactersKeyOptional.get();
             String ocidValue = charactersKey.getOcid();
-//            System.out.println("Found ocid: " + ocidValue);
             return CompletableFuture.completedFuture(ocidValue);
         } else {
-            Mono<String> monoResult = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("character_name", request.getName()).build()).retrieve().bodyToMono(String.class).flatMap(responseBody -> {
+            Mono<String> monoResult = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("character_name", charactersName).build()).retrieve().bodyToMono(String.class).flatMap(responseBody -> {
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
                     JsonNode jsonNode = objectMapper.readTree(responseBody);
                     String ocidValue = jsonNode.get("ocid").asText();
-                    charactersKeyRepository.save(new CharactersKey(request.getName(), ocidValue));
+                    charactersKeyRepository.save(new CharactersKey(charactersName, ocidValue));
                     return Mono.just(ocidValue);
                 } catch (Exception exception) {
                     System.err.println("에러: " + exception.getMessage());
@@ -77,7 +79,6 @@ public class CharacterService {
             });
             CompletableFuture<String> completableFutureResult = new CompletableFuture<>();
             monoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
-
             return completableFutureResult;
         }
 
@@ -117,12 +118,23 @@ public class CharacterService {
 
                 ResponseEntity<CharactersInfo> responseEntity = new RestTemplate().exchange(fullUrl, HttpMethod.GET, new HttpEntity<>(headers), CharactersInfo.class);
                 // 서버 응답에서 받은 CharacterInfo
-                CharactersInfo jsonResult = responseEntity.getBody();
 
-                // "ocid" 값을 클라이언트에서 원하는 값으로 설정
+                ///
+                CharactersInfo charactersInfo = responseEntity.getBody();
 
-                return null;
-//                return CompletableFuture.completedFuture(jsonResult);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonResult;
+                try {
+                    jsonResult = objectMapper.writeValueAsString(charactersInfo);
+                } catch (Exception e) {
+                    // JSON 변환 중 오류 처리
+                    e.printStackTrace();
+                    return CompletableFuture.completedFuture("Error occurred during JSON conversion");
+                }
+                ///
+
+//                return null;
+                return CompletableFuture.completedFuture(jsonResult);
 
 //            return responseEntity.getBody();
             } catch (HttpClientErrorException e) {

@@ -38,46 +38,34 @@ public class CharacterController {
 
     @GetMapping("/maplestory/v1/id")
     public CompletableFuture<String> getCharacterOcid(HttpServletRequest request, @RequestParam String charactersName) {
-        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
+//        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
         String Url = request.getRequestURI();
         System.out.println(Url);
-            return characterService.getCharacterOcid(getCharactersOcid,Url);
+            return characterService.getCharacterOcid(charactersName);
 
     }
 
 
     /////////////////////////////////
-
+//
 //    @GetMapping("/maplestory/v1/character/basic")
-//    @Async("characterThreadPool")
+//    public CompletableFuture<ResponseEntity<CharacterInfo>> getCharacterInfo(HttpServletRequest request,@RequestParam String charactersName, String date) {
+////        CompletableFuture<ResponseEntity<CharacterInfo>> resultFuture = new CompletableFuture<>();
 //
-//    public CompletableFuture<ResponseEntity<CharacterInfo>> getCharacterInfo(@RequestParam String ocid, String date) {
-//        CompletableFuture<ResponseEntity<CharacterInfo>> resultFuture = new CompletableFuture<>();
-//
-//        if (rateLimiter.tryAcquire()) {
+//            CompletableFuture<String> ocid = characterService.getCharacterOcid(charactersName);
 //
 //            ObjectMapper objectMapper = new ObjectMapper();
 //            try {
 //                GetChracterInfo getChracterInfo = new GetChracterInfo(date, ocid);
 //                String Url = apiUrl + "/maplestory/v1/character/basic";
 //
-//                System.out.println("여기여기222");
-//
-//
 //                resultFuture.complete(ResponseEntity.ok(characterService.getCharacterInfo(getChracterInfo, Url, apiKey, ocid)));
 //            } catch (Exception exception) {
 //                System.err.println("에러: " + exception.getMessage());
 //                return null;
 //            }
-//        }else {
-//                System.err.println("호출 제한 초과");
-//            resultFuture.complete(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build());
-//
-//        }
-//        System.out.println("resultFuture ::"+ resultFuture);
 //
 //        return resultFuture;
-//
 //
 //}
 }
