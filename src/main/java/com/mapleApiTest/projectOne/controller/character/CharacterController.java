@@ -40,7 +40,7 @@ public class CharacterController {
     public CompletableFuture<String> getCharacterOcid(HttpServletRequest request, @RequestParam String charactersName) {
 //        GetCharactersOcid getCharactersOcid = new GetCharactersOcid(charactersName);
         String Url = request.getRequestURI();
-//        System.out.println(Url);
+        System.out.println(Url);
             return characterService.getCharacterOcid(charactersName);
 
     }
