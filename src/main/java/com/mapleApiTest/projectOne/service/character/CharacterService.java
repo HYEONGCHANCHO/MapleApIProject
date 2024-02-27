@@ -141,8 +141,8 @@ public class CharacterService {
                 HttpStatus statusCode = e.getStatusCode();
                 String responseBody = e.getResponseBodyAsString();
 
-                System.err.println("HTTP 상태 코드: " + statusCode);
-                System.err.println("응답 본문: " + responseBody);
+//                System.err.println("HTTP 상태 코드: " + statusCode);
+//                System.err.println("응답 본문: " + responseBody);
                 return null;
 
             } catch (Exception exception) {
