@@ -20,6 +20,15 @@ public class CharactersInfo {
     @Column(nullable = false)
     private String charactersServer;
 
+    @Column(nullable = false)
+    private String character_class;
+
+    @Column(nullable = false)
+    private String character_image;
+
+    @Column(nullable = false)
+    private String world_name;
+
     public Long getId() {
         return id;
     }
@@ -39,4 +48,28 @@ public class CharactersInfo {
     public String getCharactersServer() {
         return charactersServer;
     }
+
+    public String getCharacter_image() {
+        return character_image;
+    }
+
+    public String getCharacter_class() {
+        return character_class;
+    }
+
+    public String getWorld_name() {
+        return world_name;
+    }
+
+    public CharactersInfo(String charactersName, String date, String charactersLevel, String charactersServer, String character_class, String character_image, String world_name) {
+        this.charactersName = charactersName;
+        this.date = date;
+        this.charactersLevel = charactersLevel;
+        this.charactersServer = charactersServer;
+        this.character_class = character_class;
+        this.character_image = character_image;
+        this.world_name = world_name;
+    }
+
+
 }

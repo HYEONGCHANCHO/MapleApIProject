@@ -50,4 +50,13 @@ public class GetCharactersInfo {
     public String getCharactersImage() {
         return charactersImage;
     }
+
+    public GetCharactersInfo(String charactersName, String date) {
+        this.charactersName = charactersName;
+        this.date = date;
+    }
+
+    public GetCharactersInfo(String charactersName) {
+        this.charactersName = charactersName;
+    }
 }
