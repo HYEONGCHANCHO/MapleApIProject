@@ -16,9 +16,9 @@ public class CharactersInfo {
     private String date;
 
     @Column(nullable = false)
-    private String charactersLevel;
-    @Column(nullable = false)
-    private String charactersServer;
+    private String character_level;
+//    @Column(nullable = false)
+//    private String character_server;
 
     @Column(nullable = false)
     private String character_class;
@@ -42,16 +42,13 @@ public class CharactersInfo {
     }
 
     public String getCharactersLevel() {
-        return charactersLevel;
+        return character_level;
     }
 
-    public String getCharactersServer() {
-        return charactersServer;
-    }
 
-    public String getCharacter_image() {
-        return character_image;
-    }
+//    public String getCharacter_image() {
+//        return character_image;
+//    }
 
     public String getCharacter_class() {
         return character_class;
@@ -61,13 +58,15 @@ public class CharactersInfo {
         return world_name;
     }
 
-    public CharactersInfo(String charactersName, String date, String charactersLevel, String charactersServer, String character_class, String character_image, String world_name) {
+    protected CharactersInfo() {
+    }
+
+    public CharactersInfo(String charactersName, String date, String character_level, String character_class, String world_name) {
         this.charactersName = charactersName;
         this.date = date;
-        this.charactersLevel = charactersLevel;
-        this.charactersServer = charactersServer;
+        this.character_level = character_level;
         this.character_class = character_class;
-        this.character_image = character_image;
+//        this.character_image = character_image;
         this.world_name = world_name;
     }
 

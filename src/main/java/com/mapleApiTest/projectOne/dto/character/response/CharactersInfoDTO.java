@@ -12,9 +12,8 @@ public class CharactersInfoDTO {
     private String character_name;
     private String world_name;
     private String character_class;
-    private String character_server;
     private String character_level;
-    private String character_image;
+//    private String character_image;
 
 //    private String ocid;
     public CharactersInfoDTO() {
@@ -40,31 +39,19 @@ public class CharactersInfoDTO {
         return character_level;
     }
 
-    public String getCharacter_image() {
-        return character_image;
-    }
+//    public String getCharacter_image() {
+//        return character_image;
+//    }
 
-    public String getCharactersServer() {
-        return character_server;
-    }
 
-    public CharactersInfoDTO(String date, String character_name, String world_name, String character_class, String character_server, String character_level, String character_image) {
+    public CharactersInfoDTO(String date, String character_name, String world_name, String character_class, String character_level) {
         this.date = date;
         this.character_name = character_name;
         this.world_name = world_name;
         this.character_class = character_class;
-        this.character_server = character_server;
         this.character_level = character_level;
-        this.character_image = character_image;
+//        this.character_image = character_image;
     }
-
-
-    //    public String getOcid() {
-//        return ocid;
-//    }
-//
-//    public void setOcid(String ocid) {
-//        this.ocid = ocid;
     }
 
 

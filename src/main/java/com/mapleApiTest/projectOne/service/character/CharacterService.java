@@ -5,12 +5,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.RateLimiter;
 import com.mapleApiTest.projectOne.domain.character.CharactersInfo;
+import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
 import com.mapleApiTest.projectOne.domain.character.CharactersKey;
+import com.mapleApiTest.projectOne.domain.character.CharactersStatInfo;
+import com.mapleApiTest.projectOne.dto.character.request.CharactersItemEquipDTO;
+import com.mapleApiTest.projectOne.dto.character.request.CharactersStatInfoDTO;
 import com.mapleApiTest.projectOne.dto.character.request.GetCharactersInfo;
 import com.mapleApiTest.projectOne.dto.character.request.GetCharactersOcid;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.dto.character.response.CharactersInfoDTO;
 import com.mapleApiTest.projectOne.repository.character.CharactersInfoRepository;
+import com.mapleApiTest.projectOne.repository.character.CharactersItemEquipRepository;
 import com.mapleApiTest.projectOne.repository.character.CharactersKeyRepository;
 import com.mapleApiTest.projectOne.repository.character.CharactersStatInfoRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +40,8 @@ public class CharacterService {
     private final CharactersKeyRepository charactersKeyRepository;
     private final CharactersInfoRepository charactersInfoRepository;
     private final CharactersStatInfoRepository charactersStatInfoRepository;
+    private final CharactersItemEquipRepository charactersItemEquipRepository;
+
     private final WebClient webClient;
 
     private final RateLimiter rateLimiter = RateLimiter.create(300.0 / 60.0); //분당 300회
@@ -44,11 +51,12 @@ public class CharacterService {
     private String apiUrl;
 
 
-    public CharacterService(WebClient.Builder builder, CharactersKeyRepository charactersKeyRepository, CharactersInfoRepository charactersInfoRepository, CharactersStatInfoRepository charactersStatInfoRepository, @Value("${external.api.key}") String apiKey, @Value("${external.api.url}") String apiUrl) {
+    public CharacterService(WebClient.Builder builder, CharactersKeyRepository charactersKeyRepository, CharactersInfoRepository charactersInfoRepository, CharactersStatInfoRepository charactersStatInfoRepository,CharactersItemEquipRepository charactersItemEquipRepository, @Value("${external.api.key}") String apiKey, @Value("${external.api.url}") String apiUrl) {
         this.webClient = builder.defaultHeader("x-nxopen-api-key", apiKey).baseUrl(apiUrl).build();
         this.charactersKeyRepository = charactersKeyRepository;
         this.charactersInfoRepository = charactersInfoRepository;
         this.charactersStatInfoRepository = charactersStatInfoRepository;
+        this.charactersItemEquipRepository = charactersItemEquipRepository;
     }
 
     @Async("characterThreadPool")
@@ -94,40 +102,36 @@ public class CharacterService {
     /////////////////////////////////////////////////
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<Object> getCharactersInfo(GetCharactersInfo request, String Url, String apiKey, String ocid) {
+    public CompletableFuture<CharactersInfoDTO> getCharactersInfo(GetCharactersInfo request, String Url, String apiKey, String ocid) {
 
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
             if (charactersInfoOptional.isPresent()) {
                 CharactersInfo charactersInfo = charactersInfoOptional.get();
-                CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO(request.getDate(), request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersServer(), charactersInfo.getCharactersLevel(), charactersInfo.getCharacter_image());
+                CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO(request.getDate(), request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersLevel());
                 return CompletableFuture.completedFuture(charactersInfoDTO);
             } else {
-                Mono<Object> MonoResult
-                        = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build()).retrieve().bodyToMono(String.class).flatMap(responseBody -> {
+                Mono<CharactersInfoDTO> MonoResult
+                        = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                     try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        JsonNode jsonNode = objectMapper.readTree(responseBody);
                         String world_name = jsonNode.get("world_name").asText();
                         String character_class = jsonNode.get("character_class").asText();
                         String character_level = jsonNode.get("character_level").asText();
-                        String character_image = jsonNode.get("character_image").asText();
-                        String character_server = jsonNode.get("character_server").asText();
-                        CharactersInfo charactersInfo = new CharactersInfo(request.getCharactersName(), request.getDate(), character_level, character_server, character_image, character_class, world_name);
+//                        String character_image = jsonNode.get("character_image").asText();
+                CharactersInfo charactersInfo = new CharactersInfo(request.getCharactersName(),request.getDate(),character_level,character_class,world_name);
                         charactersInfoRepository.save(charactersInfo);
-                        CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO(request.getDate(), request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersServer(), charactersInfo.getCharactersLevel(), charactersInfo.getCharacter_image());
+                        CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO(request.getDate(), request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersLevel());
                         return Mono.just(charactersInfoDTO);
                     } catch (Exception exception) {
                         System.err.println("에러: " + exception.getMessage());
-                        return Mono.just("없는 데이터");
+                        return Mono.error(exception);
                     }
                 }).onErrorResume(exception -> {
                     System.err.println("에러: " + exception.getMessage());
                     exception.printStackTrace(); // 추가된 부분
                     return Mono.error(exception);
-
                 });
-                CompletableFuture<Object> completableFutureResult = new CompletableFuture<>();
+                CompletableFuture<CharactersInfoDTO> completableFutureResult = new CompletableFuture<>();
                 MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
                 return completableFutureResult;
             }
@@ -135,49 +139,102 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
+    /////////////////
+
+
+    @Async("characterThreadPool")
+    @Transactional
+    public CompletableFuture<CharactersStatInfoDTO> getCharactersStatInfo(GetCharactersInfo request, String Url, String apiKey, String ocid) {
+
+        if (rateLimiter.tryAcquire()) {
+            Optional<CharactersStatInfo> charactersStatInfoOptional = charactersStatInfoRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
+            if (charactersStatInfoOptional.isPresent()) {
+                CharactersStatInfo charactersStatInfo = charactersStatInfoOptional.get();
+                CharactersStatInfoDTO charactersStatInfoDTO = new CharactersStatInfoDTO(request.getDate(), request.getCharactersName(),charactersStatInfo.getFinal_stat());
+
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                JsonNode finalStatNode = null;
+//                try {
+//                    finalStatNode = objectMapper.readTree(charactersStatInfoDTO.getFinal_stat());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                System.out.println("Final Stat Node: " + finalStatNode);
+
+                return CompletableFuture.completedFuture(charactersStatInfoDTO);
+            } else {
+                Mono<CharactersStatInfoDTO> MonoResult
+                        = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                    try {
+                        String final_stat = jsonNode.get("final_stat").toString();
+                        CharactersStatInfo charactersStatInfo = new CharactersStatInfo(request.getCharactersName(), request.getDate(), final_stat);
+                        charactersStatInfoRepository.save(charactersStatInfo);
+                        CharactersStatInfoDTO charactersStatInfoDTO = new CharactersStatInfoDTO(request.getDate(), request.getCharactersName(), final_stat);
+                        return Mono.just(charactersStatInfoDTO);
+                    } catch (Exception exception) {
+                        System.err.println("에러: " + exception.getMessage());
+                        return Mono.error(exception);
+                    }
+                }).onErrorResume(exception -> {
+                    System.err.println("에러: " + exception.getMessage());
+                    exception.printStackTrace(); // 추가된 부분
+                    return Mono.error(exception);
+                });
+                CompletableFuture<CharactersStatInfoDTO> completableFutureResult = new CompletableFuture<>();
+                MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+                return completableFutureResult;
+            }
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+
+    /////////////////
+
+    @Async("characterThreadPool")
+    @Transactional
+    public CompletableFuture<CharactersItemEquipDTO> getCharactersItemEquip(GetCharactersInfo request, String Url, String apiKey, String ocid) {
+
+        if (rateLimiter.tryAcquire()) {
+            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
+            if (charactersItemEquipOptional.isPresent()) {
+                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+                CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getDate(), request.getCharactersName(),charactersItemEquip.getItem_equipment());
+                return CompletableFuture.completedFuture(charactersItemEquipDTO);
+            } else {
+                Mono<CharactersItemEquipDTO> MonoResult
+                        = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                    try {
+                        String item_equipment = jsonNode.get("item_equipment").toString();
+                        CharactersItemEquip charactersItemEquip = new CharactersItemEquip(request.getCharactersName(), request.getDate(), item_equipment);
+                        charactersItemEquipRepository.save(charactersItemEquip);
+                        CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getDate(), request.getCharactersName(), item_equipment);
+                        return Mono.just(charactersItemEquipDTO);
+                    } catch (Exception exception) {
+                        System.err.println("에러: " + exception.getMessage());
+                        return Mono.error(exception);
+                    }
+                }).onErrorResume(exception -> {
+                    System.err.println("에러: " + exception.getMessage());
+                    exception.printStackTrace(); // 추가된 부분
+                    return Mono.error(exception);
+                });
+                CompletableFuture<CharactersItemEquipDTO> completableFutureResult = new CompletableFuture<>();
+                MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+                return completableFutureResult;
+            }
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+
+
 }
 
-//                String fullUrl = UriComponentsBuilder.fromUriString(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build().toUriString();
-//
-//                HttpHeaders headers = new HttpHeaders();
-//                headers.set("x-nxopen-api-key", apiKey);
-//
-//                ResponseEntity<CharactersInfo> responseEntity = new RestTemplate().exchange(fullUrl, HttpMethod.GET, new HttpEntity<>(headers), CharactersInfo.class);
-//                // 서버 응답에서 받은 CharacterInfo
-//
-//                ///
-//                CharactersInfo charactersInfo = responseEntity.getBody();
-//
-//                ObjectMapper objectMapper = new ObjectMapper();
-//                String jsonResult;
-//                try {
-//                    jsonResult = objectMapper.writeValueAsString(charactersInfo);
-//                } catch (Exception e) {
-//                    // JSON 변환 중 오류 처리
-//                    e.printStackTrace();
-//                    return CompletableFuture.completedFuture("Error occurred during JSON conversion");
-//                }
-//                ///
-//
-////                return null;
-//                return CompletableFuture.completedFuture(jsonResult);
-//
-////            return responseEntity.getBody();
-//            } catch (HttpClientErrorException e) {
-//                HttpStatus statusCode = e.getStatusCode();
-//                String responseBody = e.getResponseBodyAsString();
-//
-////                System.err.println("HTTP 상태 코드: " + statusCode);
-////                System.err.println("응답 본문: " + responseBody);
-//                return null;
-//
-//            } catch (Exception exception) {
-//                System.err.println("에러: " + exception.getMessage());
-//                return null;
-//            }
-//        }
-//    }
-//}
 
 
 

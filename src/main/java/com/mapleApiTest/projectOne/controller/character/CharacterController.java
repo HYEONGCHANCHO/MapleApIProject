@@ -3,6 +3,8 @@ package com.mapleApiTest.projectOne.controller.character;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.RateLimiter;
 
+import com.mapleApiTest.projectOne.dto.character.request.CharactersItemEquipDTO;
+import com.mapleApiTest.projectOne.dto.character.request.CharactersStatInfoDTO;
 import com.mapleApiTest.projectOne.dto.character.request.GetCharactersInfo;
 import com.mapleApiTest.projectOne.dto.character.request.GetCharactersOcid;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
@@ -41,42 +43,45 @@ public class CharacterController {
     @GetMapping("/maplestory/v1/id")
     public CompletableFuture<String> getCharacterOcid(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
-//        String Url = request.getRequestURI();
-//        String Url = "/maplestory/v1/id";
-//        System.out.println(Url);
             return characterService.getCharacterOcid(getCharactersInfo);
-
     }
-
 
     /////////////////////////////////
 
     @GetMapping("/maplestory/v1/character/basic")
-    public CompletableFuture<Object> getCharacterInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
-//        CompletableFuture<ResponseEntity<CharacterInfo>> resultFuture = new CompletableFuture<>();
+    public CompletableFuture<CharactersInfoDTO> getCharacterInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-
-            CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
-
+       CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
-
-
-//        ObjectMapper objectMapper = new ObjectMapper();
-//            try {
-//                GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-//                String Url = apiUrl + "/maplestory/v1/character/basic";
                 String Url = request.getRequestURI();
-
-//                resultFuture.complete(ResponseEntity.ok(
                 return characterService.getCharactersInfo(getCharactersInfo, Url, apiKey, ocid);
 
-//                );
-//            } catch (Exception exception) {
-//                System.err.println("에러: " + exception.getMessage());
-//                return null;
-//            }
-
-//        return resultFuture;
-
 }
+
+    @GetMapping("/maplestory/v1/character/stat")
+    public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        String Url = request.getRequestURI();
+        return characterService.getCharactersStatInfo(getCharactersInfo, Url, apiKey, ocid);
+
+    }
+
+
+    @GetMapping("/maplestory/v1/character/item-equipment")
+    public CompletableFuture<CharactersItemEquipDTO> getCharacterItemEquipInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        String Url = request.getRequestURI();
+        return characterService.getCharactersItemEquip(getCharactersInfo, Url, apiKey, ocid);
+
+    }
+
+
+
+
+
+
 }

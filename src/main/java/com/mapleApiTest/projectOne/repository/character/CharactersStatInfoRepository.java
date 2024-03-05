@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface CharactersStatInfoRepository extends JpaRepository<CharactersStatInfo, Long> {
 
-//    Optional<CharactersStatInfo> findByCharactersNameAndDate(String CharactersInfo);
+    Optional<CharactersStatInfo> findByCharactersNameAndDate(String charactersName, String date);
 }
