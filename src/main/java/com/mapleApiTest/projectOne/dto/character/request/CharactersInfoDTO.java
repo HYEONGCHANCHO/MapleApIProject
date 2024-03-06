@@ -1,4 +1,4 @@
-package com.mapleApiTest.projectOne.dto.character.response;
+package com.mapleApiTest.projectOne.dto.character.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

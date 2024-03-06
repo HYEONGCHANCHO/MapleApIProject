@@ -23,8 +23,8 @@ public class CharactersInfo {
     @Column(nullable = false)
     private String character_class;
 
-    @Column(nullable = false)
-    private String character_image;
+//    @Column(nullable = false)
+//    private String character_image;
 
     @Column(nullable = false)
     private String world_name;
@@ -44,6 +44,8 @@ public class CharactersInfo {
     public String getCharactersLevel() {
         return character_level;
     }
+
+
 
 
 //    public String getCharacter_image() {
