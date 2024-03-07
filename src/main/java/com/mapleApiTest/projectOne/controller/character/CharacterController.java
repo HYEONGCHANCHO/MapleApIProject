@@ -67,13 +67,13 @@ public class CharacterController {
     }
 
 
-//    @GetMapping("/totalInfo")
-//    public CompletableFuture<CharactersTotalInfoDTO> getCharacterItemEquipInfo(@RequestParam String charactersName, String date) {
-//        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-//
-//        return characterService.getCharactersTotalInfo(getCharactersInfo);
-//
-//    }
+    @GetMapping("/totalInfo")
+    public CompletableFuture<CharactersTotalInfoDTO> getCharacterItemEquipInfo(@RequestParam String charactersName, String date) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+
+        return characterService.getCharactersTotalInfo(getCharactersInfo);
+
+    }
 
 
 

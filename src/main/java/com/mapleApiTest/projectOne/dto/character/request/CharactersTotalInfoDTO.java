@@ -6,7 +6,6 @@ public class CharactersTotalInfoDTO {
     private String charactersName;
 
     private String date;
-//    private String item_equipment;
 
     private String world_name;
 
@@ -14,16 +13,290 @@ public class CharactersTotalInfoDTO {
 
     private String character_level;
 
-    private String hatInfo;
+    private double damage;
 
-    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, String character_level, String hatInfo) {
+    private double bossDamage;
+
+
+    private double finalDamage;
+
+
+    private double ignoreRate;
+
+
+    private double criticalDamage;
+
+    private int str;
+
+    private int dex;
+
+    private int intel;
+
+    private int luk;
+    private int hp;
+
+    private int attackPower;
+    private int magicPower;
+
+    private int combatPower;
+
+    private String hatInfo;
+    private String topInfo;
+    private String bottomInfo;
+    private String capeInfo;
+    private String shoesInfo;
+    private String glovesInfo;
+    private String shoulderInfo;
+    private String faceInfo;
+    private String eyeInfo;
+    private String earInfo;
+    private String pendantOneInfo;
+    private String pendantTwoInfo;
+    private String beltInfo;
+    private String ringOneInfo;
+    private String ringTwoInfo;
+    private String ringThreeInfo;
+    private String ringFourInfo;
+    private String weaponInfo;
+    private String subWeaponInfo;
+    private String emblemInfo;
+    private String badgeInfo;
+    private String medalInfo;
+    private String poketInfo;
+    private String heartInfo;
+
+    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, String character_level, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
         this.date = date;
-//        this.item_equipment = item_equipment;
         this.world_name = world_name;
         this.character_class = character_class;
         this.character_level = character_level;
+        this.damage = damage;
+        this.bossDamage = bossDamage;
+        this.finalDamage = finalDamage;
+        this.ignoreRate = ignoreRate;
+        this.criticalDamage = criticalDamage;
+        this.str = str;
+        this.dex = dex;
+        this.intel = intel;
+        this.luk = luk;
+        this.hp = hp;
+        this.attackPower = attackPower;
+        this.magicPower = magicPower;
+        this.combatPower = combatPower;
+    }
+
+    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, String character_level, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
+        this.charactersName = charactersName;
+        this.date = date;
+        this.world_name = world_name;
+        this.character_class = character_class;
+        this.character_level = character_level;
+        this.damage = damage;
+        this.bossDamage = bossDamage;
+        this.finalDamage = finalDamage;
+        this.ignoreRate = ignoreRate;
+        this.criticalDamage = criticalDamage;
+        this.str = str;
+        this.dex = dex;
+        this.intel = intel;
+        this.luk = luk;
+        this.hp = hp;
+        this.attackPower = attackPower;
+        this.magicPower = magicPower;
+        this.combatPower = combatPower;
         this.hatInfo = hatInfo;
+        this.topInfo = topInfo;
+        this.bottomInfo = bottomInfo;
+        this.capeInfo = capeInfo;
+        this.shoesInfo = shoesInfo;
+        this.glovesInfo = glovesInfo;
+        this.shoulderInfo = shoulderInfo;
+        this.faceInfo = faceInfo;
+        this.eyeInfo = eyeInfo;
+        this.earInfo = earInfo;
+        this.pendantOneInfo = pendantOneInfo;
+        this.pendantTwoInfo = pendantTwoInfo;
+        this.beltInfo = beltInfo;
+        this.ringOneInfo = ringOneInfo;
+        this.ringTwoInfo = ringTwoInfo;
+        this.ringThreeInfo = ringThreeInfo;
+        this.ringFourInfo = ringFourInfo;
+        this.weaponInfo = weaponInfo;
+        this.subWeaponInfo = subWeaponInfo;
+        this.emblemInfo = emblemInfo;
+        this.badgeInfo = badgeInfo;
+        this.medalInfo = medalInfo;
+        this.poketInfo = poketInfo;
+        this.heartInfo = heartInfo;
+    }
+
+    public String getCharactersName() {
+        return charactersName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getWorld_name() {
+        return world_name;
+    }
+
+    public String getCharacter_class() {
+        return character_class;
+    }
+
+    public String getCharacter_level() {
+        return character_level;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public double getBossDamage() {
+        return bossDamage;
+    }
+
+    public double getFinalDamage() {
+        return finalDamage;
+    }
+
+    public double getIgnoreRate() {
+        return ignoreRate;
+    }
+
+    public double getCriticalDamage() {
+        return criticalDamage;
+    }
+
+    public int getStr() {
+        return str;
+    }
+
+    public int getDex() {
+        return dex;
+    }
+
+    public int getIntel() {
+        return intel;
+    }
+
+    public int getLuk() {
+        return luk;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+
+    public int getMagicPower() {
+        return magicPower;
+    }
+
+    public int getCombatPower() {
+        return combatPower;
+    }
+
+    public String getHatInfo() {
+        return hatInfo;
+    }
+
+    public String getTopInfo() {
+        return topInfo;
+    }
+
+    public String getBottomInfo() {
+        return bottomInfo;
+    }
+
+    public String getCapeInfo() {
+        return capeInfo;
+    }
+
+    public String getShoesInfo() {
+        return shoesInfo;
+    }
+
+    public String getGlovesInfo() {
+        return glovesInfo;
+    }
+
+    public String getShoulderInfo() {
+        return shoulderInfo;
+    }
+
+    public String getFaceInfo() {
+        return faceInfo;
+    }
+
+    public String getEyeInfo() {
+        return eyeInfo;
+    }
+
+    public String getEarInfo() {
+        return earInfo;
+    }
+
+    public String getPendantOneInfo() {
+        return pendantOneInfo;
+    }
+
+    public String getPendantTwoInfo() {
+        return pendantTwoInfo;
+    }
+
+    public String getBeltInfo() {
+        return beltInfo;
+    }
+
+    public String getRingOneInfo() {
+        return ringOneInfo;
+    }
+
+    public String getRingTwoInfo() {
+        return ringTwoInfo;
+    }
+
+    public String getRingThreeInfo() {
+        return ringThreeInfo;
+    }
+
+    public String getRingFourInfo() {
+        return ringFourInfo;
+    }
+
+    public String getWeaponInfo() {
+        return weaponInfo;
+    }
+
+    public String getSubWeaponInfo() {
+        return subWeaponInfo;
+    }
+
+    public String getEmblemInfo() {
+        return emblemInfo;
+    }
+
+    public String getBadgeInfo() {
+        return badgeInfo;
+    }
+
+    public String getMedalInfo() {
+        return medalInfo;
+    }
+
+    public String getPoketInfo() {
+        return poketInfo;
+    }
+
+    public String getHeartInfo() {
+        return heartInfo;
     }
 
     //    "["

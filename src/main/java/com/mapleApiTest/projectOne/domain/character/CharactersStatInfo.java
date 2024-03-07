@@ -15,53 +15,51 @@ public class CharactersStatInfo {
     @Column(nullable = false)
     private String date;
 
+
 //    @Column(columnDefinition = "json")
-//    private String final_stat;
-////
-    @Column(columnDefinition = "json")
-    private String damage;
+    private double damage;
 
 
-        @Column(columnDefinition = "json")
-    private String bossDamage;
+//        @Column(columnDefinition = "json")
+    private double bossDamage;
 
 
-        @Column(columnDefinition = "json")
-    private String finalDamage;
+//        @Column(columnDefinition = "json")
+    private double finalDamage;
 
 
-        @Column(columnDefinition = "json")
-    private String ignoreRate;
+//        @Column(columnDefinition = "json")
+    private double ignoreRate;
 
 
-        @Column(columnDefinition = "json")
-    private String criticalDamage;
+//        @Column(columnDefinition = "json")
+    private double criticalDamage;
 
-    @Column(columnDefinition = "json")
-    private String str;
+//    @Column(columnDefinition = "json")
+    private int str;
 
-    @Column(columnDefinition = "json")
-    private String dex;
+//    @Column(columnDefinition = "json")
+    private int dex;
 
-    @Column(columnDefinition = "json")
-    private String intel;
+//    @Column(columnDefinition = "json")
+    private int intel;
 
-    @Column(columnDefinition = "json")
-    private String luk;
-    @Column(columnDefinition = "json")
-    private String hp;
+//    @Column(columnDefinition = "json")
+    private int luk;
+//    @Column(columnDefinition = "json")
+    private int hp;
 
-    @Column(columnDefinition = "json")
-    private String attackPower;
-    @Column(columnDefinition = "json")
-    private String magicPower;
+//    @Column(columnDefinition = "json")
+    private int attackPower;
+//    @Column(columnDefinition = "json")
+    private int magicPower;
 
-    @Column(columnDefinition = "json")
-    private String combatPower;
+//    @Column(columnDefinition = "json")
+    private int combatPower;
 
     protected CharactersStatInfo(){}
 
-    public CharactersStatInfo(String charactersName, String date, String damage, String bossDamage, String finalDamage, String ignoreRate, String criticalDamage, String str, String dex, String intel, String luk, String hp, String attackPower, String magicPower, String combatPower) {
+    public CharactersStatInfo(String charactersName, String date, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
         this.date = date;
         this.damage = damage;
@@ -87,55 +85,55 @@ public class CharactersStatInfo {
         return date;
     }
 
-    public String getDamage() {
+    public double getDamage() {
         return damage;
     }
 
-    public String getBossDamage() {
+    public double getBossDamage() {
         return bossDamage;
     }
 
-    public String getFinalDamage() {
+    public double getFinalDamage() {
         return finalDamage;
     }
 
-    public String getIgnoreRate() {
+    public double getIgnoreRate() {
         return ignoreRate;
     }
 
-    public String getCriticalDamage() {
+    public double getCriticalDamage() {
         return criticalDamage;
     }
 
-    public String getStr() {
+    public int getStr() {
         return str;
     }
 
-    public String getDex() {
+    public int getDex() {
         return dex;
     }
 
-    public String getIntel() {
+    public int getIntel() {
         return intel;
     }
 
-    public String getLuk() {
+    public int getLuk() {
         return luk;
     }
 
-    public String getHp() {
+    public int getHp() {
         return hp;
     }
 
-    public String getAttackPower() {
+    public int getAttackPower() {
         return attackPower;
     }
 
-    public String getMagicPower() {
+    public int getMagicPower() {
         return magicPower;
     }
 
-    public String getCombatPower() {
+    public int getCombatPower() {
         return combatPower;
     }
 }

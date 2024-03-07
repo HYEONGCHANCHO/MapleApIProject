@@ -149,22 +149,19 @@ public class CharacterService {
                 Mono<CharactersStatInfoDTO> MonoResult
                         = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                     try {
-                        String damage = jsonNode.get("final_stat").get(2).toString();
-
-                        String bossDamage = jsonNode.get("final_stat").get(3).toString();
-                        String finalDamage = jsonNode.get("final_stat").get(4).toString();
-                        String ignoreRate = jsonNode.get("final_stat").get(5).toString();
-                        String criticalDamage = jsonNode.get("final_stat").get(7).toString();
-                        String str = jsonNode.get("final_stat").get(16).toString();
-                        String dex = jsonNode.get("final_stat").get(17).toString();
-                        String intel = jsonNode.get("final_stat").get(18).toString();
-                        String luk = jsonNode.get("final_stat").get(19).toString();
-                        String hp = jsonNode.get("final_stat").get(20).toString();
-                        String attackPower = jsonNode.get("final_stat").get(40).toString();
-                        String magicPower = jsonNode.get("final_stat").get(41).toString();
-                        String combatPower = jsonNode.get("final_stat").get(42).toString();
-
-
+                        double damage = jsonNode.get("final_stat").get(2).get("stat_value").asDouble();
+                        double bossDamage = jsonNode.get("final_stat").get(3).get("stat_value").asDouble();
+                        double finalDamage = jsonNode.get("final_stat").get(4).get("stat_value").asDouble();
+                        double ignoreRate = jsonNode.get("final_stat").get(5).get("stat_value").asDouble();
+                        double criticalDamage = jsonNode.get("final_stat").get(7).get("stat_value").asDouble();
+                        int str = jsonNode.get("final_stat").get(16).get("stat_value").asInt();
+                        int dex = jsonNode.get("final_stat").get(17).get("stat_value").asInt();
+                        int intel = jsonNode.get("final_stat").get(18).get("stat_value").asInt();
+                        int luk = jsonNode.get("final_stat").get(19).get("stat_value").asInt();
+                        int hp = jsonNode.get("final_stat").get(20).get("stat_value").asInt();
+                        int attackPower = jsonNode.get("final_stat").get(40).get("stat_value").asInt();
+                        int magicPower = jsonNode.get("final_stat").get(41).get("stat_value").asInt();
+                        int combatPower = jsonNode.get("final_stat").get(42).get("stat_value").asInt();
 
 
                         CharactersStatInfo charactersStatInfo = new CharactersStatInfo(request.getCharactersName(), request.getDate(), damage,bossDamage,finalDamage,ignoreRate,criticalDamage,str,dex,intel,luk,hp,attackPower,magicPower,combatPower);
@@ -200,34 +197,22 @@ public class CharacterService {
             Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
             if (charactersItemEquipOptional.isPresent()) {
                 CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getDate(), request.getCharactersName(),charactersItemEquip.getHatInfo(),charactersItemEquip.getFaceInfo(),charactersItemEquip.getEyeInfo(),charactersItemEquip.getEarInfo(),charactersItemEquip.getTopInfo(),charactersItemEquip.getBottomInfo(),charactersItemEquip.getShoesInfo(),charactersItemEquip.getGlovesInfo(),charactersItemEquip.getSubWeaponInfo(),charactersItemEquip.getWeaponInfo(),charactersItemEquip.getRingOneInfo(),charactersItemEquip.getRingTwoInfo(),charactersItemEquip.getRingThreeInfo(),charactersItemEquip.getRingFourInfo(), charactersItemEquip.getPendantOneInfo(),charactersItemEquip.getMedalInfo(),charactersItemEquip.getShoulderInfo(),charactersItemEquip.getPoketInfo(),charactersItemEquip.getHeartInfo(),charactersItemEquip.getBadgeInfo(),charactersItemEquip.getEmblemInfo(),charactersItemEquip.getPendantTwoInfo());
+                CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getDate(), request.getCharactersName(),charactersItemEquip.getHatInfo(),charactersItemEquip.getTopInfo(),charactersItemEquip.getBottomInfo(),charactersItemEquip.getCapeInfo(),charactersItemEquip.getShoesInfo(),charactersItemEquip.getGlovesInfo(),charactersItemEquip.getShoulderInfo(),charactersItemEquip.getFaceInfo(),charactersItemEquip.getEyeInfo(),charactersItemEquip.getEarInfo(),charactersItemEquip.getPendantOneInfo(),charactersItemEquip.getPendantTwoInfo(),charactersItemEquip.getBeltInfo(),charactersItemEquip.getRingOneInfo(),charactersItemEquip.getRingTwoInfo(),charactersItemEquip.getRingThreeInfo(),charactersItemEquip.getRingFourInfo(),charactersItemEquip.getWeaponInfo(),charactersItemEquip.getSubWeaponInfo(),charactersItemEquip.getEmblemInfo(),charactersItemEquip.getBadgeInfo(),charactersItemEquip.getMedalInfo(),charactersItemEquip.getPoketInfo(),charactersItemEquip.getHeartInfo());
                 return CompletableFuture.completedFuture(charactersItemEquipDTO);
+
             } else {
                 Mono<CharactersItemEquipDTO> MonoResult
                         = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("date", request.getDate()).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                     try {
-//                        String item_equipment = jsonNode.get("item_equipment").toString();
 
+                        String[] equipmentTypes = {"모자","상의","하의","망토","신발","장갑","어깨장식","얼굴장식","눈장식","귀고리","펜던트","펜던트2","벨트" ,"반지1","반지2","반지3", "반지4","무기","보조무기","엠블렘" ,"뱃지" ,"훈장","포켓 아이템","기계 심장"};
 
-//                        String[] equipmentTypes = {"hat","face", "eye", "ear", "top", "bottom", "shoes", "gloves", "subWeapon", "weapon", "ringOne", "ringTwo", "ringThree", "ringFour", "pendantOne", "medal", "shoulder", "poket", "heart", "badge", "emblem", "pendantTwo"};
-//
-//                        String[] equipmentInfo = new String[equipmentTypes.length];
-//
-//                        for (int i = 0; i < equipmentTypes.length; i++) {
-//                            equipmentInfo[i] = jsonNode.get("item_equipment").get(i).toString();
-//                        }
-
-
-                        String[] equipmentTypes = {"망토","모자","얼굴장식", "눈장식", "귀고리", "상의", "하의", "신발", "장갑", "밸트" ,"보조무기", "무기", "반지1", "반지2", "반지3", "반지4", "팬던트", "훈장", "어깨장식", "포켓 아이템", "기계 심장", "뱃지", "엠블렘", "팬던트2"};
-
-                        //위 순서랑 아래 인포 순서랑 맞추면 됨.
                         String[] equipmentInfo = new String[equipmentTypes.length];
 
-// "item_equipment" 배열에 대한 루프
                         JsonNode itemEquipmentNode = jsonNode.get("item_equipment");
                         for (JsonNode equipmentNode : itemEquipmentNode) {
                             // "item_equipment_part" 값 가져오기
-                            String equipmentPart = equipmentNode.get("item_equipment_part").asText();
+                            String equipmentPart = equipmentNode.get("item_equipment_slot").asText();
 
                             // "equipmentTypes" 배열에서 일치하는 값의 인덱스 찾기
                             int index = Arrays.asList(equipmentTypes).indexOf(equipmentPart);
@@ -238,34 +223,34 @@ public class CharacterService {
                             }
                         }
 
-
-
                         String hatInfo = equipmentInfo[0];
-                        String faceInfo = equipmentInfo[1];
-                        String eyeInfo = equipmentInfo[2];
-                        String earInfo = equipmentInfo[3];
-                        String topInfo = equipmentInfo[4];
-                        String bottomInfo = equipmentInfo[5];
-                        String shoesInfo = equipmentInfo[6];
-                        String glovesInfo = equipmentInfo[7];
-                        String subWeaponInfo = equipmentInfo[8];
-                        String weaponInfo = equipmentInfo[9];
-                        String ringOneInfo = equipmentInfo[10];
-                        String ringTwoInfo = equipmentInfo[11];
-                        String ringThreeInfo = equipmentInfo[12];
-                        String ringFourInfo = equipmentInfo[13];
-                        String pendantOneInfo = equipmentInfo[14];
-                        String medalInfo = equipmentInfo[15];
-                        String shoulderInfo = equipmentInfo[16];
-                        String poketInfo = equipmentInfo[17];
-                        String heartInfo = equipmentInfo[18];
-                        String badgeInfo = equipmentInfo[19];
-                        String emblemInfo = equipmentInfo[20];
-                        String pendantTwoInfo = equipmentInfo[21];
+                        String topInfo = equipmentInfo[1];
+                        String bottomInfo = equipmentInfo[2];
+                        String capeInfo = equipmentInfo[3];
+                        String shoesInfo = equipmentInfo[4];
+                        String glovesInfo = equipmentInfo[5];
+                        String shoulderInfo = equipmentInfo[6];
+                        String faceInfo = equipmentInfo[7];
+                        String eyeInfo = equipmentInfo[8];
+                        String earInfo = equipmentInfo[9];
+                        String pendantOneInfo = equipmentInfo[10];
+                        String pendantTwoInfo = equipmentInfo[11];
+                        String beltInfo = equipmentInfo[12];
+                        String ringOneInfo = equipmentInfo[13];
+                        String ringTwoInfo = equipmentInfo[14];
+                        String ringThreeInfo = equipmentInfo[15];
+                        String ringFourInfo = equipmentInfo[16];
+                        String weaponInfo = equipmentInfo[17];
+                        String subWeaponInfo = equipmentInfo[18];
+                        String emblemInfo = equipmentInfo[19];
+                        String badgeInfo = equipmentInfo[20];
+                        String medalInfo = equipmentInfo[21];
+                        String poketInfo = equipmentInfo[22];
+                        String heartInfo = equipmentInfo[23];
 
-                        CharactersItemEquip charactersItemEquip = new CharactersItemEquip(request.getCharactersName(), request.getDate(),hatInfo,faceInfo,eyeInfo,earInfo,topInfo,bottomInfo,shoesInfo,glovesInfo,subWeaponInfo,weaponInfo,ringOneInfo,ringTwoInfo,ringThreeInfo,ringFourInfo,pendantOneInfo,medalInfo,shoulderInfo,poketInfo,heartInfo,badgeInfo,emblemInfo,pendantTwoInfo);
+                        CharactersItemEquip charactersItemEquip = new CharactersItemEquip(request.getCharactersName(), request.getDate(),hatInfo,topInfo,bottomInfo,capeInfo,shoesInfo,glovesInfo,shoulderInfo,faceInfo,eyeInfo,earInfo,pendantOneInfo,pendantTwoInfo,beltInfo,ringOneInfo,ringTwoInfo,ringThreeInfo,ringFourInfo,weaponInfo,subWeaponInfo,emblemInfo,badgeInfo,medalInfo,poketInfo,heartInfo);
                         charactersItemEquipRepository.save(charactersItemEquip);
-                        CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getDate(), request.getCharactersName(), hatInfo,faceInfo,eyeInfo,earInfo,topInfo,bottomInfo,shoesInfo,glovesInfo,subWeaponInfo,weaponInfo,ringOneInfo,ringTwoInfo,ringThreeInfo,ringFourInfo,pendantOneInfo,medalInfo,shoulderInfo,poketInfo,heartInfo,badgeInfo,emblemInfo,pendantTwoInfo);
+                        CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getDate(), request.getCharactersName(),hatInfo,topInfo,bottomInfo,capeInfo,shoesInfo,glovesInfo,shoulderInfo,faceInfo,eyeInfo,earInfo,pendantOneInfo,pendantTwoInfo,beltInfo,ringOneInfo,ringTwoInfo,ringThreeInfo,ringFourInfo,weaponInfo,subWeaponInfo,emblemInfo,badgeInfo,medalInfo,poketInfo,heartInfo);
                         return Mono.just(charactersItemEquipDTO);
                     } catch (Exception exception) {
                         System.err.println("에러: " + exception.getMessage());
@@ -286,60 +271,109 @@ public class CharacterService {
     }
 
 
-    ///////////////////
-//
-//    @Async("characterThreadPool")
-//    @Transactional
-//    public CompletableFuture<CharactersTotalInfoDTO> getCharactersTotalInfo(GetCharactersInfo request) {
-//
-//        if (rateLimiter.tryAcquire()) {
-//
-//            Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
-//
-//
-//            Optional<CharactersStatInfo> charactersStatInfoOptional = charactersStatInfoRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
-//
-//            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
-//            if (charactersItemEquipOptional.isPresent()&&charactersStatInfoOptional.isPresent()&&charactersItemEquipOptional.isPresent()) {
-//
-//                CharactersInfo charactersInfo = charactersInfoOptional.get();
-//                CharactersStatInfo charactersStatInfo = charactersStatInfoOptional.get();
-//                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+    /////////////////
+
+    @Async("characterThreadPool")
+    @Transactional
+    public CompletableFuture<CharactersTotalInfoDTO> getCharactersTotalInfo(GetCharactersInfo request) {
+
+        if (rateLimiter.tryAcquire()) {
+
+            Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
+            Optional<CharactersStatInfo> charactersStatInfoOptional = charactersStatInfoRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
+            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(request.getCharactersName(), request.getDate());
+
+            if (charactersItemEquipOptional.isPresent()&&charactersStatInfoOptional.isPresent()&&charactersItemEquipOptional.isPresent()) {
+
+                CharactersInfo charactersInfo = charactersInfoOptional.get();
+                CharactersStatInfo charactersStatInfo = charactersStatInfoOptional.get();
+                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+
+                double damageInfo = charactersStatInfo.getDamage();
+                double bossDamageInfo = charactersStatInfo.getBossDamage();
+                double finalDamageInfo = charactersStatInfo.getFinalDamage();
+                double ignoreRateInfo = charactersStatInfo.getIgnoreRate();
+                double criticalDamageInfo = charactersStatInfo.getCriticalDamage();
+                int strInfo = charactersStatInfo.getStr();
+                int dexInfo = charactersStatInfo.getDex();
+                int intelInfo = charactersStatInfo.getIntel();
+                int lukInfo = charactersStatInfo.getLuk();
+                int hpInfo = charactersStatInfo.getHp();
+                int attackPowerInfo = charactersStatInfo.getAttackPower();
+                int magicPowerInfo = charactersStatInfo.getMagicPower();
+                int combatPowerInfo = charactersStatInfo.getCombatPower();
+
+
+
+
 //
 //                ObjectMapper objectMapper = new ObjectMapper();
-//                JsonNode finalEquipNode = null;
+//                JsonNode damageInfoNode = null;
+//                JsonNode bossDamageInfoNode = null;
+//                JsonNode finalDamageInfoNode = null;
+//                JsonNode ignoreRateInfoNode = null;
+//                JsonNode criticalDamageInfoNode = null;
+//                JsonNode strInfoNode = null;
+//                JsonNode dexInfoNode = null;
+//                JsonNode intelInfoNode = null;
+//                JsonNode lukInfoNode = null;
+//                JsonNode hpInfoNode = null;
+//                JsonNode attackPowerInfoNode = null;
+//                JsonNode magicPowerInfoNode = null;
+//                JsonNode combatPowerInfoNode = null;
 //                try {
-//                    finalEquipNode = objectMapper.readTree(charactersItemEquip.getItem_equipment());
+//                    damageInfoNode = objectMapper.readTree(charactersStatInfo.getDamage());
+//                    bossDamageInfoNode = objectMapper.readTree(charactersStatInfo.getBossDamage());
+//                    finalDamageInfoNode = objectMapper.readTree(charactersStatInfo.getFinalDamage());
+//                    ignoreRateInfoNode = objectMapper.readTree(charactersStatInfo.getIgnoreRate());
+//                    criticalDamageInfoNode = objectMapper.readTree(charactersStatInfo.getCriticalDamage());
+//                    strInfoNode = objectMapper.readTree(charactersStatInfo.getStr());
+//                    dexInfoNode = objectMapper.readTree(charactersStatInfo.getDex());
+//                    intelInfoNode = objectMapper.readTree(charactersStatInfo.getIntel());
+//                    lukInfoNode = objectMapper.readTree(charactersStatInfo.getLuk());
+//                    hpInfoNode = objectMapper.readTree(charactersStatInfo.getHp());
+//                    attackPowerInfoNode = objectMapper.readTree(charactersStatInfo.getAttackPower());
+//                    magicPowerInfoNode = objectMapper.readTree(charactersStatInfo.getMagicPower());
+//                    combatPowerInfoNode = objectMapper.readTree(charactersStatInfo.getCombatPower());
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
-//
-//                String hatInfo = finalEquipNode.get(0).toString();
-//
-////                finalEquipNode.get(0).toString()
-//                System.out.println("hatInfo: " + hatInfo+ "dddsdsds");
-//
-//                CharactersTotalInfoDTO charactersTotalInfoDTO = new CharactersTotalInfoDTO(request.getCharactersName(),request.getDate(),charactersInfo.getWorld_name(),charactersInfo.getCharacter_class(),charactersInfo.getCharactersLevel(),hatInfo);
-//
-//                return CompletableFuture.completedFuture(charactersTotalInfoDTO);
-//
-//
-//            } else {
-//                return null;
+
+//                int damageInfo = damageInfoNode.get("stat_value").asInt();
+//                int bossDamageInfo = bossDamageInfoNode.get("stat_value").asInt();
+//                int finalDamageInfo = finalDamageInfoNode.get("stat_value").asInt();
+//                double ignoreRateInfo = ignoreRateInfoNode.get("stat_value").asDouble();
+//                double criticalDamageInfo = criticalDamageInfoNode.get("stat_value").asDouble();
+//                int strInfo = strInfoNode.get("stat_value").asInt();
+//                int dexInfo = dexInfoNode.get("stat_value").asInt();
+//                int intelInfo = intelInfoNode.get("stat_value").asInt();
+//                int lukInfo = lukInfoNode.get("stat_value").asInt();
+//                int hpInfo = hpInfoNode.get("stat_value").asInt();
+//                int attackPowerInfo = attackPowerInfoNode.get("stat_value").asInt();
+//                int magicPowerInfo = magicPowerInfoNode.get("stat_value").asInt();
+//                int combatPowerInfo = combatPowerInfoNode.get("stat_value").asInt();
+
+                CharactersTotalInfoDTO charactersTotalInfoDTO = new CharactersTotalInfoDTO(request.getCharactersName(),request.getDate(),charactersInfo.getWorld_name(),charactersInfo.getCharacter_class(),charactersInfo.getCharactersLevel(),damageInfo,bossDamageInfo,finalDamageInfo,ignoreRateInfo,criticalDamageInfo,strInfo,dexInfo,intelInfo,lukInfo,hpInfo,attackPowerInfo,magicPowerInfo,combatPowerInfo);
+
+                return CompletableFuture.completedFuture(charactersTotalInfoDTO);
+
+
+            } else {
+                return null;
+            }
+//           (exception -> {
+//                    System.err.println("에러: " + exception.getMessage());
+//                    exception.printStackTrace(); // 추가된 부분
+//                    return Mono.error(exception);
+//                });
+
 //            }
-////           (exception -> {
-////                    System.err.println("에러: " + exception.getMessage());
-////                    exception.printStackTrace(); // 추가된 부분
-////                    return Mono.error(exception);
-////                });
-//
-////            }
-//        } else {
-//            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-//        }
-//
-//
-//    }
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+
+
+    }
 
 
 

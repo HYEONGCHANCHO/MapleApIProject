@@ -10,40 +10,98 @@ public class CharactersStatInfoDTO {
     private String charactersName;
 
     private String date;
-//    private String final_stat;
 
-    private String damage;
-
-
-    private String bossDamage;
+    private double damage;
 
 
-    private String finalDamage;
+    private double bossDamage;
 
 
-    private String ignoreRate;
+    private double finalDamage;
 
 
-    private String criticalDamage;
+    private double ignoreRate;
 
-    private String str;
 
-    private String dex;
+    private double criticalDamage;
 
-    private String intel;
+    private int str;
 
-    private String luk;
-    private String hp;
+    private int dex;
 
-    private String attackPower;
-    private String magicPower;
+    private int intel;
 
-    private String combatPower;
+    private int luk;
+    private int hp;
 
-    public CharactersStatInfoDTO(String charactersName, String date,String damage, String bossDamage, String finalDamage, String ignoreRate, String criticalDamage, String str, String dex, String intel, String luk, String hp, String attackPower, String magicPower, String combatPower) {
+    private int attackPower;
+    private int magicPower;
+
+    private int combatPower;
+
+    public String getCharactersName() {
+        return charactersName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public double getBossDamage() {
+        return bossDamage;
+    }
+
+    public double getFinalDamage() {
+        return finalDamage;
+    }
+
+    public double getIgnoreRate() {
+        return ignoreRate;
+    }
+
+    public double getCriticalDamage() {
+        return criticalDamage;
+    }
+
+    public int getStr() {
+        return str;
+    }
+
+    public int getDex() {
+        return dex;
+    }
+
+    public int getIntel() {
+        return intel;
+    }
+
+    public int getLuk() {
+        return luk;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+
+    public int getMagicPower() {
+        return magicPower;
+    }
+
+    public int getCombatPower() {
+        return combatPower;
+    }
+
+    public CharactersStatInfoDTO(String charactersName, String date, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
         this.date = date;
-//        this.final_stat = final_stat;
         this.damage = damage;
         this.bossDamage = bossDamage;
         this.finalDamage = finalDamage;
@@ -58,91 +116,4 @@ public class CharactersStatInfoDTO {
         this.magicPower = magicPower;
         this.combatPower = combatPower;
     }
-
-    public String getCharactersName() {
-        return charactersName;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-//    public String getFinal_stat() {
-//        return final_stat;
-//    }
-
-    public String getDamage() {
-        return damage;
-    }
-
-    public String getBossDamage() {
-        return bossDamage;
-    }
-
-    public String getFinalDamage() {
-        return finalDamage;
-    }
-
-    public String getIgnoreRate() {
-        return ignoreRate;
-    }
-
-    public String getCriticalDamage() {
-        return criticalDamage;
-    }
-
-    public String getStr() {
-        return str;
-    }
-
-    public String getDex() {
-        return dex;
-    }
-
-    public String getIntel() {
-        return intel;
-    }
-
-    public String getLuk() {
-        return luk;
-    }
-
-    public String getHp() {
-        return hp;
-    }
-
-    public String getAttackPower() {
-        return attackPower;
-    }
-
-    public String getMagicPower() {
-        return magicPower;
-    }
-
-    public String getCombatPower() {
-        return combatPower;
-    }
-
-
-    //    public String getFinal_stat() {
-//        return final_stat;
-//    }
-    //    private String damegeSum;
-//    private String str;
-//
-//    private String dex;
-//    @JsonProperty("int")
-//    private String intel;
-//
-//    private String luk;
-//    private String hp;
-//
-//    private String attackPower;
-//    private String magicPower;
-//
-//    private String combatPower;
-
-
-
-
 }

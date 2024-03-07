@@ -8,69 +8,72 @@ public class CharactersItemEquipDTO {
     private String charactersName;
 
     private String date;
-//    private String item_equipment;
-    private String hatInfo;
-    private String faceInfo;
 
-    private String eyeInfo;
-    private String earInfo;
+    private String hatInfo;
     private String topInfo;
     private String bottomInfo;
+    private String capeInfo;
     private String shoesInfo;
     private String glovesInfo;
-
-    private String subWeaponInfo;
-
-    private String weaponInfo;
+    private String shoulderInfo;
+    private String faceInfo;
+    private String eyeInfo;
+    private String earInfo;
+    private String pendantOneInfo;
+    private String pendantTwoInfo;
+    private String beltInfo;
     private String ringOneInfo;
     private String ringTwoInfo;
     private String ringThreeInfo;
     private String ringFourInfo;
-    private String pendantOneInfo;
-
+    private String weaponInfo;
+    private String subWeaponInfo;
+    private String emblemInfo;
+    private String badgeInfo;
     private String medalInfo;
-
-    private String shoulderInfo;
-
     private String poketInfo;
-
     private String heartInfo;
 
-    private String badgeInfo;
 
-    private String emblemInfo;
-    private String pendantTwoInfo;
-
-
-    public CharactersItemEquipDTO(String charactersName, String date, String hatInfo,String faceInfo, String eyeInfo, String earInfo, String topInfo, String bottomInfo, String shoesInfo, String glovesInfo, String subWeaponInfo, String weaponInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String pendantOneInfo, String medalInfo, String shoulderInfo, String poketInfo, String heartInfo, String badgeInfo, String emblemInfo, String pendantTwoInfo) {
+    public CharactersItemEquipDTO(String charactersName, String date, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
         this.charactersName = charactersName;
         this.date = date;
         this.hatInfo = hatInfo;
+        this.topInfo = topInfo;
+        this.bottomInfo = bottomInfo;
+        this.capeInfo = capeInfo;
+        this.shoesInfo = shoesInfo;
+        this.glovesInfo = glovesInfo;
+        this.shoulderInfo = shoulderInfo;
         this.faceInfo = faceInfo;
         this.eyeInfo = eyeInfo;
         this.earInfo = earInfo;
-        this.topInfo = topInfo;
-        this.bottomInfo = bottomInfo;
-        this.shoesInfo = shoesInfo;
-        this.glovesInfo = glovesInfo;
-        this.subWeaponInfo = subWeaponInfo;
-        this.weaponInfo = weaponInfo;
+        this.pendantOneInfo = pendantOneInfo;
+        this.pendantTwoInfo = pendantTwoInfo;
+        this.beltInfo = beltInfo;
         this.ringOneInfo = ringOneInfo;
         this.ringTwoInfo = ringTwoInfo;
         this.ringThreeInfo = ringThreeInfo;
         this.ringFourInfo = ringFourInfo;
-        this.pendantOneInfo = pendantOneInfo;
+        this.weaponInfo = weaponInfo;
+        this.subWeaponInfo = subWeaponInfo;
+        this.emblemInfo = emblemInfo;
+        this.badgeInfo = badgeInfo;
         this.medalInfo = medalInfo;
-        this.shoulderInfo = shoulderInfo;
         this.poketInfo = poketInfo;
         this.heartInfo = heartInfo;
-        this.badgeInfo = badgeInfo;
-        this.emblemInfo = emblemInfo;
-        this.pendantTwoInfo = pendantTwoInfo;
     }
 
     public String getFaceInfo() {
         return faceInfo;
+    }
+
+    public String getCapeInfo() {
+        return capeInfo;
+    }
+
+    public String getBeltInfo() {
+        return beltInfo;
     }
 
     public String getEyeInfo() {

@@ -14,35 +14,32 @@ public class CharactersItemEquip {
     @Column(nullable = false)
     private String date;
 
-//    @Column(columnDefinition = "json")
-//    private String item_equipment;
-
     @Column(columnDefinition = "json")
     private String hatInfo;
-    @Column(columnDefinition = "json")
-    private String faceInfo;
-
-    @Column(columnDefinition = "json")
-    private String eyeInfo;
-    @Column(columnDefinition = "json")
-    private String earInfo;
     @Column(columnDefinition = "json")
     private String topInfo;
     @Column(columnDefinition = "json")
     private String bottomInfo;
     @Column(columnDefinition = "json")
+    private String capeInfo;
+    @Column(columnDefinition = "json")
     private String shoesInfo;
     @Column(columnDefinition = "json")
     private String glovesInfo;
-
     @Column(columnDefinition = "json")
-    private String capeInfo;
-
+    private String shoulderInfo;
     @Column(columnDefinition = "json")
-    private String subWeaponInfo;
-
+    private String faceInfo;
     @Column(columnDefinition = "json")
-    private String weaponInfo;
+    private String eyeInfo;
+    @Column(columnDefinition = "json")
+    private String earInfo;
+    @Column(columnDefinition = "json")
+    private String pendantOneInfo;
+    @Column(columnDefinition = "json")
+    private String pendantTwoInfo;
+    @Column(columnDefinition = "json")
+    private String beltInfo;
     @Column(columnDefinition = "json")
     private String ringOneInfo;
     @Column(columnDefinition = "json")
@@ -52,27 +49,22 @@ public class CharactersItemEquip {
     @Column(columnDefinition = "json")
     private String ringFourInfo;
     @Column(columnDefinition = "json")
-    private String pendantOneInfo;
-
+    private String weaponInfo;
     @Column(columnDefinition = "json")
-    private String medalInfo;
-
-    @Column(columnDefinition = "json")
-    private String shoulderInfo;
-
-    @Column(columnDefinition = "json")
-    private String poketInfo;
-
-    @Column(columnDefinition = "json")
-    private String heartInfo;
-
-    @Column(columnDefinition = "json")
-    private String badgeInfo;
-
+    private String subWeaponInfo;
     @Column(columnDefinition = "json")
     private String emblemInfo;
     @Column(columnDefinition = "json")
-    private String pendantTwoInfo;
+    private String badgeInfo;
+    @Column(columnDefinition = "json")
+    private String medalInfo;
+    @Column(columnDefinition = "json")
+    private String poketInfo;
+    @Column(columnDefinition = "json")
+    private String heartInfo;
+
+
+
 
     public String getCharactersName() {
         return charactersName;
@@ -81,10 +73,6 @@ public class CharactersItemEquip {
     public String getDate() {
         return date;
     }
-
-//    public String getItem_equipment() {
-//        return item_equipment;
-//    }
 
     public String getHatInfo() {
         return hatInfo;
@@ -174,33 +162,42 @@ public class CharactersItemEquip {
         return pendantTwoInfo;
     }
 
+    public String getCapeInfo() {
+        return capeInfo;
+    }
+
+    public String getBeltInfo() {
+        return beltInfo;
+    }
+
     protected CharactersItemEquip(){}
 
-    public CharactersItemEquip(String charactersName, String date, String hatInfo,String faceInfo, String eyeInfo, String earInfo, String topInfo, String bottomInfo, String shoesInfo, String glovesInfo, String subWeaponInfo, String weaponInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String pendantOneInfo, String medalInfo, String shoulderInfo, String poketInfo, String heartInfo, String badgeInfo, String emblemInfo, String pendantTwoInfo) {
+    public CharactersItemEquip(String charactersName, String date, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
         this.charactersName = charactersName;
         this.date = date;
-//        this.item_equipment = item_equipment;
         this.hatInfo = hatInfo;
+        this.topInfo = topInfo;
+        this.bottomInfo = bottomInfo;
+        this.capeInfo = capeInfo;
+        this.shoesInfo = shoesInfo;
+        this.glovesInfo = glovesInfo;
+        this.shoulderInfo = shoulderInfo;
         this.faceInfo = faceInfo;
         this.eyeInfo = eyeInfo;
         this.earInfo = earInfo;
-        this.topInfo = topInfo;
-        this.bottomInfo = bottomInfo;
-        this.shoesInfo = shoesInfo;
-        this.glovesInfo = glovesInfo;
-        this.subWeaponInfo = subWeaponInfo;
-        this.weaponInfo = weaponInfo;
+        this.pendantOneInfo = pendantOneInfo;
+        this.pendantTwoInfo = pendantTwoInfo;
+        this.beltInfo = beltInfo;
         this.ringOneInfo = ringOneInfo;
         this.ringTwoInfo = ringTwoInfo;
         this.ringThreeInfo = ringThreeInfo;
         this.ringFourInfo = ringFourInfo;
-        this.pendantOneInfo = pendantOneInfo;
+        this.weaponInfo = weaponInfo;
+        this.subWeaponInfo = subWeaponInfo;
+        this.emblemInfo = emblemInfo;
+        this.badgeInfo = badgeInfo;
         this.medalInfo = medalInfo;
-        this.shoulderInfo = shoulderInfo;
         this.poketInfo = poketInfo;
         this.heartInfo = heartInfo;
-        this.badgeInfo = badgeInfo;
-        this.emblemInfo = emblemInfo;
-        this.pendantTwoInfo = pendantTwoInfo;
     }
 }
