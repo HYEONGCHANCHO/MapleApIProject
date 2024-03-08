@@ -2,6 +2,10 @@ package com.mapleApiTest.projectOne.controller.character;
 
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
+import com.mapleApiTest.projectOne.dto.item.CharactersBottomInfoDTO;
+import com.mapleApiTest.projectOne.dto.item.CharactersHatInfoDTO;
+import com.mapleApiTest.projectOne.dto.item.CharactersMedalInfoDTO;
+import com.mapleApiTest.projectOne.dto.item.CharactersTopInfoDTO;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +34,7 @@ public class CharacterController {
     @GetMapping("/maplestory/v1/id")
     public CompletableFuture<String> getCharacterOcid(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
-            return characterService.getCharacterOcid(getCharactersInfo);
+        return characterService.getCharacterOcid(getCharactersInfo);
     }
 
     /////////////////////////////////
@@ -38,12 +42,12 @@ public class CharacterController {
     @GetMapping("/maplestory/v1/character/basic")
     public CompletableFuture<CharactersInfoDTO> getCharacterInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-       CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
-                String Url = request.getRequestURI();
-                return characterService.getCharactersInfo(getCharactersInfo, Url, apiKey, ocid);
+        String Url = request.getRequestURI();
+        return characterService.getCharactersInfo(getCharactersInfo, Url, apiKey, ocid);
 
-}
+    }
 
     @GetMapping("/maplestory/v1/character/stat")
     public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
@@ -74,6 +78,30 @@ public class CharacterController {
         return characterService.getCharactersTotalInfo(getCharactersInfo);
 
     }
+
+    @GetMapping("/HatInfo")
+    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(@RequestParam String charactersName, String date) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+
+        return characterService.getCharactersHatInfo(getCharactersInfo);
+
+    }
+
+    @GetMapping("/TopInfo")
+    public CompletableFuture<CharactersTopInfoDTO> getCharactersTopInfo(@RequestParam String charactersName, String date) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+
+        return characterService.getCharactersTopInfo(getCharactersInfo);
+    }
+
+
+//    @GetMapping("/ItemInfoTest")
+//    public CompletableFuture<CharactersMedalInfoDTO> getCharactersMedalInfo(@RequestParam String charactersName, String date) {
+//        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+//
+//        return characterService.getCharactersMedalInfo(getCharactersInfo);
+//    }
+
 
 
 
