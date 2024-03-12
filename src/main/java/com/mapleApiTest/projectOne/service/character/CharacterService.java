@@ -312,8 +312,6 @@ public class CharacterService {
 //                equipStr = getCharactersHatInfo(request).get().getStr();
 
 
-
-
                 CharactersTotalInfoDTO charactersTotalInfoDTO = new CharactersTotalInfoDTO(request.getCharactersName(), request.getDate(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersLevel(), damageInfo, bossDamageInfo, finalDamageInfo, ignoreRateInfo, criticalDamageInfo, strInfo, dexInfo, intelInfo, lukInfo, hpInfo, attackPowerInfo, magicPowerInfo, combatPowerInfo);
 
                 return CompletableFuture.completedFuture(charactersTotalInfoDTO);
@@ -341,15 +339,15 @@ public class CharacterService {
             if (charactersItemEquipOptional.isPresent()) {
 
                 CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo =null;
+                JsonNode jsonInfo = null;
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
                     jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                    CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
-                    );
+                CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
+                );
                 return CompletableFuture.completedFuture(charactersHatInfoDTO);
             } else {
                 return null;
@@ -358,6 +356,7 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
     @Async("characterThreadPool")
     @Transactional
     public CompletableFuture<CharactersTopInfoDTO> getCharactersTopInfo(GetCharactersInfo request) {
@@ -366,7 +365,7 @@ public class CharacterService {
             if (charactersItemEquipOptional.isPresent()) {
 
                 CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo =null;
+                JsonNode jsonInfo = null;
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
                     jsonInfo = objectMapper.readTree(charactersItemEquip.getTopInfo());
@@ -759,6 +758,7 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
     @Async("characterThreadPool")
     @Transactional
     public CompletableFuture<CharactersPendantOneInfoDTO> getCharactersPendantOneInfo(GetCharactersInfo request) {
@@ -1112,6 +1112,8 @@ public class CharacterService {
                         jsonInfo.get("item_total_option").get("luk").asInt(),
                         jsonInfo.get("item_total_option").get("max_hp").asInt(),
                         jsonInfo.get("item_total_option").get("attack_power").asInt(),
+                        jsonInfo.get("item_base_option").get("attack_power").asInt(),
+                        jsonInfo.get("item_add_option").get("attack_power").asInt(),
                         jsonInfo.get("item_total_option").get("magic_power").asInt(),
                         jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
                         jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
@@ -1229,6 +1231,7 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
     @Async("characterThreadPool")
     @Transactional
     public CompletableFuture<CharactersBadgeInfoDTO> getCharactersBadgeInfo(GetCharactersInfo request) {
@@ -1322,6 +1325,7 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
     @Async("characterThreadPool")
     @Transactional
     public CompletableFuture<CharactersPoketInfoDTO> getCharactersPoketInfo(GetCharactersInfo request) {
@@ -1417,5 +1421,109 @@ public class CharacterService {
     }
 
 
+    @Async("characterThreadPool")
+    @Transactional
+    public Double getCharactersCombat(GetCharactersTotalInfoDTO request,GetCharactersInfo re
+    ){
+
+        int addAllStat = request.getAddAllStat();
+        Double addBossDamage= request.getAddBossDamage();
+        int addAtMgPower = request.getAddAtMgPower();
+        int petAtMgPower = request.getPetAtMgPower();
+        int mainStatNonPer = request.getMainStatNonPer();
+        int subStatNonPer = request.getSubStatNonPer();
+        int mainStatBase = request.getMainStatBase()-request.getMainStatSkill();
+        int mainStatPerBase = request.getMainStatPerBase()-request.getMainStatPerSkill();
+        int subStatBase = request.getSubStatBase()-request.getSubStatSkill();
+        int subStatPerBase = request.getSubStatPerBase()-request.getSubStatPerSkill();
+        int atMgPowerBase = request.getAtMgPowerBase()- request.getAtMgPowerSkill();
+        int atMgPowerPerBase = request.getAtMgPowerPerBase()- request.getAtMgPowerPerSkill();
+        Double criticalDamageBase = request.getCriticalDamageBase()- request.getCriticalDamageSkill();
+        Double DamageBase = request.getDamageBase()- request.getDamageSkill();
+        Double BossDamageBase = request.getBossDamageBase()- request.getBossDamageSkill();
+
+        CompletableFuture<CharactersWeaponInfoDTO> WeaponInfoFuture = getCharactersWeaponInfo(re);
+        int[] attactPowerTotal = {0};
+        int[] attactPowerBase = {0};
+        int[] attactPowerAdd = {0};
+        WeaponInfoFuture.thenAccept(charactersWeaponInfoDTO -> {
+
+            int equipAttactPowerTotal = charactersWeaponInfoDTO.getAttactPowerTotal();
+            attactPowerTotal[0] += equipAttactPowerTotal;
+            int equipAttactPowerBase = charactersWeaponInfoDTO.getAttactPowerBase();
+            attactPowerBase[0] += equipAttactPowerBase;
+            int equipAttactPowerAdd = charactersWeaponInfoDTO.getAttactPowerAdd();
+            attactPowerAdd[0] += equipAttactPowerAdd;
+
+//            attactPowerTotal[0]= attactPowerTotal[0]-attactPowerBase[0]-attactPowerAdd[0]+ 101;
+
+        }).join();
+        if (attactPowerAdd[0]==106) {
+            atMgPowerBase = atMgPowerBase - attactPowerBase[0] - attactPowerAdd[0] + 101 + addAtMgPower + petAtMgPower +30;
+        }
+
+
+        Double finalMainStat = null;
+        Double finalSubStat = null;
+        Double finalStat = null;
+        Double finalAtMgPower = null;
+        Double finalCriticalDamage = null;
+        Double finalDamage = null;
+        Double finalBossDamage = null;
+        Double finalCombat = null;
+
+        if (request.isFree()){finalDamage =1.1;}
+        else {finalDamage = 1.0;}
+
+
+        finalMainStat= Math.floor((mainStatBase+addAllStat)*((100+mainStatPerBase)/100.0)+mainStatNonPer);
+        finalSubStat= Math.floor((subStatBase+addAllStat)*((100+subStatPerBase)/100.0)+subStatNonPer);
+        finalStat = ((finalMainStat*4)+finalSubStat)/100.0;
+        finalAtMgPower =Math.floor(atMgPowerBase*((100+atMgPowerPerBase)/100.0));
+        finalCriticalDamage = (135+criticalDamageBase)/100.0;
+        finalBossDamage = (100+DamageBase+BossDamageBase+addBossDamage)/100.0;
+
+        finalCombat =Math.floor(finalStat*finalAtMgPower*finalCriticalDamage*finalBossDamage*finalDamage);
+
+        System.out.println(finalMainStat);
+        System.out.println(finalSubStat);
+        System.out.println(finalStat);
+        System.out.println(finalAtMgPower);
+        System.out.println(finalCriticalDamage);
+        System.out.println(finalBossDamage);
+        System.out.println(finalCombat);
+        return finalCombat;
+    }
+
+
+
+
+
+
+
+//    public void someServiceMethod(GetCharactersInfo request) {
+//        CompletableFuture<CharactersHatInfoDTO> hatInfoFuture = getCharactersHatInfo(request);
+//        CompletableFuture<CharactersTopInfoDTO> TopInfoFuture = getCharactersTopInfo(request);
+//
+//
+//        int[] totalEquipStr = {0};
+//        int[] totalEquipDex = {0};
+//        int[] totalEquipIntel = {0};
+//        int[] totalEquipLuk = {0};
+//        int[] totalEquipAttactPower = {0};
+//        int[] totalEquipMagicPower = {0};
+//
+//        hatInfoFuture.thenAccept(charactersHatInfoDTO -> {
+//            int EquipStr = charactersHatInfoDTO.getStr();
+//            totalEquipStr[0] += EquipStr;
+//        }).join();
+//
+//        TopInfoFuture.thenAccept(charactersTopInfoDTO -> {
+//            int EquipStr = charactersTopInfoDTO.getStr();
+//            totalEquipStr[0] += EquipStr;
+//        }).join();
+//
+//
+//    }
 }
 

@@ -12,7 +12,9 @@ public class CharactersWeaponInfoDTO {
     int intel ;
     int luk ;
     int hp ;
-    int attactPower ;
+    int attactPowerTotal ;
+    int AttactPowerBase ;
+    int attactPowerAdd ;
     int magicPower ;
     Double bossDamage;
     Double ignore ;
@@ -26,7 +28,7 @@ public class CharactersWeaponInfoDTO {
     JsonNode excetional ;
     String soul ;
 
-    public CharactersWeaponInfoDTO(String item_equipment_slot, String itemName, int str, int dex, int intel, int luk, int hp, int attactPower, int magicPower, Double bossDamage, Double ignore, int allStat, String potentialOne, String potentialTwo, String potentialThree, String additionalOne, String additionalTwo, String additionalThree, JsonNode excetional, String soul) {
+    public CharactersWeaponInfoDTO(String item_equipment_slot, String itemName, int str, int dex, int intel, int luk, int hp, int attactPowerTotal, int attactPowerBase, int attactPowerAdd, int magicPower, Double bossDamage, Double ignore, int allStat, String potentialOne, String potentialTwo, String potentialThree, String additionalOne, String additionalTwo, String additionalThree, JsonNode excetional, String soul) {
         this.item_equipment_slot = item_equipment_slot;
         this.itemName = itemName;
         this.str = str;
@@ -34,7 +36,9 @@ public class CharactersWeaponInfoDTO {
         this.intel = intel;
         this.luk = luk;
         this.hp = hp;
-        this.attactPower = attactPower;
+        this.attactPowerTotal = attactPowerTotal;
+        AttactPowerBase = attactPowerBase;
+        this.attactPowerAdd = attactPowerAdd;
         this.magicPower = magicPower;
         this.bossDamage = bossDamage;
         this.ignore = ignore;
@@ -77,8 +81,16 @@ public class CharactersWeaponInfoDTO {
         return hp;
     }
 
-    public int getAttactPower() {
-        return attactPower;
+    public int getAttactPowerTotal() {
+        return attactPowerTotal;
+    }
+
+    public int getAttactPowerBase() {
+        return AttactPowerBase;
+    }
+
+    public int getAttactPowerAdd() {
+        return attactPowerAdd;
     }
 
     public int getMagicPower() {

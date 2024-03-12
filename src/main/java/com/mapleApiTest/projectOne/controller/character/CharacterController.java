@@ -2,10 +2,7 @@ package com.mapleApiTest.projectOne.controller.character;
 
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
-import com.mapleApiTest.projectOne.dto.item.CharactersBottomInfoDTO;
-import com.mapleApiTest.projectOne.dto.item.CharactersHatInfoDTO;
-import com.mapleApiTest.projectOne.dto.item.CharactersMedalInfoDTO;
-import com.mapleApiTest.projectOne.dto.item.CharactersTopInfoDTO;
+import com.mapleApiTest.projectOne.dto.item.*;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -96,12 +93,19 @@ public class CharacterController {
 
 
 //    @GetMapping("/ItemInfoTest")
-//    public CompletableFuture<CharactersMedalInfoDTO> getCharactersMedalInfo(@RequestParam String charactersName, String date) {
+//    public void getCharactersMedalInfo(@RequestParam String charactersName, String date) {
 //        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
 //
-//        return characterService.getCharactersMedalInfo(getCharactersInfo);
+//        characterService.someServiceMethod(getCharactersInfo);
 //    }
 
+    @GetMapping("/charactersBaseInfo")
+    public Double getCharactersBaseInfo(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage,int addAtMgPower,int petAtMgPower,int mainStatBase,int mainStatSkill,int mainStatPerBase, int mainStatPerSkill,int mainStatNonPer, int subStatBase,int subStatSkill,int subStatPerBase,int subStatPerSkill,int subStatNonPer,int atMgPowerBase,int atMgPowerSkill,int atMgPowerPerBase,int atMgPowerPerSkill,Double criticalDamageBase, Double criticalDamageSkill,Double damageBase,Double damageSkill,Double BossDamageBase, Double BossDamageSkill, boolean isFree) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+        GetCharactersTotalInfoDTO charactersTotalInfoDTO = new GetCharactersTotalInfoDTO(addAllStat,addBossDamage,addAtMgPower,petAtMgPower,mainStatBase,mainStatSkill,mainStatPerBase,mainStatPerSkill,mainStatNonPer,subStatBase,subStatSkill,subStatPerBase,subStatPerSkill,subStatNonPer,atMgPowerBase,atMgPowerSkill,atMgPowerPerBase,atMgPowerPerSkill,criticalDamageBase,criticalDamageSkill,damageBase,damageSkill,BossDamageBase,BossDamageSkill,isFree);
+
+        return characterService.getCharactersCombat(charactersTotalInfoDTO,getCharactersInfo);
+    }
 
 
 
