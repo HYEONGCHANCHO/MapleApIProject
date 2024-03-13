@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -1423,82 +1425,136 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public Double getCharactersCombat(GetCharactersTotalInfoDTO request,GetCharactersInfo re
-    ){
+    public String getCharactersCombat(GetCharactersTotalInfoDTO request, GetCharactersInfo re
+    ) {
 
         int addAllStat = request.getAddAllStat();
-        Double addBossDamage= request.getAddBossDamage();
+        Double addBossDamage = request.getAddBossDamage();
         int addAtMgPower = request.getAddAtMgPower();
         int petAtMgPower = request.getPetAtMgPower();
         int mainStatNonPer = request.getMainStatNonPer();
         int subStatNonPer = request.getSubStatNonPer();
-        int mainStatBase = request.getMainStatBase()-request.getMainStatSkill();
-        int mainStatPerBase = request.getMainStatPerBase()-request.getMainStatPerSkill();
-        int subStatBase = request.getSubStatBase()-request.getSubStatSkill();
-        int subStatPerBase = request.getSubStatPerBase()-request.getSubStatPerSkill();
-        int atMgPowerBase = request.getAtMgPowerBase()- request.getAtMgPowerSkill();
-        int atMgPowerPerBase = request.getAtMgPowerPerBase()- request.getAtMgPowerPerSkill();
-        Double criticalDamageBase = request.getCriticalDamageBase()- request.getCriticalDamageSkill();
-        Double DamageBase = request.getDamageBase()- request.getDamageSkill();
-        Double BossDamageBase = request.getBossDamageBase()- request.getBossDamageSkill();
+        int mainStatBase = request.getMainStatBase() - request.getMainStatSkill() +addAllStat;
+        int mainStatPerBase = request.getMainStatPerBase() - request.getMainStatPerSkill();
+        int subStatBase = request.getSubStatBase() - request.getSubStatSkill() + addAllStat;
+        int subStatPerBase = request.getSubStatPerBase() - request.getSubStatPerSkill();
+        int atMgPowerBase = request.getAtMgPowerBase() - request.getAtMgPowerSkill()+addAtMgPower+petAtMgPower+30;
+        int atMgPowerPerBase = request.getAtMgPowerPerBase() - request.getAtMgPowerPerSkill();
+        Double criticalDamageBase = request.getCriticalDamageBase() - request.getCriticalDamageSkill();
+        Double DamageBase = request.getDamageBase() - request.getDamageSkill();
+        Double BossDamageBase = request.getBossDamageBase() - request.getBossDamageSkill();
 
-        CompletableFuture<CharactersWeaponInfoDTO> WeaponInfoFuture = getCharactersWeaponInfo(re);
-        int[] attactPowerTotal = {0};
-        int[] attactPowerBase = {0};
-        int[] attactPowerAdd = {0};
-        WeaponInfoFuture.thenAccept(charactersWeaponInfoDTO -> {
 
-            int equipAttactPowerTotal = charactersWeaponInfoDTO.getAttactPowerTotal();
-            attactPowerTotal[0] += equipAttactPowerTotal;
-            int equipAttactPowerBase = charactersWeaponInfoDTO.getAttactPowerBase();
-            attactPowerBase[0] += equipAttactPowerBase;
-            int equipAttactPowerAdd = charactersWeaponInfoDTO.getAttactPowerAdd();
-            attactPowerAdd[0] += equipAttactPowerAdd;
 
-//            attactPowerTotal[0]= attactPowerTotal[0]-attactPowerBase[0]-attactPowerAdd[0]+ 101;
+        BigDecimal criticalDamageBaseBD = BigDecimal.valueOf(criticalDamageBase);
 
-        }).join();
-        if (attactPowerAdd[0]==106) {
-            atMgPowerBase = atMgPowerBase - attactPowerBase[0] - attactPowerAdd[0] + 101 + addAtMgPower + petAtMgPower +30;
+        criticalDamageBaseBD = criticalDamageBaseBD.setScale(2, RoundingMode.HALF_UP);
+
+        System.out.println(addAllStat);
+        System.out.println(addBossDamage);
+        System.out.println(addAtMgPower);
+        System.out.println(petAtMgPower);
+        System.out.println(mainStatNonPer);
+        System.out.println(subStatNonPer);
+        System.out.println(mainStatBase);
+        System.out.println(mainStatPerBase);
+        System.out.println(subStatBase);
+        System.out.println(subStatPerBase);
+        System.out.println(atMgPowerBase);
+        System.out.println(atMgPowerPerBase);
+        System.out.println(criticalDamageBase);
+        System.out.println(criticalDamageBaseBD);
+        System.out.println(DamageBase);
+        System.out.println(BossDamageBase);
+
+
+        Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(re.getCharactersName(), re.getDate());
+        if (charactersItemEquipOptional.isPresent()) {
+            CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+            JsonNode jsonInfo = null;
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            int weaponAttactPowerBase = jsonInfo.get("item_base_option").get("attack_power").asInt();
+            int weaponAttactPowerAdd = jsonInfo.get("item_add_option").get("attack_power").asInt();
+            int weaponAttackPowerStarforce = jsonInfo.get("item_starforce_option").get("attack_power").asInt();
+            int weaponStarforce = jsonInfo.get("starforce").asInt();
+
+            System.out.println(weaponAttactPowerBase);
+
+            System.out.println(weaponAttactPowerAdd);
+            System.out.println(weaponAttackPowerStarforce);
+            System.out.println(weaponStarforce);
+
+            int arcaneBowBaseAt = 276;
+            int arcaneBowTwoAdd = 133;
+            int arcaneBowStarforce18 = 173;
+
+            if (weaponAttactPowerAdd == 106) {
+                atMgPowerBase = atMgPowerBase - weaponAttactPowerBase - weaponAttactPowerAdd -weaponAttackPowerStarforce + arcaneBowBaseAt+arcaneBowTwoAdd +arcaneBowStarforce18;
+            }
+            System.out.println(atMgPowerBase);
+
+
+            Double finalMainStat = null;
+            Double finalSubStat = null;
+            Double finalStat = null;
+            Double finalAtMgPower = null;
+            Double finalCriticalDamage = null;
+            Double finalDamage = null;
+            Double finalBossDamage = null;
+            Double finalCombatE = null;
+
+            if (request.isFree()) {
+                finalDamage = 1.1;
+            } else {
+                finalDamage = 1.0;
+            }
+
+            System.out.println(finalDamage);
+
+            finalMainStat = Math.floor((mainStatBase) * ((100 + mainStatPerBase) / 100.0) + mainStatNonPer);
+            finalSubStat = Math.floor((subStatBase) * ((100 + subStatPerBase) / 100.0) + subStatNonPer);
+            finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+            finalAtMgPower = Math.floor(atMgPowerBase * ((100 + atMgPowerPerBase) / 100.0));
+            finalCriticalDamage = (135 + criticalDamageBase) / 100.0;
+            finalBossDamage = (100 + DamageBase + BossDamageBase + addBossDamage) / 100.0;
+
+            finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+            System.out.println(finalMainStat);
+            System.out.println(finalSubStat);
+            System.out.println(finalStat);
+            System.out.println(finalAtMgPower);
+            System.out.println(finalCriticalDamage);
+            System.out.println(finalBossDamage);
+            System.out.println(finalCombatE);
+
+            BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
+            String finalCombat = finalCombatBD.toPlainString();
+            System.out.println(finalCombat);
+//
+//
+//            int mainStatChange = 0;
+//            int subStatChange = 0;
+//            int atMgPowerChange = 0;
+//            int mainStatChange = 0;
+//            int mainStatChange = 0;
+
+
+
+
+            return finalCombat;
+
+
         }
 
-
-        Double finalMainStat = null;
-        Double finalSubStat = null;
-        Double finalStat = null;
-        Double finalAtMgPower = null;
-        Double finalCriticalDamage = null;
-        Double finalDamage = null;
-        Double finalBossDamage = null;
-        Double finalCombat = null;
-
-        if (request.isFree()){finalDamage =1.1;}
-        else {finalDamage = 1.0;}
-
-
-        finalMainStat= Math.floor((mainStatBase+addAllStat)*((100+mainStatPerBase)/100.0)+mainStatNonPer);
-        finalSubStat= Math.floor((subStatBase+addAllStat)*((100+subStatPerBase)/100.0)+subStatNonPer);
-        finalStat = ((finalMainStat*4)+finalSubStat)/100.0;
-        finalAtMgPower =Math.floor(atMgPowerBase*((100+atMgPowerPerBase)/100.0));
-        finalCriticalDamage = (135+criticalDamageBase)/100.0;
-        finalBossDamage = (100+DamageBase+BossDamageBase+addBossDamage)/100.0;
-
-        finalCombat =Math.floor(finalStat*finalAtMgPower*finalCriticalDamage*finalBossDamage*finalDamage);
-
-        System.out.println(finalMainStat);
-        System.out.println(finalSubStat);
-        System.out.println(finalStat);
-        System.out.println(finalAtMgPower);
-        System.out.println(finalCriticalDamage);
-        System.out.println(finalBossDamage);
-        System.out.println(finalCombat);
-        return finalCombat;
+        return null;
     }
-
-
-
-
-
+    }
 
 
 //    public void someServiceMethod(GetCharactersInfo request) {
@@ -1525,5 +1581,5 @@ public class CharacterService {
 //
 //
 //    }
-}
+
 
