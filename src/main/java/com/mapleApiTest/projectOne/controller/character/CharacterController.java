@@ -1,5 +1,7 @@
 package com.mapleApiTest.projectOne.controller.character;
 
+import com.mapleApiTest.projectOne.dto.ItemInfo.ArcaneHatDTO;
+import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.dto.item.*;
@@ -108,6 +110,12 @@ public class CharacterController {
     }
 
 
+    @GetMapping("/equipSimulation")
+    public void getEquipSimulation(){
+
+        characterService.getEquipSimulation();
+
+    }
 
 
 }

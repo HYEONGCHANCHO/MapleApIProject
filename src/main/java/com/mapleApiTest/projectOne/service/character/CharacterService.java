@@ -8,6 +8,8 @@ import com.mapleApiTest.projectOne.domain.character.CharactersInfo;
 import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
 import com.mapleApiTest.projectOne.domain.character.CharactersKey;
 import com.mapleApiTest.projectOne.domain.character.CharactersStatInfo;
+import com.mapleApiTest.projectOne.dto.ItemInfo.ArcaneHatDTO;
+import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.dto.item.*;
@@ -1434,16 +1436,15 @@ public class CharacterService {
         int petAtMgPower = request.getPetAtMgPower();
         int mainStatNonPer = request.getMainStatNonPer();
         int subStatNonPer = request.getSubStatNonPer();
-        int mainStatBase = request.getMainStatBase() - request.getMainStatSkill() +addAllStat;
+        int mainStatBase = request.getMainStatBase() - request.getMainStatSkill() + addAllStat;
         int mainStatPerBase = request.getMainStatPerBase() - request.getMainStatPerSkill();
         int subStatBase = request.getSubStatBase() - request.getSubStatSkill() + addAllStat;
         int subStatPerBase = request.getSubStatPerBase() - request.getSubStatPerSkill();
-        int atMgPowerBase = request.getAtMgPowerBase() - request.getAtMgPowerSkill()+addAtMgPower+petAtMgPower+30;
+        int atMgPowerBase = request.getAtMgPowerBase() - request.getAtMgPowerSkill() + addAtMgPower + petAtMgPower + 30;
         int atMgPowerPerBase = request.getAtMgPowerPerBase() - request.getAtMgPowerPerSkill();
         Double criticalDamageBase = request.getCriticalDamageBase() - request.getCriticalDamageSkill();
         Double DamageBase = request.getDamageBase() - request.getDamageSkill();
         Double BossDamageBase = request.getBossDamageBase() - request.getBossDamageSkill();
-
 
 
         BigDecimal criticalDamageBaseBD = BigDecimal.valueOf(criticalDamageBase);
@@ -1495,7 +1496,7 @@ public class CharacterService {
             int arcaneBowStarforce18 = 173;
 
             if (weaponAttactPowerAdd == 106) {
-                atMgPowerBase = atMgPowerBase - weaponAttactPowerBase - weaponAttactPowerAdd -weaponAttackPowerStarforce + arcaneBowBaseAt+arcaneBowTwoAdd +arcaneBowStarforce18;
+                atMgPowerBase = atMgPowerBase - weaponAttactPowerBase - weaponAttactPowerAdd - weaponAttackPowerStarforce + arcaneBowBaseAt + arcaneBowTwoAdd + arcaneBowStarforce18;
             }
             System.out.println(atMgPowerBase);
 
@@ -1545,8 +1546,6 @@ public class CharacterService {
 //            int mainStatChange = 0;
 
 
-
-
             return finalCombat;
 
 
@@ -1554,7 +1553,69 @@ public class CharacterService {
 
         return null;
     }
+
+
+    @Async("characterThreadPool")
+    @Transactional
+    public void getEquipSimulation() {
+
+        ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
+        ArcaneHatDTO arcaneHatDTO = new ArcaneHatDTO();
+
+        int starForce;
+        starForce = 4;
+        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
+        System.out.println(arcaneHatDTO.getMainStat());
+        System.out.println(arcaneHatDTO.getSubStat());
+        System.out.println(arcaneHatDTO.getAtMgPower());
+        arcaneHatDTO.setMainStat(65);
+        arcaneHatDTO.setSubStat(65);
+        arcaneHatDTO.setAtMgPower(7);
+
+        starForce = 17;
+        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
+        System.out.println(arcaneHatDTO.getMainStat());
+        System.out.println(arcaneHatDTO.getSubStat());
+        System.out.println(arcaneHatDTO.getAtMgPower());
+        System.out.println("맞는거"+32);
+        arcaneHatDTO.setMainStat(65);
+        arcaneHatDTO.setSubStat(65);
+        arcaneHatDTO.setAtMgPower(7);
+        starForce = 22;
+        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
+        System.out.println(arcaneHatDTO.getMainStat());
+        System.out.println(arcaneHatDTO.getSubStat());
+        System.out.println(arcaneHatDTO.getAtMgPower());
+        System.out.println("맞는거"+113);
+
+        arcaneHatDTO.setMainStat(65);
+        arcaneHatDTO.setSubStat(65);
+        arcaneHatDTO.setAtMgPower(7);
+        starForce = 23;
+        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
+        System.out.println(arcaneHatDTO.getMainStat());
+        System.out.println(arcaneHatDTO.getSubStat());
+        System.out.println(arcaneHatDTO.getAtMgPower());
+        System.out.println("맞는거"+134);
+
+        arcaneHatDTO.setMainStat(65);
+        arcaneHatDTO.setSubStat(65);
+        arcaneHatDTO.setAtMgPower(7);
+        starForce = 24;
+        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
+        System.out.println(arcaneHatDTO.getMainStat());
+        System.out.println(arcaneHatDTO.getSubStat());
+        System.out.println(arcaneHatDTO.getAtMgPower());
+        System.out.println("맞는거"+157);
+
+        arcaneHatDTO.setMainStat(65);
+        arcaneHatDTO.setSubStat(65);
+        arcaneHatDTO.setAtMgPower(7);
+
+
     }
+
+}
 
 
 //    public void someServiceMethod(GetCharactersInfo request) {
