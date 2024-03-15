@@ -6,87 +6,377 @@ public class ItemSimulationDTO {
 
     int statIncrementOneToFive = 2;
     int statIncrementSixToFifteen = 3;
-    //    int statIncrementFifteenToTwentyTwo = 15;
     int statIncrementFifteenToTwenty130 = 7;
     int statIncrementFifteenToTwentyTwoLevel140 = 9;
     int statIncrementFifteenToTwentyTwoLevel150 = 11;
     int statIncrementFifteenToTwentyTwoLevel160 = 13;
     int statIncrementFifteenToTwentyTwoLevel200 = 15;
+    int statIncrementFifteenToTwentyTwoLevel250 = 17;
 
     int atMgIncrementLevel130 = 7;
     int atMgIncrementLevel140 = 8;
     int atMgIncrementLevel150 = 9;
     int atMgIncrementLevel160 = 10;
     int atMgIncrementLevel200 = 12;
+    int atMgIncrementLevel250 = 14;
 
     int mainStat;
     int subStat;
     int atMgPower;
 
     int atMgIncrement;
-int atMgIncrementAdd;
+    int atMgIncrementAdd;
 
-    public void calculateEquipmentStats(ArcaneHatDTO arcaneHatDTO, int starForce) {
-        if (starForce < 6) {
-            mainStat = arcaneHatDTO.mainStat + starForce * statIncrementOneToFive;
-            subStat = arcaneHatDTO.subStat + starForce * statIncrementOneToFive;
-            atMgPower = arcaneHatDTO.atMgPower;
-        } else if (starForce < 16) {
-            mainStat = arcaneHatDTO.mainStat + (5 * statIncrementOneToFive)
+    public void calculateEquipmentStats(HatStatInfoDTO hatStatInfoDTO, int starForce, int itemUpgrade, int itemLevel) {
 
-                    + (starForce - 5) * statIncrementSixToFifteen;
-            subStat = arcaneHatDTO.subStat + 10 + (starForce - 5) * statIncrementSixToFifteen;
+        if (itemLevel == 150) {
+            if (starForce < 6) {
+                mainStat = hatStatInfoDTO.mainStat + starForce * statIncrementOneToFive;
+                subStat = hatStatInfoDTO.subStat + starForce * statIncrementOneToFive;
+                atMgPower = hatStatInfoDTO.atMgPower;
+            } else if (starForce < 16) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive)
 
-        } else if (arcaneHatDTO.getItemLevel() == 200 && starForce < 22) {
-            mainStat = arcaneHatDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
+                        + (starForce - 5) * statIncrementSixToFifteen;
+                subStat = hatStatInfoDTO.subStat + 10 + (starForce - 5) * statIncrementSixToFifteen;
 
-            subStat = arcaneHatDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
-            atMgIncrement=0;
+            } else if (starForce < 22) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel150;
 
-            for (int i = 16; i <= starForce; i++) {
-                atMgIncrement += (atMgIncrementLevel200 + i - 16);
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel150;
+                atMgIncrement = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel150 + i - 16);
+                }
+
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement;
+            } else if (starForce < 23) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel150;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel150;
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel150 + i - 16);
+                }
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            } else if (starForce < 26) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel150);
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel150);
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel150 + i - 16);
+
+                }
+
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            }
+            int itemUpgradeMainStat = 0;
+            int itemUpgradeSubStat = 0;
+            int itemUpgradeAtMg = 0;
+            if (itemUpgrade == 100) {
+                itemUpgradeMainStat = 3 * 12;
+            } else if (itemUpgrade == 70) {
+                itemUpgradeMainStat = 4 * 12;
+
+            } else if (itemUpgrade == 30) {
+                itemUpgradeMainStat = 10 * 12;
+                itemUpgradeSubStat = 3 * 12;
+
+            } else if (itemUpgrade == 15) {
+                itemUpgradeMainStat = 14 * 12;
+                itemUpgradeSubStat = 4 * 12;
+
+            } else if (itemUpgrade == 33) {
+                itemUpgradeMainStat = 3 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 63) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 66) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 6 * 12;
             }
 
-            atMgPower = arcaneHatDTO.atMgPower + atMgIncrement;
-        } else if (arcaneHatDTO.getItemLevel() == 200 && starForce <23) {
-            mainStat = arcaneHatDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
+            mainStat = mainStat + itemUpgradeMainStat;
+            subStat = subStat + itemUpgradeSubStat;
+            atMgPower = atMgPower + itemUpgradeAtMg;
 
-            subStat = arcaneHatDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
-            atMgIncrement=0;
-            atMgIncrementAdd=0;
-            for (int i = 16; i <= starForce; i++) {
-                atMgIncrement += (atMgIncrementLevel200 + i - 16);
-            }
-  for (int i = 21; i <= starForce; i++) {
-      atMgIncrementAdd += (i-20)*2-1;
-            }
-
-
-            atMgPower = arcaneHatDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
-
-        }
-
-        else if (arcaneHatDTO.getItemLevel() == 200 && starForce < 26) {
-            mainStat = arcaneHatDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel200);
-            subStat = arcaneHatDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel200);
-            atMgIncrement=0;
-            for (int i = 16; i <= starForce; i++) {
-                atMgIncrement += (atMgIncrementLevel200 + i - 16);
-
-            }
-
-            for (int i = 21; i <= starForce; i++) {
-                atMgIncrementAdd += (i-20)*2-1;
-            }
-
-            atMgPower = arcaneHatDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
-
-
-
-        }
 // 계산된 능력치를 설정
-        arcaneHatDTO.setMainStat(mainStat);
-        arcaneHatDTO.setSubStat(subStat);
-        arcaneHatDTO.setAtMgPower(atMgPower);
+            hatStatInfoDTO.setMainStat(mainStat);
+            hatStatInfoDTO.setSubStat(subStat);
+            hatStatInfoDTO.setAtMgPower(atMgPower);
+        } else if (itemLevel == 160) {
+            if (starForce < 6) {
+                mainStat = hatStatInfoDTO.mainStat + starForce * statIncrementOneToFive;
+                subStat = hatStatInfoDTO.subStat + starForce * statIncrementOneToFive;
+                atMgPower = hatStatInfoDTO.atMgPower;
+            } else if (starForce < 16) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive)
 
-    }}
+                        + (starForce - 5) * statIncrementSixToFifteen;
+                subStat = hatStatInfoDTO.subStat + 10 + (starForce - 5) * statIncrementSixToFifteen;
+
+            } else if (starForce < 22) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel160;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel160;
+                atMgIncrement = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel160 + i - 16);
+                }
+
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement;
+            } else if (starForce < 23) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel160;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel160;
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel160 + i - 16);
+                }
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            } else if (starForce < 26) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel150);
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel150);
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel150 + i - 16);
+
+                }
+
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            }
+            int itemUpgradeMainStat = 0;
+            int itemUpgradeSubStat = 0;
+            int itemUpgradeAtMg = 0;
+            if (itemUpgrade == 100) {
+                itemUpgradeMainStat = 3 * 12;
+            } else if (itemUpgrade == 70) {
+                itemUpgradeMainStat = 4 * 12;
+
+            } else if (itemUpgrade == 30) {
+                itemUpgradeMainStat = 10 * 12;
+                itemUpgradeSubStat = 3 * 12;
+
+            } else if (itemUpgrade == 15) {
+                itemUpgradeMainStat = 14 * 12;
+                itemUpgradeSubStat = 4 * 12;
+
+            } else if (itemUpgrade == 33) {
+                itemUpgradeMainStat = 3 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 63) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 66) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 6 * 12;
+            }
+
+            mainStat = mainStat + itemUpgradeMainStat;
+            subStat = subStat + itemUpgradeSubStat;
+            atMgPower = atMgPower + itemUpgradeAtMg;
+
+// 계산된 능력치를 설정
+            hatStatInfoDTO.setMainStat(mainStat);
+            hatStatInfoDTO.setSubStat(subStat);
+            hatStatInfoDTO.setAtMgPower(atMgPower);
+        } else if (itemLevel == 200) {
+            if (starForce < 6) {
+                mainStat = hatStatInfoDTO.mainStat + starForce * statIncrementOneToFive;
+                subStat = hatStatInfoDTO.subStat + starForce * statIncrementOneToFive;
+                atMgPower = hatStatInfoDTO.atMgPower;
+            } else if (starForce < 16) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive)
+
+                        + (starForce - 5) * statIncrementSixToFifteen;
+                subStat = hatStatInfoDTO.subStat + 10 + (starForce - 5) * statIncrementSixToFifteen;
+
+            } else if (starForce < 22) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
+                atMgIncrement = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel200 + i - 16);
+                }
+
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement;
+            } else if (starForce < 23) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel200;
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel200 + i - 16);
+                }
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            } else if (starForce < 26) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel200);
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel200);
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel200 + i - 16);
+
+                }
+
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            }
+            int itemUpgradeMainStat = 0;
+            int itemUpgradeSubStat = 0;
+            int itemUpgradeAtMg = 0;
+            if (itemUpgrade == 100) {
+                itemUpgradeMainStat = 3 * 12;
+            } else if (itemUpgrade == 70) {
+                itemUpgradeMainStat = 4 * 12;
+
+            } else if (itemUpgrade == 30) {
+                itemUpgradeMainStat = 10 * 12;
+                itemUpgradeSubStat = 3 * 12;
+
+            } else if (itemUpgrade == 15) {
+                itemUpgradeMainStat = 14 * 12;
+                itemUpgradeSubStat = 4 * 12;
+
+            } else if (itemUpgrade == 33) {
+                itemUpgradeMainStat = 3 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 63) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 66) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 6 * 12;
+            }
+
+            mainStat = mainStat + itemUpgradeMainStat;
+            subStat = subStat + itemUpgradeSubStat;
+            atMgPower = atMgPower + itemUpgradeAtMg;
+
+// 계산된 능력치를 설정
+            hatStatInfoDTO.setMainStat(mainStat);
+            hatStatInfoDTO.setSubStat(subStat);
+            hatStatInfoDTO.setAtMgPower(atMgPower);
+
+
+        } else if (itemLevel == 250) {
+            if (starForce < 6) {
+                mainStat = hatStatInfoDTO.mainStat + starForce * statIncrementOneToFive;
+                subStat = hatStatInfoDTO.subStat + starForce * statIncrementOneToFive;
+                atMgPower = hatStatInfoDTO.atMgPower;
+            } else if (starForce < 16) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive)
+
+                        + (starForce - 5) * statIncrementSixToFifteen;
+                subStat = hatStatInfoDTO.subStat + 10 + (starForce - 5) * statIncrementSixToFifteen;
+
+            } else if (starForce < 22) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel250;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel250;
+                atMgIncrement = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel250 + i - 16);
+                }
+
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement;
+            } else if (starForce < 23) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel250;
+
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (starForce - 15) * statIncrementFifteenToTwentyTwoLevel250;
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel250 + i - 16);
+                }
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            } else if (starForce < 26) {
+                mainStat = hatStatInfoDTO.mainStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel250);
+                subStat = hatStatInfoDTO.subStat + (5 * statIncrementOneToFive) + (10 * statIncrementSixToFifteen) + (7 * statIncrementFifteenToTwentyTwoLevel250);
+                atMgIncrement = 0;
+                atMgIncrementAdd = 0;
+
+                for (int i = 16; i <= starForce; i++) {
+                    atMgIncrement += (atMgIncrementLevel250 + i - 16);
+
+                }
+
+                for (int i = 22; i <= starForce; i++) {
+                    atMgIncrementAdd += i - 21;
+                }
+                atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
+            }
+            int itemUpgradeMainStat = 0;
+            int itemUpgradeSubStat = 0;
+            int itemUpgradeAtMg = 0;
+            if (itemUpgrade == 100) {
+                itemUpgradeMainStat = 3 * 12;
+            } else if (itemUpgrade == 70) {
+                itemUpgradeMainStat = 4 * 12;
+
+            } else if (itemUpgrade == 30) {
+                itemUpgradeMainStat = 10 * 12;
+                itemUpgradeSubStat = 3 * 12;
+
+            } else if (itemUpgrade == 15) {
+                itemUpgradeMainStat = 14 * 12;
+                itemUpgradeSubStat = 4 * 12;
+
+            } else if (itemUpgrade == 33) {
+                itemUpgradeMainStat = 3 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 63) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 3 * 12;
+            } else if (itemUpgrade == 66) {
+                itemUpgradeMainStat = 6 * 12;
+                itemUpgradeAtMg = 6 * 12;
+            }
+
+            mainStat = mainStat + itemUpgradeMainStat;
+            subStat = subStat + itemUpgradeSubStat;
+            atMgPower = atMgPower + itemUpgradeAtMg;
+
+// 계산된 능력치를 설정
+            hatStatInfoDTO.setMainStat(mainStat);
+            hatStatInfoDTO.setSubStat(subStat);
+            hatStatInfoDTO.setAtMgPower(atMgPower);
+        }
+
+
+    }
+}

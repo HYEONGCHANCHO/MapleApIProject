@@ -8,7 +8,7 @@ import com.mapleApiTest.projectOne.domain.character.CharactersInfo;
 import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
 import com.mapleApiTest.projectOne.domain.character.CharactersKey;
 import com.mapleApiTest.projectOne.domain.character.CharactersStatInfo;
-import com.mapleApiTest.projectOne.dto.ItemInfo.ArcaneHatDTO;
+import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
 import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
@@ -1451,22 +1451,102 @@ public class CharacterService {
 
         criticalDamageBaseBD = criticalDamageBaseBD.setScale(2, RoundingMode.HALF_UP);
 
-        System.out.println(addAllStat);
-        System.out.println(addBossDamage);
-        System.out.println(addAtMgPower);
-        System.out.println(petAtMgPower);
-        System.out.println(mainStatNonPer);
-        System.out.println(subStatNonPer);
-        System.out.println(mainStatBase);
-        System.out.println(mainStatPerBase);
-        System.out.println(subStatBase);
-        System.out.println(subStatPerBase);
-        System.out.println(atMgPowerBase);
-        System.out.println(atMgPowerPerBase);
-        System.out.println(criticalDamageBase);
-        System.out.println(criticalDamageBaseBD);
-        System.out.println(DamageBase);
-        System.out.println(BossDamageBase);
+
+        Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(re.getCharactersName(), re.getDate());
+        if (charactersItemEquipOptional.isPresent()) {
+            CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+            JsonNode jsonInfo = null;
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+            int weaponAttactPowerBase = jsonInfo.get("item_base_option").get("attack_power").asInt();
+            int weaponAttactPowerAdd = jsonInfo.get("item_add_option").get("attack_power").asInt();
+            int weaponAttackPowerStarforce = jsonInfo.get("item_starforce_option").get("attack_power").asInt();
+            int weaponStarforce = jsonInfo.get("starforce").asInt();
+
+
+            int arcaneBowBaseAt = 276;
+            int arcaneBowTwoAdd = 133;
+            int arcaneBowStarforce18 = 173;
+
+            if (weaponAttactPowerAdd == 106) {
+                atMgPowerBase = atMgPowerBase - weaponAttactPowerBase - weaponAttactPowerAdd - weaponAttackPowerStarforce + arcaneBowBaseAt + arcaneBowTwoAdd + arcaneBowStarforce18;
+            }
+            Double finalMainStat = null;
+            Double finalSubStat = null;
+            Double finalStat = null;
+            Double finalAtMgPower = null;
+            Double finalCriticalDamage = null;
+            Double finalDamage = null;
+            Double finalBossDamage = null;
+            Double finalCombatE = null;
+
+            if (request.isFree()) {
+                finalDamage = 1.1;
+            } else {
+                finalDamage = 1.0;
+            }
+
+            finalMainStat = Math.floor((mainStatBase) * ((100 + mainStatPerBase) / 100.0) + mainStatNonPer);
+            finalSubStat = Math.floor((subStatBase) * ((100 + subStatPerBase) / 100.0) + subStatNonPer);
+            finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+            finalAtMgPower = Math.floor(atMgPowerBase * ((100 + atMgPowerPerBase) / 100.0));
+            finalCriticalDamage = (135 + criticalDamageBase) / 100.0;
+            finalBossDamage = (100 + DamageBase + BossDamageBase + addBossDamage) / 100.0;
+
+            finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+            BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
+            String finalCombat = finalCombatBD.toPlainString();
+            System.out.println(finalCombat+"변경전");
+
+            return finalCombat;
+        }
+        return null;
+    }
+
+
+    @Async("characterThreadPool")
+    @Transactional
+    public void getEquipSimulation(int itemLevel,int starForce, int itemUpgrade) {
+
+        ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
+        HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
+
+        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel);
+        System.out.println(hatStatInfoDTO.getMainStat());
+        System.out.println(hatStatInfoDTO.getSubStat());
+        System.out.println(hatStatInfoDTO.getAtMgPower());
+    }
+
+    @Async("characterThreadPool")
+    @Transactional
+    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re,int itemLevel,int starForce,int itemUpgrade
+    ) {
+
+        int addAllStat = request.getAddAllStat();
+        Double addBossDamage = request.getAddBossDamage();
+        int addAtMgPower = request.getAddAtMgPower();
+        int petAtMgPower = request.getPetAtMgPower();
+        int mainStatNonPer = request.getMainStatNonPer();
+        int subStatNonPer = request.getSubStatNonPer();
+        int mainStatBase = request.getMainStatBase() - request.getMainStatSkill() + addAllStat;
+        int mainStatPerBase = request.getMainStatPerBase() - request.getMainStatPerSkill();
+        int subStatBase = request.getSubStatBase() - request.getSubStatSkill() + addAllStat;
+        int subStatPerBase = request.getSubStatPerBase() - request.getSubStatPerSkill();
+        int atMgPowerBase = request.getAtMgPowerBase() - request.getAtMgPowerSkill() + addAtMgPower + petAtMgPower + 30;
+        int atMgPowerPerBase = request.getAtMgPowerPerBase() - request.getAtMgPowerPerSkill();
+        Double criticalDamageBase = request.getCriticalDamageBase() - request.getCriticalDamageSkill();
+        Double DamageBase = request.getDamageBase() - request.getDamageSkill();
+        Double BossDamageBase = request.getBossDamageBase() - request.getBossDamageSkill();
+
+
+        BigDecimal criticalDamageBaseBD = BigDecimal.valueOf(criticalDamageBase);
+
+        criticalDamageBaseBD = criticalDamageBaseBD.setScale(2, RoundingMode.HALF_UP);
 
 
         Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersNameAndDate(re.getCharactersName(), re.getDate());
@@ -1485,11 +1565,6 @@ public class CharacterService {
             int weaponAttackPowerStarforce = jsonInfo.get("item_starforce_option").get("attack_power").asInt();
             int weaponStarforce = jsonInfo.get("starforce").asInt();
 
-            System.out.println(weaponAttactPowerBase);
-
-            System.out.println(weaponAttactPowerAdd);
-            System.out.println(weaponAttackPowerStarforce);
-            System.out.println(weaponStarforce);
 
             int arcaneBowBaseAt = 276;
             int arcaneBowTwoAdd = 133;
@@ -1498,9 +1573,6 @@ public class CharacterService {
             if (weaponAttactPowerAdd == 106) {
                 atMgPowerBase = atMgPowerBase - weaponAttactPowerBase - weaponAttactPowerAdd - weaponAttackPowerStarforce + arcaneBowBaseAt + arcaneBowTwoAdd + arcaneBowStarforce18;
             }
-            System.out.println(atMgPowerBase);
-
-
             Double finalMainStat = null;
             Double finalSubStat = null;
             Double finalStat = null;
@@ -1516,8 +1588,6 @@ public class CharacterService {
                 finalDamage = 1.0;
             }
 
-            System.out.println(finalDamage);
-
             finalMainStat = Math.floor((mainStatBase) * ((100 + mainStatPerBase) / 100.0) + mainStatNonPer);
             finalSubStat = Math.floor((subStatBase) * ((100 + subStatPerBase) / 100.0) + subStatNonPer);
             finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
@@ -1526,121 +1596,28 @@ public class CharacterService {
             finalBossDamage = (100 + DamageBase + BossDamageBase + addBossDamage) / 100.0;
 
             finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
-            System.out.println(finalMainStat);
-            System.out.println(finalSubStat);
-            System.out.println(finalStat);
-            System.out.println(finalAtMgPower);
-            System.out.println(finalCriticalDamage);
-            System.out.println(finalBossDamage);
-            System.out.println(finalCombatE);
-
             BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
             String finalCombat = finalCombatBD.toPlainString();
-            System.out.println(finalCombat);
-//
-//
-//            int mainStatChange = 0;
-//            int subStatChange = 0;
-//            int atMgPowerChange = 0;
-//            int mainStatChange = 0;
-//            int mainStatChange = 0;
 
 
+            System.out.println(finalCombat+"변경후");
             return finalCombat;
-
-
         }
-
         return null;
     }
 
 
-    @Async("characterThreadPool")
-    @Transactional
-    public void getEquipSimulation() {
-
-        ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
-        ArcaneHatDTO arcaneHatDTO = new ArcaneHatDTO();
-
-        int starForce;
-        starForce = 4;
-        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
-        System.out.println(arcaneHatDTO.getMainStat());
-        System.out.println(arcaneHatDTO.getSubStat());
-        System.out.println(arcaneHatDTO.getAtMgPower());
-        arcaneHatDTO.setMainStat(65);
-        arcaneHatDTO.setSubStat(65);
-        arcaneHatDTO.setAtMgPower(7);
-
-        starForce = 17;
-        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
-        System.out.println(arcaneHatDTO.getMainStat());
-        System.out.println(arcaneHatDTO.getSubStat());
-        System.out.println(arcaneHatDTO.getAtMgPower());
-        System.out.println("맞는거"+32);
-        arcaneHatDTO.setMainStat(65);
-        arcaneHatDTO.setSubStat(65);
-        arcaneHatDTO.setAtMgPower(7);
-        starForce = 22;
-        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
-        System.out.println(arcaneHatDTO.getMainStat());
-        System.out.println(arcaneHatDTO.getSubStat());
-        System.out.println(arcaneHatDTO.getAtMgPower());
-        System.out.println("맞는거"+113);
-
-        arcaneHatDTO.setMainStat(65);
-        arcaneHatDTO.setSubStat(65);
-        arcaneHatDTO.setAtMgPower(7);
-        starForce = 23;
-        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
-        System.out.println(arcaneHatDTO.getMainStat());
-        System.out.println(arcaneHatDTO.getSubStat());
-        System.out.println(arcaneHatDTO.getAtMgPower());
-        System.out.println("맞는거"+134);
-
-        arcaneHatDTO.setMainStat(65);
-        arcaneHatDTO.setSubStat(65);
-        arcaneHatDTO.setAtMgPower(7);
-        starForce = 24;
-        itemSimulationDTO.calculateEquipmentStats(arcaneHatDTO, starForce);
-        System.out.println(arcaneHatDTO.getMainStat());
-        System.out.println(arcaneHatDTO.getSubStat());
-        System.out.println(arcaneHatDTO.getAtMgPower());
-        System.out.println("맞는거"+157);
-
-        arcaneHatDTO.setMainStat(65);
-        arcaneHatDTO.setSubStat(65);
-        arcaneHatDTO.setAtMgPower(7);
 
 
-    }
+
+
+
+
+
+
 
 }
 
 
-//    public void someServiceMethod(GetCharactersInfo request) {
-//        CompletableFuture<CharactersHatInfoDTO> hatInfoFuture = getCharactersHatInfo(request);
-//        CompletableFuture<CharactersTopInfoDTO> TopInfoFuture = getCharactersTopInfo(request);
-//
-//
-//        int[] totalEquipStr = {0};
-//        int[] totalEquipDex = {0};
-//        int[] totalEquipIntel = {0};
-//        int[] totalEquipLuk = {0};
-//        int[] totalEquipAttactPower = {0};
-//        int[] totalEquipMagicPower = {0};
-//
-//        hatInfoFuture.thenAccept(charactersHatInfoDTO -> {
-//            int EquipStr = charactersHatInfoDTO.getStr();
-//            totalEquipStr[0] += EquipStr;
-//        }).join();
-//
-//        TopInfoFuture.thenAccept(charactersTopInfoDTO -> {
-//            int EquipStr = charactersTopInfoDTO.getStr();
-//            totalEquipStr[0] += EquipStr;
-//        }).join();
-//
-//
-//    }
 
 
