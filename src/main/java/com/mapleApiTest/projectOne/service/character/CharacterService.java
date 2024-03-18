@@ -1511,7 +1511,7 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public void getEquipSimulation(int itemLevel,int starForce, int itemUpgrade) {
+    public HatStatInfoDTO getEquipSimulation(int itemLevel,int starForce, int itemUpgrade) {
 
         ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
         HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
@@ -1520,6 +1520,7 @@ public class CharacterService {
         System.out.println(hatStatInfoDTO.getMainStat());
         System.out.println(hatStatInfoDTO.getSubStat());
         System.out.println(hatStatInfoDTO.getAtMgPower());
+        return hatStatInfoDTO;
     }
 
     @Async("characterThreadPool")

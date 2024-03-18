@@ -1,5 +1,6 @@
 package com.mapleApiTest.projectOne.controller.character;
 
+import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
 import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
 import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -123,28 +125,35 @@ public class CharacterController {
 
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
         HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
-        final int[] mainStat = new int[1];
-        final int[] subStat = new int[1];
-        final int[] atMgPower = new int[1];
-        int ChangedmainStatBase;
-        int ChangedsubStatBase;
-        int ChangedatMgPowerBase;
+
+        int ChangedmainStatBase=0;
+        int ChangedsubStatBase=0;
+        int ChangedatMgPowerBase=0;
+
         CompletableFuture<CharactersHatInfoDTO> future = characterService.getCharactersHatInfo(getCharactersInfo);
-        future.thenAccept(hatInfo -> {
-            // heartInfo에서 필요한 필드 값을 추출하여 사용합니다.
-            mainStat[0] = hatInfo.getStr();
-            subStat[0] = hatInfo.getDex();
-            atMgPower[0] = hatInfo.getAttactPower();
-        });
+        CharactersHatInfoDTO hatInfo = future.join();
 
-        System.out.println(mainStat[0]+"dsdsdsd");
-        System.out.println(subStat[0]+"dsdsdsd");
-        System.out.println(atMgPower[0]+"dsdsdsd");
+            // DTO에서 필요한 필드 값을 가져와서 변수로 사용합니다.
+            int mainStat = hatInfo.getStr();
+            int subStat = hatInfo.getDex();
+            int atMgPower = hatInfo.getAttactPower();
 
-        characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade);
-        ChangedmainStatBase = mainStatBase + (hatStatInfoDTO.getMainStat() - mainStat[0]);
-        ChangedsubStatBase = subStatBase + (hatStatInfoDTO.getSubStat() - subStat[0]);
-        ChangedatMgPowerBase = atMgPowerBase + (hatStatInfoDTO.getAtMgPower() - atMgPower[0]);
+
+        System.out.println(mainStat+"dsdsdsd");
+        System.out.println(subStat+"dsdsdsd");
+        System.out.println(atMgPower+"dsdsdsd");
+
+        hatStatInfoDTO=characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade);
+
+        System.out.println(hatStatInfoDTO.getMainStat()+"ㅁㄴㅁㄴㄴ12222");
+        System.out.println(hatStatInfoDTO.getSubStat()+"ㅁㄴ2ㅁㄴ22");
+        System.out.println(hatStatInfoDTO.getAtMgPower()+"ㅁㄴㅁㄴ22");
+
+
+
+        ChangedmainStatBase = mainStatBase + (hatStatInfoDTO.getMainStat() - mainStat);
+        ChangedsubStatBase = subStatBase + (hatStatInfoDTO.getSubStat() - subStat);
+        ChangedatMgPowerBase = atMgPowerBase + (hatStatInfoDTO.getAtMgPower() - atMgPower);
 
         System.out.println(ChangedmainStatBase+"dsdsdsd1");
         System.out.println(ChangedsubStatBase+"dsdsdsd1");
