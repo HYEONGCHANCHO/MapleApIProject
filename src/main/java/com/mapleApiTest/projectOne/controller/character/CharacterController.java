@@ -112,54 +112,59 @@ public class CharacterController {
     }
 
 
-    @GetMapping("/equipSimulation")
-    public void getEquipSimulation(@RequestParam int itemLevel, int starForce, int itemUpgrade) {
-
-        characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade);
-
-    }
+//    @GetMapping("/equipSimulation")
+//    public void getEquipSimulation(@RequestParam int itemLevel, int starForce, int itemUpgrade,int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
+//
+//        characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade,addOptionStat,potentialTotalMainStatPer,potentialTotalSubStatPer,potentialTotalAtMgPower);
+//
+//    }
 
 
     @GetMapping("/charactersChangeBaseInfo")
-    public String getCharactersChangeCombat(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree, int itemLevel, int starForce, int itemUpgrade) {
+    public String getCharactersChangeCombat(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree, int itemLevel, int starForce, int itemUpgrade,int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
 
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-        HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
+//        HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
 
-        int ChangedmainStatBase=0;
-        int ChangedsubStatBase=0;
-        int ChangedatMgPowerBase=0;
+        int changedMainStatBase;
+        int changedSubStatBase;
+        int changedAtMgPowerBase;
 
         CompletableFuture<CharactersHatInfoDTO> future = characterService.getCharactersHatInfo(getCharactersInfo);
         CharactersHatInfoDTO hatInfo = future.join();
 
-            // DTO에서 필요한 필드 값을 가져와서 변수로 사용합니다.
-            int mainStat = hatInfo.getStr();
-            int subStat = hatInfo.getDex();
-            int atMgPower = hatInfo.getAttactPower();
+        // DTO에서 필요한 필드 값을 가져와서 변수로 사용합니다.
+        int charactersHatMainStat = hatInfo.getStr();
+        int charactersHatSubStat = hatInfo.getDex();
+        int charactersHatAtMgPower = hatInfo.getAttactPower();
 
 
-        System.out.println(mainStat+"dsdsdsd");
-        System.out.println(subStat+"dsdsdsd");
-        System.out.println(atMgPower+"dsdsdsd");
+        System.out.println(charactersHatMainStat + "dsdsdsd");
+        System.out.println(charactersHatSubStat + "dsdsdsd");
+        System.out.println(charactersHatAtMgPower + "dsdsdsd");
 
-        hatStatInfoDTO=characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade);
+        CompletableFuture<HatStatInfoDTO> futureHat = characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade,addOptionStat,potentialTotalMainStatPer,potentialTotalSubStatPer,potentialTotalAtMgPower);
 
-        System.out.println(hatStatInfoDTO.getMainStat()+"ㅁㄴㅁㄴㄴ12222");
-        System.out.println(hatStatInfoDTO.getSubStat()+"ㅁㄴ2ㅁㄴ22");
-        System.out.println(hatStatInfoDTO.getAtMgPower()+"ㅁㄴㅁㄴ22");
+        HatStatInfoDTO newHatInfo = futureHat.join();
+        int newHatMainStat = newHatInfo.getMainStat();
+        int newHatSubStat = newHatInfo.getSubStat();
+        int newHatAtMgPower = newHatInfo.getAtMgPower();
 
 
+        System.out.println(newHatMainStat + "ㅁㄴㅁㄴㄴ12222");
+        System.out.println(newHatSubStat + "ㅁㄴ2ㅁㄴ22");
+        System.out.println(newHatAtMgPower + "ㅁㄴㅁㄴ22");
 
-        ChangedmainStatBase = mainStatBase + (hatStatInfoDTO.getMainStat() - mainStat);
-        ChangedsubStatBase = subStatBase + (hatStatInfoDTO.getSubStat() - subStat);
-        ChangedatMgPowerBase = atMgPowerBase + (hatStatInfoDTO.getAtMgPower() - atMgPower);
 
-        System.out.println(ChangedmainStatBase+"dsdsdsd1");
-        System.out.println(ChangedsubStatBase+"dsdsdsd1");
-        System.out.println(ChangedatMgPowerBase+"dsdsdsd1");
+        changedMainStatBase = mainStatBase + (newHatMainStat - charactersHatMainStat);
+        changedSubStatBase = subStatBase + (newHatSubStat - charactersHatSubStat);
+        changedAtMgPowerBase = atMgPowerBase + (newHatAtMgPower - charactersHatAtMgPower);
 
-        GetCharactersTotalChangedInfoDTO getCharactersTotalChangedInfoDTO = new GetCharactersTotalChangedInfoDTO(addAllStat, addBossDamage, addAtMgPower, petAtMgPower, ChangedmainStatBase, mainStatSkill, mainStatPerBase, mainStatPerSkill, mainStatNonPer, ChangedsubStatBase, subStatSkill, subStatPerBase, subStatPerSkill, subStatNonPer, ChangedatMgPowerBase, atMgPowerSkill, atMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
+        System.out.println(changedMainStatBase + "dsdsdsd1");
+        System.out.println(changedSubStatBase + "dsdsdsd1");
+        System.out.println(changedAtMgPowerBase + "dsdsdsd1");
+
+        GetCharactersTotalChangedInfoDTO getCharactersTotalChangedInfoDTO = new GetCharactersTotalChangedInfoDTO(addAllStat, addBossDamage, addAtMgPower, petAtMgPower, changedMainStatBase, mainStatSkill, mainStatPerBase, mainStatPerSkill, mainStatNonPer, changedSubStatBase, subStatSkill, subStatPerBase, subStatPerSkill, subStatNonPer, changedAtMgPowerBase, atMgPowerSkill, atMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
 
 
         return characterService.getCharactersChangeCombat(getCharactersTotalChangedInfoDTO, getCharactersInfo, itemLevel, starForce, itemUpgrade);

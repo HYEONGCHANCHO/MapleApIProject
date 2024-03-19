@@ -19,6 +19,62 @@ public class HatStatInfoDTO {
     String additionalOne;
     String additionalTwo;
     String additionalThree;
+
+    int potentialTotalMainStatPer;
+    int potentialTotalSubStatPer;
+    int potentialTotalMainStat;
+    int potentialTotalSubStat;
+    int potentialTotalAtMgPower;
+    int potentialTotalAtMgPowerPer;
+
+    public void setPotentialTotalMainStatPer(int potentialTotalMainStatPer) {
+        this.potentialTotalMainStatPer = potentialTotalMainStatPer;
+    }
+
+    public void setPotentialTotalSubStatPer(int potentialTotalSubStatPer) {
+        this.potentialTotalSubStatPer = potentialTotalSubStatPer;
+    }
+
+    public void setPotentialTotalMainStat(int potentialTotalMainStat) {
+        this.potentialTotalMainStat = potentialTotalMainStat;
+    }
+
+    public void setPotentialTotalSubStat(int potentialTotalSubStat) {
+        this.potentialTotalSubStat = potentialTotalSubStat;
+    }
+
+    public void setPotentialTotalAtMgPower(int potentialTotalAtMgPower) {
+        this.potentialTotalAtMgPower = potentialTotalAtMgPower;
+    }
+
+    public void setPotentialTotalAtMgPowerPer(int potentialTotalAtMgPowerPer) {
+        this.potentialTotalAtMgPowerPer = potentialTotalAtMgPowerPer;
+    }
+
+    public int getPotentialTotalMainStatPer() {
+        return potentialTotalMainStatPer;
+    }
+
+    public int getPotentialTotalSubStatPer() {
+        return potentialTotalSubStatPer;
+    }
+
+    public int getPotentialTotalMainStat() {
+        return potentialTotalMainStat;
+    }
+
+    public int getPotentialTotalSubStat() {
+        return potentialTotalSubStat;
+    }
+
+    public int getPotentialTotalAtMgPower() {
+        return potentialTotalAtMgPower;
+    }
+
+    public int getPotentialTotalAtMgPowerPer() {
+        return potentialTotalAtMgPowerPer;
+    }
+
     JsonNode excetional;
     String soul;
 

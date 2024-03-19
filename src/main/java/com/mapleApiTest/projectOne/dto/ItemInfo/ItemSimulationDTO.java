@@ -27,7 +27,74 @@ public class ItemSimulationDTO {
     int atMgIncrement;
     int atMgIncrementAdd;
 
-    public void calculateEquipmentStats(HatStatInfoDTO hatStatInfoDTO, int starForce, int itemUpgrade, int itemLevel) {
+    public void calculateEquipmentStats(HatStatInfoDTO hatStatInfoDTO, int starForce, int itemUpgrade, int itemLevel, int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
+
+        int itemUpgradeMainStat = 0;
+        int itemUpgradeSubStat = 0;
+        int itemUpgradeAtMg = 0;
+        if (itemUpgrade == 100) {
+            itemUpgradeMainStat = 3 * 12;
+        } else if (itemUpgrade == 70) {
+            itemUpgradeMainStat = 4 * 12;
+
+        } else if (itemUpgrade == 30) {
+            itemUpgradeMainStat = 10 * 12;
+            itemUpgradeSubStat = 3 * 12;
+
+        } else if (itemUpgrade == 15) {
+            itemUpgradeMainStat = 14 * 12;
+            itemUpgradeSubStat = 4 * 12;
+
+        } else if (itemUpgrade == 33) {
+            itemUpgradeMainStat = 3 * 12;
+            itemUpgradeAtMg = 3 * 12;
+        } else if (itemUpgrade == 63) {
+            itemUpgradeMainStat = 6 * 12;
+            itemUpgradeAtMg = 3 * 12;
+        } else if (itemUpgrade == 66) {
+            itemUpgradeMainStat = 6 * 12;
+            itemUpgradeAtMg = 6 * 12;
+        }
+
+        int itemAddOptionMainStat = 0;
+        int itemAddOptionAllStat = 0;
+        int itemAddOptionAtMg = 0;
+
+        if(addOptionStat == 100){
+            itemAddOptionMainStat = 60;
+            itemAddOptionAllStat =4;
+        } else if(addOptionStat == 110){
+            itemAddOptionMainStat = 70;
+            itemAddOptionAllStat =4;
+        } else if(addOptionStat == 120){
+            itemAddOptionMainStat = 70;
+            itemAddOptionAllStat =5;
+        } else if(addOptionStat == 130){
+            itemAddOptionMainStat = 80;
+            itemAddOptionAllStat =5;
+        } else if(addOptionStat == 140){
+            itemAddOptionMainStat = 80;
+            itemAddOptionAllStat =6;
+        } else if(addOptionStat == 150){
+            itemAddOptionMainStat = 90;
+            itemAddOptionAllStat =6;
+        } else if(addOptionStat == 160){
+            itemAddOptionMainStat = 90;
+            itemAddOptionAllStat =7;
+        } else if(addOptionStat == 170){
+            itemAddOptionMainStat = 100;
+            itemAddOptionAllStat =7;
+        } else if(addOptionStat == 180){
+            itemAddOptionMainStat = 110;
+            itemAddOptionAllStat =7;
+        } else if(addOptionStat == 190){
+            itemAddOptionMainStat = 120;
+            itemAddOptionAllStat =7;
+        } else if(addOptionStat == 200){
+            itemAddOptionMainStat = 130;
+            itemAddOptionAllStat =7;
+        }
+
 
         if (itemLevel == 150) {
             if (starForce < 6) {
@@ -80,38 +147,13 @@ public class ItemSimulationDTO {
                 }
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
-            int itemUpgradeMainStat = 0;
-            int itemUpgradeSubStat = 0;
-            int itemUpgradeAtMg = 0;
-            if (itemUpgrade == 100) {
-                itemUpgradeMainStat = 3 * 12;
-            } else if (itemUpgrade == 70) {
-                itemUpgradeMainStat = 4 * 12;
 
-            } else if (itemUpgrade == 30) {
-                itemUpgradeMainStat = 10 * 12;
-                itemUpgradeSubStat = 3 * 12;
 
-            } else if (itemUpgrade == 15) {
-                itemUpgradeMainStat = 14 * 12;
-                itemUpgradeSubStat = 4 * 12;
-
-            } else if (itemUpgrade == 33) {
-                itemUpgradeMainStat = 3 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 63) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 66) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 6 * 12;
-            }
-
-            mainStat = mainStat + itemUpgradeMainStat;
+            mainStat = mainStat + itemUpgradeMainStat + itemAddOptionMainStat;
             subStat = subStat + itemUpgradeSubStat;
             atMgPower = atMgPower + itemUpgradeAtMg;
-
-// 계산된 능력치를 설정
+//
+//// 계산된 능력치를 설정
             hatStatInfoDTO.setMainStat(mainStat);
             hatStatInfoDTO.setSubStat(subStat);
             hatStatInfoDTO.setAtMgPower(atMgPower);
@@ -166,34 +208,8 @@ public class ItemSimulationDTO {
                 }
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
-            int itemUpgradeMainStat = 0;
-            int itemUpgradeSubStat = 0;
-            int itemUpgradeAtMg = 0;
-            if (itemUpgrade == 100) {
-                itemUpgradeMainStat = 3 * 12;
-            } else if (itemUpgrade == 70) {
-                itemUpgradeMainStat = 4 * 12;
 
-            } else if (itemUpgrade == 30) {
-                itemUpgradeMainStat = 10 * 12;
-                itemUpgradeSubStat = 3 * 12;
-
-            } else if (itemUpgrade == 15) {
-                itemUpgradeMainStat = 14 * 12;
-                itemUpgradeSubStat = 4 * 12;
-
-            } else if (itemUpgrade == 33) {
-                itemUpgradeMainStat = 3 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 63) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 66) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 6 * 12;
-            }
-
-            mainStat = mainStat + itemUpgradeMainStat;
+            mainStat = mainStat + itemUpgradeMainStat+ itemAddOptionMainStat;
             subStat = subStat + itemUpgradeSubStat;
             atMgPower = atMgPower + itemUpgradeAtMg;
 
@@ -252,34 +268,7 @@ public class ItemSimulationDTO {
                 }
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
-            int itemUpgradeMainStat = 0;
-            int itemUpgradeSubStat = 0;
-            int itemUpgradeAtMg = 0;
-            if (itemUpgrade == 100) {
-                itemUpgradeMainStat = 3 * 12;
-            } else if (itemUpgrade == 70) {
-                itemUpgradeMainStat = 4 * 12;
-
-            } else if (itemUpgrade == 30) {
-                itemUpgradeMainStat = 10 * 12;
-                itemUpgradeSubStat = 3 * 12;
-
-            } else if (itemUpgrade == 15) {
-                itemUpgradeMainStat = 14 * 12;
-                itemUpgradeSubStat = 4 * 12;
-
-            } else if (itemUpgrade == 33) {
-                itemUpgradeMainStat = 3 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 63) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 66) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 6 * 12;
-            }
-
-            mainStat = mainStat + itemUpgradeMainStat;
+            mainStat = mainStat + itemUpgradeMainStat+ itemAddOptionMainStat;
             subStat = subStat + itemUpgradeSubStat;
             atMgPower = atMgPower + itemUpgradeAtMg;
 
@@ -340,34 +329,8 @@ public class ItemSimulationDTO {
                 }
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
-            int itemUpgradeMainStat = 0;
-            int itemUpgradeSubStat = 0;
-            int itemUpgradeAtMg = 0;
-            if (itemUpgrade == 100) {
-                itemUpgradeMainStat = 3 * 12;
-            } else if (itemUpgrade == 70) {
-                itemUpgradeMainStat = 4 * 12;
 
-            } else if (itemUpgrade == 30) {
-                itemUpgradeMainStat = 10 * 12;
-                itemUpgradeSubStat = 3 * 12;
-
-            } else if (itemUpgrade == 15) {
-                itemUpgradeMainStat = 14 * 12;
-                itemUpgradeSubStat = 4 * 12;
-
-            } else if (itemUpgrade == 33) {
-                itemUpgradeMainStat = 3 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 63) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 3 * 12;
-            } else if (itemUpgrade == 66) {
-                itemUpgradeMainStat = 6 * 12;
-                itemUpgradeAtMg = 6 * 12;
-            }
-
-            mainStat = mainStat + itemUpgradeMainStat;
+            mainStat = mainStat + itemUpgradeMainStat+ itemAddOptionMainStat;
             subStat = subStat + itemUpgradeSubStat;
             atMgPower = atMgPower + itemUpgradeAtMg;
 
@@ -375,6 +338,11 @@ public class ItemSimulationDTO {
             hatStatInfoDTO.setMainStat(mainStat);
             hatStatInfoDTO.setSubStat(subStat);
             hatStatInfoDTO.setAtMgPower(atMgPower);
+            hatStatInfoDTO.setAllStat(hatStatInfoDTO.getAllStat()+itemAddOptionAllStat);
+            hatStatInfoDTO.setPotentialTotalMainStatPer(potentialTotalMainStatPer+itemAddOptionAllStat);
+            hatStatInfoDTO.setPotentialTotalSubStatPer(potentialTotalSubStatPer+itemAddOptionAllStat);
+            hatStatInfoDTO.setPotentialTotalAtMgPower(potentialTotalAtMgPower);
+
         }
 
 

@@ -352,6 +352,36 @@ public class CharacterService {
                 }
                 CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
                 );
+
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialOne()); ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialTwo()); ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialThree()); ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalOne()); ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalTwo()); ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalThree()); ;
+
+                int hatStrPotentialPer=charactersHatInfoDTO.getStrPotentialPer();
+                int hatDexPotentialPer=charactersHatInfoDTO.getDexPotentialPer() ;
+                int hatIntPotentialPer=charactersHatInfoDTO.getIntPotentialPer() ;
+                int hatLukPotentialPer=charactersHatInfoDTO.getLukPotentialPer() ;
+                int hatAllStatPotentialPer=charactersHatInfoDTO.getAllStatPotentialPer() ;
+                int hatStrPotentialStat=charactersHatInfoDTO.getStrPotentialStat() ;
+                int hatDexPotentialStat=charactersHatInfoDTO.getDexPotentialStat() ;
+                int hatIntPotentialStat=charactersHatInfoDTO.getIntPotentialStat() ;
+                int hatLukPotentialStat=charactersHatInfoDTO.getLukPotentialStat() ;
+                int hatAtMgPotentialPer=charactersHatInfoDTO.getAtMgPotentialPer() ;
+                int hatAtMgPotentialStat=charactersHatInfoDTO.getAtMgPotentialStat() ;
+
+                System.out.println("hatStrPotentialPer"+hatStrPotentialPer);
+                System.out.println("hatDexPotentialPer"+hatDexPotentialPer);
+                System.out.println("hatAllStatPotentialPer"+hatAllStatPotentialPer);
+                System.out.println("hatAtMgPotentialStat"+hatAtMgPotentialStat);
+                System.out.println("hatStrPotentialStat"+hatStrPotentialStat);
+                System.out.println("hatDexPotentialStat"+hatDexPotentialStat);
+
+
+
+
                 return CompletableFuture.completedFuture(charactersHatInfoDTO);
             } else {
                 return null;
@@ -1415,6 +1445,9 @@ public class CharacterService {
                         jsonInfo.get("soul_option").asText()
                 );
 
+
+
+
                 return CompletableFuture.completedFuture(charactersHeartInfoDTO);
             } else {
                 return null;
@@ -1511,16 +1544,16 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public HatStatInfoDTO getEquipSimulation(int itemLevel,int starForce, int itemUpgrade) {
+    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel,int starForce, int itemUpgrade,int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
 
         ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
         HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
 
-        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel);
-        System.out.println(hatStatInfoDTO.getMainStat());
+        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel,addOptionStat,potentialTotalMainStatPer,potentialTotalSubStatPer,potentialTotalAtMgPower);
+        System.out.println(hatStatInfoDTO.getMainStat()+"dadadadadadad");
         System.out.println(hatStatInfoDTO.getSubStat());
         System.out.println(hatStatInfoDTO.getAtMgPower());
-        return hatStatInfoDTO;
+        return CompletableFuture.completedFuture(hatStatInfoDTO);
     }
 
     @Async("characterThreadPool")
