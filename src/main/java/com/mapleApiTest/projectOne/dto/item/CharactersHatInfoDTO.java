@@ -101,7 +101,6 @@ public class CharactersHatInfoDTO {
         this.potentialThree = potentialThree;
         this.additionalOne = additionalOne;
         this.additionalTwo = additionalTwo;
-        this.additionalTwo = additionalTwo;
         this.additionalThree = additionalThree;
         this.excetional = excetional;
         this.soul = soul;
@@ -141,7 +140,7 @@ public class CharactersHatInfoDTO {
                     default:
                         break;
                 }
-            }
+            } else {
 
             int number = Integer.parseInt(lastPart);
 
@@ -164,7 +163,7 @@ public class CharactersHatInfoDTO {
                 default:
                     break;
             }
-        }
+        }}
     }
 
 

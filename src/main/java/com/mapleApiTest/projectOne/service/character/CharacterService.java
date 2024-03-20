@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -1544,15 +1545,26 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel,int starForce, int itemUpgrade,int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
+    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel,int starForce, int itemUpgrade,int addOptionStat,int potentialNewMainStatPer,int potentialNewSubStatPer,int potentialNewAtMgPowerPer,int potentialNewMainStat,int potentialNewSubStat,int potentialNewAtMgPowerStat) {
 
         ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
         HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
 
-        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel,addOptionStat,potentialTotalMainStatPer,potentialTotalSubStatPer,potentialTotalAtMgPower);
+        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel,addOptionStat,potentialNewMainStatPer,potentialNewSubStatPer,potentialNewAtMgPowerPer,potentialNewMainStat,potentialNewSubStat,potentialNewAtMgPowerStat);
+
         System.out.println(hatStatInfoDTO.getMainStat()+"dadadadadadad");
         System.out.println(hatStatInfoDTO.getSubStat());
         System.out.println(hatStatInfoDTO.getAtMgPower());
+        System.out.println(hatStatInfoDTO.getAllStatPer()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalMainStatPer()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalSubStatPer()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalMainStat()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalSubStat()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPowerPer()+"dadadadadadad");
+
+
         return CompletableFuture.completedFuture(hatStatInfoDTO);
     }
 
@@ -1639,10 +1651,6 @@ public class CharacterService {
         }
         return null;
     }
-
-
-
-
 
 
 

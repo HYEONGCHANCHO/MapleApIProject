@@ -1,5 +1,6 @@
 package com.mapleApiTest.projectOne.controller.character;
 
+import com.mapleApiTest.dropItemChoice.Service.DropItemChoiceService;
 import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
 import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
 import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
@@ -121,54 +122,88 @@ public class CharacterController {
 
 
     @GetMapping("/charactersChangeBaseInfo")
-    public String getCharactersChangeCombat(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree, int itemLevel, int starForce, int itemUpgrade,int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
+    public String getCharactersChangeCombat(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree, int itemLevel, int starForce, int itemUpgrade,int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer,int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
 
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-//        HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
 
         int changedMainStatBase;
         int changedSubStatBase;
         int changedAtMgPowerBase;
+        int changedMainStatPerBase;
+        int changedSubStatPerBase;
+        int changedAtMgPowerPerBase;
 
+        //캐릭터 착용 모자 정
         CompletableFuture<CharactersHatInfoDTO> future = characterService.getCharactersHatInfo(getCharactersInfo);
         CharactersHatInfoDTO hatInfo = future.join();
 
-        // DTO에서 필요한 필드 값을 가져와서 변수로 사용합니다.
+        // 캐릭터 착용 모자 정보고 렙당스탯은 반영못했음
         int charactersHatMainStat = hatInfo.getStr();
         int charactersHatSubStat = hatInfo.getDex();
         int charactersHatAtMgPower = hatInfo.getAttactPower();
-
+        int charactersHatPotentialMainStatPer = hatInfo.getStrPotentialPer();
+        int charactersHatPotentialMainStat = hatInfo.getStrPotentialStat();
+        int charactersHatPotentialSubStatPer = hatInfo.getDexPotentialPer();
+        int charactersHatPotentialSubStat = hatInfo.getDexPotentialStat();
+        int charactersHatPotentialAtMgPower = hatInfo.getAtMgPotentialStat();
+        int charactersHatPotentialAtMgPowerPer = hatInfo.getAtMgPotentialPer();
 
         System.out.println(charactersHatMainStat + "dsdsdsd");
         System.out.println(charactersHatSubStat + "dsdsdsd");
         System.out.println(charactersHatAtMgPower + "dsdsdsd");
 
-        CompletableFuture<HatStatInfoDTO> futureHat = characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade,addOptionStat,potentialTotalMainStatPer,potentialTotalSubStatPer,potentialTotalAtMgPower);
+        System.out.println(charactersHatPotentialMainStatPer + "dsdsdsd");
+        System.out.println(charactersHatPotentialMainStat + "dsdsdsd");
+        System.out.println(charactersHatPotentialSubStatPer + "dsdsdsd");
+
+        System.out.println(charactersHatPotentialSubStat + "dsdsdsd");
+        System.out.println(charactersHatPotentialAtMgPower + "dsdsdsd");
+        System.out.println(charactersHatPotentialAtMgPowerPer + "dsdsdsd");
+
+        CompletableFuture<HatStatInfoDTO> futureHat = characterService.getEquipSimulation(itemLevel, starForce, itemUpgrade,addOptionStat,potentialNewMainStatPer,potentialNewSubStatPer,potentialNewAtMgPowerPer,potentialNewMainStat,potentialNewSubStat,potentialNewAtMgPowerStat);
 
         HatStatInfoDTO newHatInfo = futureHat.join();
+
         int newHatMainStat = newHatInfo.getMainStat();
         int newHatSubStat = newHatInfo.getSubStat();
         int newHatAtMgPower = newHatInfo.getAtMgPower();
+        int newHatAllStatPer = newHatInfo.getAllStatPer();
+        int newHatPotentialMainStatPer = newHatInfo.getPotentialTotalMainStatPer();
+        int newHatPotentialSubStatPer = newHatInfo.getPotentialTotalSubStatPer();
+        int newHatPotentialAtMgPower = newHatInfo.getPotentialTotalAtMgPower();
+        int newHatPotentialMainStat = newHatInfo.getPotentialTotalMainStat();
+        int newHatPotentialSubStat = newHatInfo.getPotentialTotalSubStat();
+        int newHatPotentialAtMgPowerPer = newHatInfo.getPotentialTotalAtMgPowerPer();
 
-
-        System.out.println(newHatMainStat + "ㅁㄴㅁㄴㄴ12222");
-        System.out.println(newHatSubStat + "ㅁㄴ2ㅁㄴ22");
-        System.out.println(newHatAtMgPower + "ㅁㄴㅁㄴ22");
-
-
-        changedMainStatBase = mainStatBase + (newHatMainStat - charactersHatMainStat);
-        changedSubStatBase = subStatBase + (newHatSubStat - charactersHatSubStat);
-        changedAtMgPowerBase = atMgPowerBase + (newHatAtMgPower - charactersHatAtMgPower);
+        changedMainStatBase = mainStatBase + (newHatMainStat +newHatPotentialMainStat - charactersHatMainStat);
+        changedSubStatBase = subStatBase + (newHatSubStat + newHatPotentialSubStat - charactersHatSubStat);
+        changedAtMgPowerBase = atMgPowerBase + (newHatAtMgPower + newHatPotentialAtMgPower - charactersHatAtMgPower);
+        changedMainStatPerBase = mainStatPerBase+newHatPotentialMainStatPer - charactersHatPotentialMainStatPer;
+        changedSubStatPerBase = subStatPerBase+newHatPotentialSubStatPer - charactersHatPotentialSubStatPer;
+        changedAtMgPowerPerBase = atMgPowerPerBase+ newHatPotentialAtMgPowerPer - charactersHatPotentialAtMgPowerPer;
 
         System.out.println(changedMainStatBase + "dsdsdsd1");
         System.out.println(changedSubStatBase + "dsdsdsd1");
         System.out.println(changedAtMgPowerBase + "dsdsdsd1");
+        System.out.println(changedMainStatPerBase + "dsdsdsd1");
+        System.out.println(changedSubStatPerBase + "dsdsdsd1");
+        System.out.println(changedAtMgPowerPerBase + "dsdsdsd1");
 
-        GetCharactersTotalChangedInfoDTO getCharactersTotalChangedInfoDTO = new GetCharactersTotalChangedInfoDTO(addAllStat, addBossDamage, addAtMgPower, petAtMgPower, changedMainStatBase, mainStatSkill, mainStatPerBase, mainStatPerSkill, mainStatNonPer, changedSubStatBase, subStatSkill, subStatPerBase, subStatPerSkill, subStatNonPer, changedAtMgPowerBase, atMgPowerSkill, atMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
+
+        GetCharactersTotalChangedInfoDTO getCharactersTotalChangedInfoDTO = new GetCharactersTotalChangedInfoDTO(addAllStat, addBossDamage, addAtMgPower, petAtMgPower, changedMainStatBase, mainStatSkill, changedMainStatPerBase, mainStatPerSkill, mainStatNonPer, changedSubStatBase, subStatSkill, changedSubStatPerBase, subStatPerSkill, subStatNonPer, changedAtMgPowerBase, atMgPowerSkill, changedAtMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
 
 
         return characterService.getCharactersChangeCombat(getCharactersTotalChangedInfoDTO, getCharactersInfo, itemLevel, starForce, itemUpgrade);
     }
+
+    @GetMapping("/choiceItem")
+    public void choiceItem(){
+
+        DropItemChoiceService dropItemChoiceService =new DropItemChoiceService();
+        dropItemChoiceService.dropItemChoice();
+
+    }
+
 
 
 }

@@ -22,13 +22,18 @@ public class ItemSimulationDTO {
 
     int mainStat;
     int subStat;
+
+    int mainStatPer;
+    int subStatPer;
     int atMgPower;
+    int atMgPowerPer;
 
     int atMgIncrement;
     int atMgIncrementAdd;
 
-    public void calculateEquipmentStats(HatStatInfoDTO hatStatInfoDTO, int starForce, int itemUpgrade, int itemLevel, int addOptionStat, int potentialTotalMainStatPer, int potentialTotalSubStatPer, int potentialTotalAtMgPower) {
+    public void calculateEquipmentStats(HatStatInfoDTO hatStatInfoDTO, int starForce, int itemUpgrade, int itemLevel, int addOptionStat,int potentialNewMainStatPer,int potentialNewSubStatPer,int potentialNewAtMgPowerPer,int potentialNewMainStat,int potentialNewSubStat,int potentialNewAtMgPowerStat) {
 
+        //주문서 작
         int itemUpgradeMainStat = 0;
         int itemUpgradeSubStat = 0;
         int itemUpgradeAtMg = 0;
@@ -55,6 +60,9 @@ public class ItemSimulationDTO {
             itemUpgradeMainStat = 6 * 12;
             itemUpgradeAtMg = 6 * 12;
         }
+
+
+        //추옵
 
         int itemAddOptionMainStat = 0;
         int itemAddOptionAllStat = 0;
@@ -95,6 +103,7 @@ public class ItemSimulationDTO {
             itemAddOptionAllStat =7;
         }
 
+        //렙제별 스타포스
 
         if (itemLevel == 150) {
             if (starForce < 6) {
@@ -149,14 +158,6 @@ public class ItemSimulationDTO {
             }
 
 
-            mainStat = mainStat + itemUpgradeMainStat + itemAddOptionMainStat;
-            subStat = subStat + itemUpgradeSubStat;
-            atMgPower = atMgPower + itemUpgradeAtMg;
-//
-//// 계산된 능력치를 설정
-            hatStatInfoDTO.setMainStat(mainStat);
-            hatStatInfoDTO.setSubStat(subStat);
-            hatStatInfoDTO.setAtMgPower(atMgPower);
         } else if (itemLevel == 160) {
             if (starForce < 6) {
                 mainStat = hatStatInfoDTO.mainStat + starForce * statIncrementOneToFive;
@@ -209,14 +210,7 @@ public class ItemSimulationDTO {
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
 
-            mainStat = mainStat + itemUpgradeMainStat+ itemAddOptionMainStat;
-            subStat = subStat + itemUpgradeSubStat;
-            atMgPower = atMgPower + itemUpgradeAtMg;
 
-// 계산된 능력치를 설정
-            hatStatInfoDTO.setMainStat(mainStat);
-            hatStatInfoDTO.setSubStat(subStat);
-            hatStatInfoDTO.setAtMgPower(atMgPower);
         } else if (itemLevel == 200) {
             if (starForce < 6) {
                 mainStat = hatStatInfoDTO.mainStat + starForce * statIncrementOneToFive;
@@ -268,15 +262,6 @@ public class ItemSimulationDTO {
                 }
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
-            mainStat = mainStat + itemUpgradeMainStat+ itemAddOptionMainStat;
-            subStat = subStat + itemUpgradeSubStat;
-            atMgPower = atMgPower + itemUpgradeAtMg;
-
-// 계산된 능력치를 설정
-            hatStatInfoDTO.setMainStat(mainStat);
-            hatStatInfoDTO.setSubStat(subStat);
-            hatStatInfoDTO.setAtMgPower(atMgPower);
-
 
         } else if (itemLevel == 250) {
             if (starForce < 6) {
@@ -329,22 +314,28 @@ public class ItemSimulationDTO {
                 }
                 atMgPower = hatStatInfoDTO.atMgPower + atMgIncrement + atMgIncrementAdd;
             }
-
-            mainStat = mainStat + itemUpgradeMainStat+ itemAddOptionMainStat;
+        }
+            mainStat = mainStat + itemUpgradeMainStat + itemAddOptionMainStat;
             subStat = subStat + itemUpgradeSubStat;
             atMgPower = atMgPower + itemUpgradeAtMg;
+            mainStatPer =itemAddOptionAllStat;
+            subStatPer =itemAddOptionAllStat;
 
-// 계산된 능력치를 설정
+
+//// 계산된 능력치를 설정
             hatStatInfoDTO.setMainStat(mainStat);
             hatStatInfoDTO.setSubStat(subStat);
             hatStatInfoDTO.setAtMgPower(atMgPower);
-            hatStatInfoDTO.setAllStat(hatStatInfoDTO.getAllStat()+itemAddOptionAllStat);
-            hatStatInfoDTO.setPotentialTotalMainStatPer(potentialTotalMainStatPer+itemAddOptionAllStat);
-            hatStatInfoDTO.setPotentialTotalSubStatPer(potentialTotalSubStatPer+itemAddOptionAllStat);
-            hatStatInfoDTO.setPotentialTotalAtMgPower(potentialTotalAtMgPower);
-
+//            hatStatInfoDTO.setAtMgPowerPer();
+            hatStatInfoDTO.setAllStatPer(hatStatInfoDTO.getAllStatPer()+itemAddOptionAllStat);
+            hatStatInfoDTO.setPotentialTotalMainStatPer(potentialNewMainStatPer);
+            hatStatInfoDTO.setPotentialTotalSubStatPer(potentialNewSubStatPer);
+            hatStatInfoDTO.setPotentialTotalAtMgPower(potentialNewAtMgPowerStat);
+            hatStatInfoDTO.setPotentialTotalMainStat(potentialNewMainStat);
+            hatStatInfoDTO.setPotentialTotalSubStat(potentialNewSubStat);
+            hatStatInfoDTO.setPotentialTotalAtMgPowerPer(potentialNewAtMgPowerPer);
         }
 
 
-    }
+
 }

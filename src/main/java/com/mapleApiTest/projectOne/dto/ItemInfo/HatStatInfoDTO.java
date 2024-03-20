@@ -12,7 +12,7 @@ public class HatStatInfoDTO {
     int subStat;
     int atMgPower;
     int damage;
-    int allStat;
+    int allStatPer;
     String potentialOne;
     String potentialTwo;
     String potentialThree;
@@ -139,8 +139,8 @@ public class HatStatInfoDTO {
         return damage;
     }
 
-    public int getAllStat() {
-        return allStat;
+    public int getAllStatPer() {
+        return allStatPer;
     }
 
     public String getPotentialOne() {
@@ -204,8 +204,8 @@ public class HatStatInfoDTO {
         this.damage = damage;
     }
 
-    public void setAllStat(int allStat) {
-        this.allStat = allStat;
+    public void setAllStatPer(int allStatPer) {
+        this.allStatPer = allStatPer;
     }
 
     public void setPotentialOne(String potentialOne) {
