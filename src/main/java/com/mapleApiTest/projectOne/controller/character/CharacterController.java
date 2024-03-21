@@ -197,10 +197,10 @@ public class CharacterController {
     }
 
     @GetMapping("/choiceItem")
-    public void choiceItem(){
+    public void choiceItem(@RequestParam int limitPrice, int goalMesoNum, int goalDropNum){
 
         DropItemChoiceService dropItemChoiceService =new DropItemChoiceService();
-        dropItemChoiceService.dropItemChoice();
+        dropItemChoiceService.dropItemChoice(limitPrice,goalMesoNum,goalDropNum);
 
     }
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DropItemChoiceService {
-    public void dropItemChoice() {
+    public void dropItemChoice(int limitPrice, int goalMesoNum, int goalDropNum) {
         EyesItemDTO eyesItemDTO = new EyesItemDTO();
         FaceItemDTO faceItemDTO = new FaceItemDTO();
         EarRingItemDTO
@@ -152,7 +152,7 @@ public class DropItemChoiceService {
                                     if (pendantOneFields == pendantOneField[0]) {
                                         pendantOneDropNum = 1;
                                         pendantOneMesoNum = 1;
-                                        pendantOnepick = "펜던트1 : 드메" + pendantOneFields;
+                                        pendantOnepick = "펜던트1 : 드메 " + pendantOneFields;
 
                                     } else if (pendantOneFields == pendantOneField[1]) {
                                         pendantOneDropNum = 2;
@@ -163,7 +163,7 @@ public class DropItemChoiceService {
                                         pendantOnepick = "펜던트1 : 메메" + pendantOneFields;
 
                                     }
-
+//
 //                                    for (int ringThreeFields : ringThreeField) {
 //
 //                                        int ringThreeDropNum = 0;
@@ -183,58 +183,43 @@ public class DropItemChoiceService {
 //                                            ringThreeMesoNum = 2;
 //                                            ringThreepick = "반지3 : 메메" + ringThreeFields;
 //                                        }
-
-                                        for (int pendantTwoFields : pendantTwoField) {
-                                            int pendantTwoDropNum = 0;
-                                            int pendantTwoMesoNum = 0;
-                                            int pendantTwoPrice = pendantOneFields;
-                                            String pendantTwopick = null;
-
-                                            if (pendantTwoFields == pendantTwoField[0]) {
-                                                pendantTwoDropNum = 1;
-                                                pendantTwoMesoNum = 1;
-                                                pendantTwopick = "펜던트2 : 드메" + pendantTwoFields;
-
-                                            } else if (pendantTwoFields == pendantTwoField[1]) {
-                                                pendantTwoDropNum = 2;
-                                                pendantTwopick = "펜던트2 : 드드" + pendantTwoFields;
-
-                                            } else if (pendantTwoFields == pendantTwoField[2]) {
-                                                pendantTwoMesoNum = 2;
-                                                pendantTwopick = "펜던트2 : 메메" + pendantTwoFields;
-
-                                            }
+//
+//                                        for (int pendantTwoFields : pendantTwoField) {
+//                                            int pendantTwoDropNum = 0;
+//                                            int pendantTwoMesoNum = 0;
+//                                            int pendantTwoPrice = pendantTwoFields;
+//                                            String pendantTwopick = null;
+//
+//                                            if (pendantTwoFields == pendantTwoField[0]) {
+//                                                pendantTwoDropNum = 1;
+//                                                pendantTwoMesoNum = 1;
+//                                                pendantTwopick = "펜던트2 : 드메" + pendantTwoFields;
+//
+//                                            } else if (pendantTwoFields == pendantTwoField[1]) {
+//                                                pendantTwoDropNum = 2;
+//                                                pendantTwopick = "펜던트2 : 드드" + pendantTwoFields;
+//
+//                                            } else if (pendantTwoFields == pendantTwoField[2]) {
+//                                                pendantTwoMesoNum = 2;
+//                                                pendantTwopick = "펜던트2 : 메메" + pendantTwoFields;
+//
+//                                            }
 //
 
-//                                        int totalPrice = eyesPrice + facePrice + earRingPrice + ringOnePrice + ringTwoPrice + ringThreePrice + pendantOnePrice ;
-//                                        int totalDropNum = eyesDropNum + faceDropNum + earRingDropNum + ringOneDropNum + ringTwoDropNum + ringThreeDropNum + pendantOneDropNum ;
-//                                        int totalMesoNum = eyesMesoNum + faceMesoNum + earRingMesoNum + ringOneMesoNum + ringTwoMesoNum + ringThreeMesoNum + pendantOneMesoNum ;
-//                                        if (totalMesoNum == 5 && totalDropNum == 9 &&totalPrice<428)  {
-//                                            System.out.println("totalPrice" + totalPrice);
-//                                            System.out.println("eyesPrice" + eyesPrice);
-//                                            System.out.println("facePrice" + facePrice);
-//                                            System.out.println("earRingPrice" + earRingPrice);
-//                                            System.out.println("ringOnePrice" + ringOnePrice);
-//                                            System.out.println("ringTwoPrice" + ringTwoPrice);
-//                                            System.out.println("ringThreePrice" + ringThreePrice);
-//                                            System.out.println("pendantOnePrice" + pendantOnePrice);
-//                                            System.out.println(eyepick + facepick + earRingpick + ringOnepick + ringTwopick + ringThreepick + pendantOnepick );
-//                                        }
-//
-                                        int totalPrice = eyesPrice + facePrice + earRingPrice + ringOnePrice + ringTwoPrice + pendantOnePrice + pendantTwoPrice ;
-                                        int totalDropNum = eyesDropNum + faceDropNum + earRingDropNum + ringOneDropNum + ringTwoDropNum + pendantOneDropNum + pendantTwoDropNum ;
-                                        int totalMesoNum = eyesMesoNum + faceMesoNum + earRingMesoNum + ringOneMesoNum + ringTwoMesoNum + pendantOneMesoNum + pendantTwoMesoNum ;
-                                        if (totalMesoNum == 5 && totalDropNum == 9 &&totalPrice<383)  {
+                                        int totalPrice = eyesPrice + facePrice + earRingPrice + ringOnePrice + ringTwoPrice +pendantOnePrice  ;
+                                        int totalDropNum = eyesDropNum + faceDropNum + earRingDropNum + ringOneDropNum + ringTwoDropNum + pendantOneDropNum;
+                                        int totalMesoNum = eyesMesoNum + faceMesoNum + earRingMesoNum + ringOneMesoNum + ringTwoMesoNum + pendantOneMesoNum ;
+                                        if (totalMesoNum == goalMesoNum && totalDropNum == goalDropNum &&totalPrice<limitPrice)  {
                                             System.out.println("totalPrice" + totalPrice);
                                             System.out.println("eyesPrice" + eyesPrice);
                                             System.out.println("facePrice" + facePrice);
                                             System.out.println("earRingPrice" + earRingPrice);
                                             System.out.println("ringOnePrice" + ringOnePrice);
                                             System.out.println("ringTwoPrice" + ringTwoPrice);
+//                                            System.out.println("ringThreePrice" + ringThreePrice);
                                             System.out.println("pendantOnePrice" + pendantOnePrice);
-                                            System.out.println("pendantTwoPrice" + pendantTwoPrice);
-                                            System.out.println(eyepick + facepick + earRingpick + ringOnepick + ringTwopick + pendantOnepick + pendantTwopick );
-                                        }
+                                            System.out.println(eyepick + facepick + earRingpick + ringOnepick + ringTwopick +pendantOnepick );
+//                                        }
 
                                     }
                             }
