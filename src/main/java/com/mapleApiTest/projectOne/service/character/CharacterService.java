@@ -354,33 +354,37 @@ public class CharacterService {
                 CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
                 );
 
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialOne()); ;
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialTwo()); ;
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialThree()); ;
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalOne()); ;
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalTwo()); ;
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalThree()); ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialOne());
+                ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialTwo());
+                ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialThree());
+                ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalOne());
+                ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalTwo());
+                ;
+                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalThree());
+                ;
 
-                int hatStrPotentialPer=charactersHatInfoDTO.getStrPotentialPer();
-                int hatDexPotentialPer=charactersHatInfoDTO.getDexPotentialPer() ;
-                int hatIntPotentialPer=charactersHatInfoDTO.getIntPotentialPer() ;
-                int hatLukPotentialPer=charactersHatInfoDTO.getLukPotentialPer() ;
-                int hatAllStatPotentialPer=charactersHatInfoDTO.getAllStatPotentialPer() ;
-                int hatStrPotentialStat=charactersHatInfoDTO.getStrPotentialStat() ;
-                int hatDexPotentialStat=charactersHatInfoDTO.getDexPotentialStat() ;
-                int hatIntPotentialStat=charactersHatInfoDTO.getIntPotentialStat() ;
-                int hatLukPotentialStat=charactersHatInfoDTO.getLukPotentialStat() ;
-                int hatAtMgPotentialPer=charactersHatInfoDTO.getAtMgPotentialPer() ;
-                int hatAtMgPotentialStat=charactersHatInfoDTO.getAtMgPotentialStat() ;
+                int hatStrPotentialPer = charactersHatInfoDTO.getStrPotentialPer();
+                int hatDexPotentialPer = charactersHatInfoDTO.getDexPotentialPer();
+                int hatIntPotentialPer = charactersHatInfoDTO.getIntPotentialPer();
+                int hatLukPotentialPer = charactersHatInfoDTO.getLukPotentialPer();
+                int hatAllStatPotentialPer = charactersHatInfoDTO.getAllStatPotentialPer();
+                int hatStrPotentialStat = charactersHatInfoDTO.getStrPotentialStat();
+                int hatDexPotentialStat = charactersHatInfoDTO.getDexPotentialStat();
+                int hatIntPotentialStat = charactersHatInfoDTO.getIntPotentialStat();
+                int hatLukPotentialStat = charactersHatInfoDTO.getLukPotentialStat();
+                int hatAtMgPotentialPer = charactersHatInfoDTO.getAtMgPotentialPer();
+                int hatAtMgPotentialStat = charactersHatInfoDTO.getAtMgPotentialStat();
 
-                System.out.println("hatStrPotentialPer"+hatStrPotentialPer);
-                System.out.println("hatDexPotentialPer"+hatDexPotentialPer);
-                System.out.println("hatAllStatPotentialPer"+hatAllStatPotentialPer);
-                System.out.println("hatAtMgPotentialStat"+hatAtMgPotentialStat);
-                System.out.println("hatStrPotentialStat"+hatStrPotentialStat);
-                System.out.println("hatDexPotentialStat"+hatDexPotentialStat);
-
-
+                System.out.println("hatStrPotentialPer" + hatStrPotentialPer);
+                System.out.println("hatDexPotentialPer" + hatDexPotentialPer);
+                System.out.println("hatAllStatPotentialPer" + hatAllStatPotentialPer);
+                System.out.println("hatAtMgPotentialStat" + hatAtMgPotentialStat);
+                System.out.println("hatStrPotentialStat" + hatStrPotentialStat);
+                System.out.println("hatDexPotentialStat" + hatDexPotentialStat);
 
 
                 return CompletableFuture.completedFuture(charactersHatInfoDTO);
@@ -1447,8 +1451,6 @@ public class CharacterService {
                 );
 
 
-
-
                 return CompletableFuture.completedFuture(charactersHeartInfoDTO);
             } else {
                 return null;
@@ -1535,7 +1537,7 @@ public class CharacterService {
             finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
             BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
             String finalCombat = finalCombatBD.toPlainString();
-            System.out.println(finalCombat+"변경전");
+            System.out.println(finalCombat + "변경전");
 
             return finalCombat;
         }
@@ -1545,24 +1547,24 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel,int starForce, int itemUpgrade,int addOptionStat,int potentialNewMainStatPer,int potentialNewSubStatPer,int potentialNewAtMgPowerPer,int potentialNewMainStat,int potentialNewSubStat,int potentialNewAtMgPowerStat) {
+    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel, int starForce, int itemUpgrade, int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer, int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
 
         ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
         HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
 
-        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel,addOptionStat,potentialNewMainStatPer,potentialNewSubStatPer,potentialNewAtMgPowerPer,potentialNewMainStat,potentialNewSubStat,potentialNewAtMgPowerStat);
+        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel, addOptionStat, potentialNewMainStatPer, potentialNewSubStatPer, potentialNewAtMgPowerPer, potentialNewMainStat, potentialNewSubStat, potentialNewAtMgPowerStat);
 
-        System.out.println(hatStatInfoDTO.getMainStat()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getMainStat() + "dadadadadadad");
         System.out.println(hatStatInfoDTO.getSubStat());
         System.out.println(hatStatInfoDTO.getAtMgPower());
-        System.out.println(hatStatInfoDTO.getAllStatPer()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalMainStatPer()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalSubStatPer()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalMainStat()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalSubStat()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower()+"dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPowerPer()+"dadadadadadad");
+        System.out.println(hatStatInfoDTO.getAllStatPer() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalMainStatPer() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalSubStatPer() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalMainStat() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalSubStat() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPowerPer() + "dadadadadadad");
 
 
         return CompletableFuture.completedFuture(hatStatInfoDTO);
@@ -1570,7 +1572,7 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re,int itemLevel,int starForce,int itemUpgrade
+    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re, int itemLevel, int starForce, int itemUpgrade
     ) {
 
         int addAllStat = request.getAddAllStat();
@@ -1646,20 +1648,81 @@ public class CharacterService {
             String finalCombat = finalCombatBD.toPlainString();
 
 
-            System.out.println(finalCombat+"변경후");
+            System.out.println(finalCombat + "변경후");
             return finalCombat;
         }
         return null;
     }
 
 
+/////////
 
+    @Async("characterThreadPool")
+    @Transactional
+    public void getCharactersSetInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/set-effect";
+            webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int absolSetCount = 0;
+                    int arcaneSetCount = 0;
+                    int bossAcSetCount = 0;
+                    int cvelSetCount = 0; //칠흑
+                    int lucidAcSetCount = 0; //여명
+                    int lomienSetCount = 0; //루타
+                    int eternalSetCount = 0; //에테
+                    int mystarSetCount = 0; //에테
+                    for (JsonNode setEffectNode : jsonNode.get("set_effect")) {
+                        String setName = setEffectNode.get("set_name").asText();
+                        char firstLetter = setName.charAt(0);
+                        switch (firstLetter) {
+                            case '앱':
+                                absolSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '아':
+                                arcaneSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '보':
+                                bossAcSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '칠':
+                                cvelSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '여':
+                                lucidAcSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '에':
+                                eternalSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '루':
+                                lomienSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '마':
+                                mystarSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            default:
+                                break;
+                        }
+
+                        CharactersSetEffectInfo charactersSetEffectInfo =new CharactersSetEffectInfo(absolSetCount,arcaneSetCount,bossAcSetCount,cvelSetCount,lucidAcSetCount,eternalSetCount,lomienSetCount,mystarSetCount);
+
+
+                    }
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+                return Mono.empty(); // 반환값이 없는 경우에는 empty로 처리
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+        }
+    }
 
 
 
 
 }
-
-
-
 
