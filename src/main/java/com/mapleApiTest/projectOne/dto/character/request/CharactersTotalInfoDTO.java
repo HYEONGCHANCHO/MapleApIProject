@@ -11,7 +11,7 @@ public class CharactersTotalInfoDTO {
 
     private String character_class;
 
-    private String character_level;
+    private int character_level;
 
     private double damage;
 
@@ -65,7 +65,7 @@ public class CharactersTotalInfoDTO {
     private String poketInfo;
     private String heartInfo;
 
-    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, String character_level, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
+    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, int character_level, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
         this.date = date;
         this.world_name = world_name;
@@ -86,7 +86,7 @@ public class CharactersTotalInfoDTO {
         this.combatPower = combatPower;
     }
 
-    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, String character_level, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
+    public CharactersTotalInfoDTO(String charactersName, String date, String world_name, String character_class, int character_level, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
         this.charactersName = charactersName;
         this.date = date;
         this.world_name = world_name;
@@ -147,7 +147,7 @@ public class CharactersTotalInfoDTO {
         return character_class;
     }
 
-    public String getCharacter_level() {
+    public int getCharacter_level() {
         return character_level;
     }
 

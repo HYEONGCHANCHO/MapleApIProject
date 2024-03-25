@@ -12,7 +12,7 @@ public class CharactersInfoDTO {
     private String character_name;
     private String world_name;
     private String character_class;
-    private String character_level;
+    private int character_level;
 //    private String character_image;
 
 //    private String ocid;
@@ -35,7 +35,7 @@ public class CharactersInfoDTO {
         return character_class;
     }
 
-    public String getCharacter_level() {
+    public int getCharacter_level() {
         return character_level;
     }
 
@@ -44,7 +44,7 @@ public class CharactersInfoDTO {
 //    }
 
 
-    public CharactersInfoDTO(String date, String character_name, String world_name, String character_class, String character_level) {
+    public CharactersInfoDTO(String date, String character_name, String world_name, String character_class, int character_level) {
         this.date = date;
         this.character_name = character_name;
         this.world_name = world_name;

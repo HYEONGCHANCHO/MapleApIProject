@@ -20,7 +20,7 @@ public class GetCharactersInfo {
     private String charactersClass;
 
     @JsonProperty("character_level")
-    private String charactersLevel;
+    private int charactersLevel;
 
     private String worldName;
 
@@ -39,7 +39,7 @@ public class GetCharactersInfo {
         return charactersClass;
     }
 
-    public String getCharactersLevel() {
+    public int getCharactersLevel() {
         return charactersLevel;
     }
 

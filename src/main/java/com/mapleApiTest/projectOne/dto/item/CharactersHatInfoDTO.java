@@ -107,9 +107,10 @@ public class CharactersHatInfoDTO {
     }
 
 
-    public void processPotential(String potential) {
+    public void processPotential(String potential,int charactersLevel) {
 
         char type = potential.charAt(0);
+        char typeTwo = potential.charAt(13);
 
         if (potential.startsWith(String.valueOf(type))) {
             String[] parts = potential.split("\\+");
@@ -137,33 +138,51 @@ public class CharactersHatInfoDTO {
                     case '공':
                         atMgPotentialPer += number;
                         break;
-                    default:
-                        break;
+
                 }
             } else {
 
-            int number = Integer.parseInt(lastPart);
+                int number = Integer.parseInt(lastPart);
 
-            switch (type) {
-                case 'S':
-                    strPotentialStat += number;
-                    break;
-                case 'D':
-                    dexPotentialStat += number;
-                    break;
-                case 'I':
-                    intPotentialStat += number;
-                    break;
-                case 'L':
-                    lukPotentialStat += number;
-                    break;
-                case '공':
-                    atMgPotentialStat += number;
-                    break;
-                default:
-                    break;
+                switch (type) {
+                    case 'S':
+                        strPotentialStat += number;
+                        break;
+                    case 'D':
+                        dexPotentialStat += number;
+                        break;
+                    case 'I':
+                        intPotentialStat += number;
+                        break;
+                    case 'L':
+                        lukPotentialStat += number;
+                        break;
+                    case '공':
+                        atMgPotentialStat += number;
+                        break;
+                    case '캐':
+                        switch (typeTwo) {
+                            case 'S':
+                                strPotentialStat += number*(charactersLevel/9);
+                                break;
+                            case 'D':
+                                dexPotentialStat += number*(charactersLevel/9);
+                                break;
+                            case 'I':
+                                intPotentialStat += number*(charactersLevel/9);
+                                break;
+                            case 'L':
+                                lukPotentialStat += number*(charactersLevel/9);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
-        }}
+        }
     }
 
 

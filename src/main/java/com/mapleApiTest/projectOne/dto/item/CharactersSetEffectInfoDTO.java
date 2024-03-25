@@ -1,6 +1,8 @@
 package com.mapleApiTest.projectOne.dto.item;
 
-public class CharactersSetEffectInfo {
+public class CharactersSetEffectInfoDTO {
+    String charactersName;
+    String ocid;
     int absolSetCount;
     int arcaneSetCount;
     int bossAcSetCount;
@@ -10,7 +12,9 @@ public class CharactersSetEffectInfo {
     int eternalSetCount;
     int mystarSetCount;
 
-    public CharactersSetEffectInfo(int absolSetCount, int arcaneSetCount, int bossAcSetCount, int cvelSetCount, int lucidAcSetCount, int lomienSetCount, int eternalSetCount, int mystarSetCount) {
+    public CharactersSetEffectInfoDTO(String charactersName, String ocid, int absolSetCount, int arcaneSetCount, int bossAcSetCount, int cvelSetCount, int lucidAcSetCount, int lomienSetCount, int eternalSetCount, int mystarSetCount) {
+        this.charactersName = charactersName;
+        this.ocid = ocid;
         this.absolSetCount = absolSetCount;
         this.arcaneSetCount = arcaneSetCount;
         this.bossAcSetCount = bossAcSetCount;
@@ -19,6 +23,22 @@ public class CharactersSetEffectInfo {
         this.lomienSetCount = lomienSetCount;
         this.eternalSetCount = eternalSetCount;
         this.mystarSetCount = mystarSetCount;
+    }
+
+    public String getCharactersName() {
+        return charactersName;
+    }
+
+    public void setCharactersName(String charactersName) {
+        this.charactersName = charactersName;
+    }
+
+    public String getOcid() {
+        return ocid;
+    }
+
+    public void setOcid(String ocid) {
+        this.ocid = ocid;
     }
 
     public int getAbsolSetCount() {

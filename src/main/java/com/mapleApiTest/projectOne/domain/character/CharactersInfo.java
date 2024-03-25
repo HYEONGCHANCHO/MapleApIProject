@@ -16,7 +16,7 @@ public class CharactersInfo {
     private String date;
 
     @Column(nullable = false)
-    private String character_level;
+    private int character_level;
 //    @Column(nullable = false)
 //    private String character_server;
 
@@ -41,7 +41,7 @@ public class CharactersInfo {
         return date;
     }
 
-    public String getCharactersLevel() {
+    public int getCharactersLevel() {
         return character_level;
     }
 
@@ -63,7 +63,7 @@ public class CharactersInfo {
     protected CharactersInfo() {
     }
 
-    public CharactersInfo(String charactersName, String date, String character_level, String character_class, String world_name) {
+    public CharactersInfo(String charactersName, String date, int character_level, String character_class, String world_name) {
         this.charactersName = charactersName;
         this.date = date;
         this.character_level = character_level;
