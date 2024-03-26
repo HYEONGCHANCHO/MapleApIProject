@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CharactersItemEquipRepository extends JpaRepository<CharactersItemEquip, Long> {
 
-    Optional<CharactersItemEquip> findByCharactersNameAndDate(String charactersName, String date);
+    Optional<CharactersItemEquip> findByCharactersName(String charactersName);
 }

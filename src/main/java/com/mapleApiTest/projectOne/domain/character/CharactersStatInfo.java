@@ -12,8 +12,8 @@ public class CharactersStatInfo {
     @Column(nullable = false)
     private String charactersName;
 
-    @Column(nullable = false)
-    private String date;
+//    @Column(nullable = false)
+//    private String date;
 
 
 //    @Column(columnDefinition = "json")
@@ -59,9 +59,9 @@ public class CharactersStatInfo {
 
     protected CharactersStatInfo(){}
 
-    public CharactersStatInfo(String charactersName, String date, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
+    public CharactersStatInfo(String charactersName, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
-        this.date = date;
+//        this.date = date;
         this.damage = damage;
         this.bossDamage = bossDamage;
         this.finalDamage = finalDamage;
@@ -81,9 +81,9 @@ public class CharactersStatInfo {
         return charactersName;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public double getDamage() {
         return damage;

@@ -7,7 +7,7 @@ public class CharactersItemEquipDTO {
 
     private String charactersName;
 
-    private String date;
+//    private String date;
 
     private String hatInfo;
     private String topInfo;
@@ -35,9 +35,9 @@ public class CharactersItemEquipDTO {
     private String heartInfo;
 
 
-    public CharactersItemEquipDTO(String charactersName, String date, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
+    public CharactersItemEquipDTO(String charactersName, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
         this.charactersName = charactersName;
-        this.date = date;
+//        this.date = date;
         this.hatInfo = hatInfo;
         this.topInfo = topInfo;
         this.bottomInfo = bottomInfo;
@@ -164,9 +164,9 @@ public class CharactersItemEquipDTO {
         return charactersName;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
 //    public String getItem_equipment() {
 //        return item_equipment;

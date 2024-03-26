@@ -12,8 +12,8 @@ public class CharactersInfo {
     @Column(nullable = false)
     private String charactersName;
 
-    @Column(nullable = false)
-    private String date;
+//    @Column(nullable = false)
+//    private String date;
 
     @Column(nullable = false)
     private int character_level;
@@ -37,9 +37,9 @@ public class CharactersInfo {
         return charactersName;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public int getCharactersLevel() {
         return character_level;
@@ -63,9 +63,9 @@ public class CharactersInfo {
     protected CharactersInfo() {
     }
 
-    public CharactersInfo(String charactersName, String date, int character_level, String character_class, String world_name) {
+    public CharactersInfo(String charactersName, int character_level, String character_class, String world_name) {
         this.charactersName = charactersName;
-        this.date = date;
+//        this.date = date;
         this.character_level = character_level;
         this.character_class = character_class;
 //        this.character_image = character_image;

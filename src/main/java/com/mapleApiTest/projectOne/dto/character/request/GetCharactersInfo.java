@@ -14,12 +14,12 @@ public class GetCharactersInfo {
     @JsonProperty("character_name")
     private String charactersName;
 
-    private String date;
+//    private String date;
 
     @JsonProperty("character_class")
     private String charactersClass;
 
-    @JsonProperty("character_level")
+//    @JsonProperty("character_level")
     private int charactersLevel;
 
     private String worldName;
@@ -31,9 +31,9 @@ public class GetCharactersInfo {
         return charactersName;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public String getCharactersClass() {
         return charactersClass;
@@ -51,10 +51,15 @@ public class GetCharactersInfo {
         return charactersImage;
     }
 
-    public GetCharactersInfo(String charactersName, String date) {
-        this.charactersName = charactersName;
-        this.date = date;
-    }
+//    public GetCharactersInfo(String charactersName, String date,int charactersLevel) {
+//        this.charactersName = charactersName;
+//        this.date = date;
+//        this.charactersLevel = charactersLevel;
+//    }
+//   public GetCharactersInfo(String charactersName, String date) {
+//        this.charactersName = charactersName;
+////        this.date = date;
+//    }
 
     public GetCharactersInfo(String charactersName) {
         this.charactersName = charactersName;

@@ -1,15 +1,18 @@
 package com.mapleApiTest.projectOne.controller.character;
 
 import com.mapleApiTest.dropItemChoice.Service.DropItemChoiceService;
+import com.mapleApiTest.projectOne.domain.character.CharactersInfo;
 import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
 import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
 import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.dto.item.*;
+import com.mapleApiTest.projectOne.repository.character.CharactersInfoRepository;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,8 +45,8 @@ public class CharacterController {
     /////////////////////////////////
 
     @GetMapping("/maplestory/v1/character/basic")
-    public CompletableFuture<CharactersInfoDTO> getCharacterInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+    public CompletableFuture<CharactersInfoDTO> getCharacterInfo(HttpServletRequest request, @RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
         String Url = request.getRequestURI();
@@ -52,8 +55,8 @@ public class CharacterController {
     }
 
     @GetMapping("/maplestory/v1/character/stat")
-    public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+    public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(HttpServletRequest request, @RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
         String Url = request.getRequestURI();
@@ -63,8 +66,8 @@ public class CharacterController {
 
 
     @GetMapping("/maplestory/v1/character/item-equipment")
-    public CompletableFuture<CharactersItemEquipDTO> getCharacterItemEquipInfo(HttpServletRequest request, @RequestParam String charactersName, String date) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+    public CompletableFuture<CharactersItemEquipDTO> getCharacterItemEquipInfo(HttpServletRequest request, @RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
         String Url = request.getRequestURI();
@@ -74,24 +77,24 @@ public class CharacterController {
 
 
     @GetMapping("/totalInfo")
-    public CompletableFuture<CharactersTotalInfoDTO> getCharacterItemEquipInfo(@RequestParam String charactersName, String date) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+    public CompletableFuture<CharactersTotalInfoDTO> getCharacterItemEquipInfo(@RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
 
         return characterService.getCharactersTotalInfo(getCharactersInfo);
 
     }
 
     @GetMapping("/HatInfo")
-    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(@RequestParam String charactersName, String date) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(@RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
 
         return characterService.getCharactersHatInfo(getCharactersInfo);
 
     }
 
     @GetMapping("/TopInfo")
-    public CompletableFuture<CharactersTopInfoDTO> getCharactersTopInfo(@RequestParam String charactersName, String date) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+    public CompletableFuture<CharactersTopInfoDTO> getCharactersTopInfo(@RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
 
         return characterService.getCharactersTopInfo(getCharactersInfo);
     }
@@ -104,13 +107,13 @@ public class CharacterController {
 //        characterService.someServiceMethod(getCharactersInfo);
 //    }
 
-    @GetMapping("/charactersBaseInfo")
-    public String getCharactersBaseInfo(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
-        GetCharactersTotalInfoDTO charactersTotalInfoDTO = new GetCharactersTotalInfoDTO(addAllStat, addBossDamage, addAtMgPower, petAtMgPower, mainStatBase, mainStatSkill, mainStatPerBase, mainStatPerSkill, mainStatNonPer, subStatBase, subStatSkill, subStatPerBase, subStatPerSkill, subStatNonPer, atMgPowerBase, atMgPowerSkill, atMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
-
-        return characterService.getCharactersCombat(charactersTotalInfoDTO, getCharactersInfo);
-    }
+//    @GetMapping("/charactersBaseInfo")
+//    public String getCharactersBaseInfo(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree) {
+//        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+//        GetCharactersTotalInfoDTO charactersTotalInfoDTO = new GetCharactersTotalInfoDTO(addAllStat, addBossDamage, addAtMgPower, petAtMgPower, mainStatBase, mainStatSkill, mainStatPerBase, mainStatPerSkill, mainStatNonPer, subStatBase, subStatSkill, subStatPerBase, subStatPerSkill, subStatNonPer, atMgPowerBase, atMgPowerSkill, atMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
+//
+//        return characterService.getCharactersCombat(charactersTotalInfoDTO);
+//    }
 
 
 //    @GetMapping("/equipSimulation")
@@ -122,9 +125,9 @@ public class CharacterController {
 
 
     @GetMapping("/charactersChangeBaseInfo")
-    public String getCharactersChangeCombat(@RequestParam String charactersName, String date, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree, int itemLevel, int starForce, int itemUpgrade,int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer,int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
+    public String getCharactersChangeCombat(@RequestParam String charactersName, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree, int itemLevel, int starForce, int itemUpgrade,int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer,int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
 
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName, date);
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
 
         int changedMainStatBase;
         int changedSubStatBase;
@@ -137,7 +140,7 @@ public class CharacterController {
         CompletableFuture<CharactersHatInfoDTO> future = characterService.getCharactersHatInfo(getCharactersInfo);
         CharactersHatInfoDTO hatInfo = future.join();
 
-        // 캐릭터 착용 모자 정보고 렙당스탯은 반영못했음
+        // 캐릭터 착용 모자 정보
         int charactersHatMainStat = hatInfo.getStr();
         int charactersHatSubStat = hatInfo.getDex();
         int charactersHatAtMgPower = hatInfo.getAttactPower();
@@ -203,6 +206,25 @@ public class CharacterController {
         dropItemChoiceService.dropItemChoice(limitPrice,goalMesoNum,goalDropNum);
 
     }
+
+
+    @PostMapping("/setCharactersBaseTotalInfo")
+    public void setCharactersBaseTotalInfo(@RequestParam String charactersName, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree){
+        CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO =new CharactersBaseTotalInfoDTO(charactersName, addAllStat,  addBossDamage, addAtMgPower, petAtMgPower,  mainStatBase,mainStatSkill, mainStatPerBase, mainStatPerSkill,  mainStatNonPer,subStatBase,  subStatSkill, subStatPerBase, subStatPerSkill,  subStatNonPer, atMgPowerBase,  atMgPowerSkill,  atMgPowerPerBase,atMgPowerPerSkill, criticalDamageBase,  criticalDamageSkill,damageBase,  damageSkill, BossDamageBase,BossDamageSkill, isFree);
+        characterService.setCharactersBaseTotalInfo(charactersBaseTotalInfoDTO);
+
+    }
+
+    @GetMapping("/calCharactersCombat")
+    public String getCharactersCombat(@RequestParam String charactersName){
+
+        CompletableFuture<CharactersBaseTotalInfoDTO> future =characterService.getCharactersBaseTotalInfoDTO(charactersName);
+        CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO = future.join();
+        return characterService.getCharactersCombat(charactersBaseTotalInfoDTO);
+
+    }
+
+
 
 
 

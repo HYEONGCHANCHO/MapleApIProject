@@ -110,8 +110,7 @@ public class CharactersHatInfoDTO {
     public void processPotential(String potential,int charactersLevel) {
 
         char type = potential.charAt(0);
-        char typeTwo = potential.charAt(13);
-
+System.out.println(charactersLevel+"level");
         if (potential.startsWith(String.valueOf(type))) {
             String[] parts = potential.split("\\+");
             String lastPart = parts[1];
@@ -161,6 +160,7 @@ public class CharactersHatInfoDTO {
                         atMgPotentialStat += number;
                         break;
                     case '캐':
+                        char typeTwo = potential.charAt(13);
                         switch (typeTwo) {
                             case 'S':
                                 strPotentialStat += number*(charactersLevel/9);

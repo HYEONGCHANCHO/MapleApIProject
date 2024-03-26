@@ -9,7 +9,7 @@ public class CharactersStatInfoDTO {
 
     private String charactersName;
 
-    private String date;
+//    private String date;
 
     private double damage;
 
@@ -43,9 +43,9 @@ public class CharactersStatInfoDTO {
         return charactersName;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public double getDamage() {
         return damage;
@@ -99,9 +99,9 @@ public class CharactersStatInfoDTO {
         return combatPower;
     }
 
-    public CharactersStatInfoDTO(String charactersName, String date, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
+    public CharactersStatInfoDTO(String charactersName, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
-        this.date = date;
+//        this.date = date;
         this.damage = damage;
         this.bossDamage = bossDamage;
         this.finalDamage = finalDamage;

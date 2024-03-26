@@ -11,8 +11,8 @@ public class CharactersItemEquip {
     @Column(nullable = false)
     private String charactersName;
 
-    @Column(nullable = false)
-    private String date;
+//    @Column(nullable = false)
+//    private String date;
 
     @Column(columnDefinition = "json")
     private String hatInfo;
@@ -70,9 +70,9 @@ public class CharactersItemEquip {
         return charactersName;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public String getHatInfo() {
         return hatInfo;
@@ -172,9 +172,9 @@ public class CharactersItemEquip {
 
     protected CharactersItemEquip(){}
 
-    public CharactersItemEquip(String charactersName, String date, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
+    public CharactersItemEquip(String charactersName,  String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
         this.charactersName = charactersName;
-        this.date = date;
+//        this.date = date;
         this.hatInfo = hatInfo;
         this.topInfo = topInfo;
         this.bottomInfo = bottomInfo;

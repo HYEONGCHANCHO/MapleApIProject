@@ -8,7 +8,7 @@ import javax.xml.stream.events.Characters;
 
 public class CharactersInfoDTO {
 
-    private String date;
+//    private String date;
     private String character_name;
     private String world_name;
     private String character_class;
@@ -19,9 +19,9 @@ public class CharactersInfoDTO {
     public CharactersInfoDTO() {
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public String getCharacter_name() {
         return character_name;
@@ -44,8 +44,8 @@ public class CharactersInfoDTO {
 //    }
 
 
-    public CharactersInfoDTO(String date, String character_name, String world_name, String character_class, int character_level) {
-        this.date = date;
+    public CharactersInfoDTO( String character_name, String world_name, String character_class, int character_level) {
+//        this.date = date;
         this.character_name = character_name;
         this.world_name = world_name;
         this.character_class = character_class;
