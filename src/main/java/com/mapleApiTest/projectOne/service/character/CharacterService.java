@@ -42,7 +42,7 @@ public class CharacterService {
     private String apiUrl;
 
 
-    public CharacterService(WebClient.Builder builder, CharactersKeyRepository charactersKeyRepository, CharactersInfoRepository charactersInfoRepository, CharactersStatInfoRepository charactersStatInfoRepository, CharactersItemEquipRepository charactersItemEquipRepository,CharactersBaseTotalInfoRepository charactersBaseTotalInfoRepository, @Value("${external.api.key}") String apiKey, @Value("${external.api.url}") String apiUrl) {
+    public CharacterService(WebClient.Builder builder, CharactersKeyRepository charactersKeyRepository, CharactersInfoRepository charactersInfoRepository, CharactersStatInfoRepository charactersStatInfoRepository, CharactersItemEquipRepository charactersItemEquipRepository, CharactersBaseTotalInfoRepository charactersBaseTotalInfoRepository, @Value("${external.api.key}") String apiKey, @Value("${external.api.url}") String apiUrl) {
         this.webClient = builder.defaultHeader("x-nxopen-api-key", apiKey).baseUrl(apiUrl).build();
         this.charactersKeyRepository = charactersKeyRepository;
         this.charactersInfoRepository = charactersInfoRepository;
@@ -100,7 +100,7 @@ public class CharacterService {
             Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
             if (charactersInfoOptional.isPresent()) {
                 CharactersInfo charactersInfo = charactersInfoOptional.get();
-                CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO( request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersLevel());
+                CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO(request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersLevel());
                 return CompletableFuture.completedFuture(charactersInfoDTO);
             } else {
                 Mono<CharactersInfoDTO> MonoResult
@@ -110,8 +110,9 @@ public class CharacterService {
                         String character_class = jsonNode.get("character_class").asText();
                         int character_level = jsonNode.get("character_level").asInt();
 //                        String character_image = jsonNode.get("character_image").asText();
-                        CharactersInfoDTO charactersInfoDTO = new CharactersInfo(request.getCharactersName(), character_level, character_class, world_name);
-                        charactersInfoRepository.save(charactersInfoDTO);
+                        CharactersInfo charactersInfo = new CharactersInfo(request.getCharactersName(), character_level, character_class, world_name);
+                        charactersInfoRepository.save(charactersInfo);
+                        CharactersInfoDTO charactersInfoDTO = new CharactersInfoDTO(request.getCharactersName(), world_name, character_class, character_level);
                         return Mono.just(charactersInfoDTO);
                     } catch (Exception exception) {
 
@@ -200,7 +201,7 @@ public class CharacterService {
                 CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
 
 
-                CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO( request.getCharactersName(), charactersItemEquip.getHatInfo(), charactersItemEquip.getTopInfo(), charactersItemEquip.getBottomInfo(), charactersItemEquip.getCapeInfo(), charactersItemEquip.getShoesInfo(), charactersItemEquip.getGlovesInfo(), charactersItemEquip.getShoulderInfo(), charactersItemEquip.getFaceInfo(), charactersItemEquip.getEyeInfo(), charactersItemEquip.getEarInfo(), charactersItemEquip.getPendantOneInfo(), charactersItemEquip.getPendantTwoInfo(), charactersItemEquip.getBeltInfo(), charactersItemEquip.getRingOneInfo(), charactersItemEquip.getRingTwoInfo(), charactersItemEquip.getRingThreeInfo(), charactersItemEquip.getRingFourInfo(), charactersItemEquip.getWeaponInfo(), charactersItemEquip.getSubWeaponInfo(), charactersItemEquip.getEmblemInfo(), charactersItemEquip.getBadgeInfo(), charactersItemEquip.getMedalInfo(), charactersItemEquip.getPoketInfo(), charactersItemEquip.getHeartInfo());
+                CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getCharactersName(), charactersItemEquip.getHatInfo(), charactersItemEquip.getTopInfo(), charactersItemEquip.getBottomInfo(), charactersItemEquip.getCapeInfo(), charactersItemEquip.getShoesInfo(), charactersItemEquip.getGlovesInfo(), charactersItemEquip.getShoulderInfo(), charactersItemEquip.getFaceInfo(), charactersItemEquip.getEyeInfo(), charactersItemEquip.getEarInfo(), charactersItemEquip.getPendantOneInfo(), charactersItemEquip.getPendantTwoInfo(), charactersItemEquip.getBeltInfo(), charactersItemEquip.getRingOneInfo(), charactersItemEquip.getRingTwoInfo(), charactersItemEquip.getRingThreeInfo(), charactersItemEquip.getRingFourInfo(), charactersItemEquip.getWeaponInfo(), charactersItemEquip.getSubWeaponInfo(), charactersItemEquip.getEmblemInfo(), charactersItemEquip.getBadgeInfo(), charactersItemEquip.getMedalInfo(), charactersItemEquip.getPoketInfo(), charactersItemEquip.getHeartInfo());
                 return CompletableFuture.completedFuture(charactersItemEquipDTO);
 
             } else {
@@ -253,7 +254,7 @@ public class CharacterService {
 
                         CharactersItemEquip charactersItemEquip = new CharactersItemEquip(request.getCharactersName(), hatInfo, topInfo, bottomInfo, capeInfo, shoesInfo, glovesInfo, shoulderInfo, faceInfo, eyeInfo, earInfo, pendantOneInfo, pendantTwoInfo, beltInfo, ringOneInfo, ringTwoInfo, ringThreeInfo, ringFourInfo, weaponInfo, subWeaponInfo, emblemInfo, badgeInfo, medalInfo, poketInfo, heartInfo);
                         charactersItemEquipRepository.save(charactersItemEquip);
-                        CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO( request.getCharactersName(), hatInfo, topInfo, bottomInfo, capeInfo, shoesInfo, glovesInfo, shoulderInfo, faceInfo, eyeInfo, earInfo, pendantOneInfo, pendantTwoInfo, beltInfo, ringOneInfo, ringTwoInfo, ringThreeInfo, ringFourInfo, weaponInfo, subWeaponInfo, emblemInfo, badgeInfo, medalInfo, poketInfo, heartInfo);
+                        CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getCharactersName(), hatInfo, topInfo, bottomInfo, capeInfo, shoesInfo, glovesInfo, shoulderInfo, faceInfo, eyeInfo, earInfo, pendantOneInfo, pendantTwoInfo, beltInfo, ringOneInfo, ringTwoInfo, ringThreeInfo, ringFourInfo, weaponInfo, subWeaponInfo, emblemInfo, badgeInfo, medalInfo, poketInfo, heartInfo);
                         return Mono.just(charactersItemEquipDTO);
                     } catch (Exception exception) {
                         System.err.println("에러: " + exception.getMessage());
@@ -328,12 +329,10 @@ public class CharacterService {
 
     }
 
-
-    //////////
-
+    ///////  각 아이템 세부 내용을 종합적으로 하나의 코드로 가져오는거
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(GetCharactersInfo request) {
+    public CompletableFuture<CharactersItemInfoDTO> getCharactersItemInfo(GetCharactersInfo request, String equipmentType) {
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
             if (charactersItemEquipOptional.isPresent()) {
@@ -342,43 +341,69 @@ public class CharacterService {
                 JsonNode jsonInfo = null;
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+
+                    switch (equipmentType) {
+                        case "hat":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+                            break;
+                        case "glove":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
+                            break;
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
-                );
                 Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
                 CharactersInfo charactersInfo = charactersInfoOptional.get();
-                System.out.println(charactersInfo.getCharactersLevel() + "levellevel");
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialOne(), charactersInfo.getCharactersLevel());
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialTwo(), charactersInfo.getCharactersLevel());
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialThree(), charactersInfo.getCharactersLevel());
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalOne(), charactersInfo.getCharactersLevel());
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalTwo(), charactersInfo.getCharactersLevel());
-                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalThree(), charactersInfo.getCharactersLevel());
+                CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
 
-                int hatStrPotentialPer = charactersHatInfoDTO.getStrPotentialPer();
-                int hatDexPotentialPer = charactersHatInfoDTO.getDexPotentialPer();
-                int hatIntPotentialPer = charactersHatInfoDTO.getIntPotentialPer();
-                int hatLukPotentialPer = charactersHatInfoDTO.getLukPotentialPer();
-                int hatAllStatPotentialPer = charactersHatInfoDTO.getAllStatPotentialPer();
-                int hatStrPotentialStat = charactersHatInfoDTO.getStrPotentialStat();
-                int hatDexPotentialStat = charactersHatInfoDTO.getDexPotentialStat();
-                int hatIntPotentialStat = charactersHatInfoDTO.getIntPotentialStat();
-                int hatLukPotentialStat = charactersHatInfoDTO.getLukPotentialStat();
-                int hatAtMgPotentialPer = charactersHatInfoDTO.getAtMgPotentialPer();
-                int hatAtMgPotentialStat = charactersHatInfoDTO.getAtMgPotentialStat();
+                charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
+                charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
+                charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
+                charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
+                charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asDouble());
+                charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asDouble());
+                charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
+                charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
+                charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
+                charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
+                charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
+                charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
+                charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
+                charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
+                charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
+                charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
+                charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
+                charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
+                charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
+                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                if (jsonInfo.get("soul_option").asText() != "null") {
+                    charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
+                }
 
-                System.out.println("hatStrPotentialPer" + hatStrPotentialPer);
-                System.out.println("hatDexPotentialPer" + hatDexPotentialPer);
-                System.out.println("hatAllStatPotentialPer" + hatAllStatPotentialPer);
-                System.out.println("hatAtMgPotentialStat" + hatAtMgPotentialStat);
-                System.out.println("hatStrPotentialStat" + hatStrPotentialStat);
-                System.out.println("hatDexPotentialStat" + hatDexPotentialStat);
+                charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
 
+                CharactersHatInfoDTO charactersHatInfoDTO =new CharactersHatInfoDTO();
 
-                return CompletableFuture.completedFuture(charactersHatInfoDTO);
+                switch (equipmentType) {
+                    case "hat":
+//                        CharactersHatInfoDTO
+                                charactersHatInfoDTO = new CharactersHatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getCriticalDamage());
+
+                        break;
+                    case "glove":
+//                        CharactersHatInfoDTO
+                                charactersHatInfoDTO = new CharactersHatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getCriticalDamage());
+                        break;
+                }
+
+                return CompletableFuture.completedFuture(charactersItemInfoDTO);
             } else {
                 return null;
             }
@@ -386,6 +411,65 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
+
+    //////////
+//
+//    @Async("characterThreadPool")
+//    @Transactional
+//    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(GetCharactersInfo request) {
+//        if (rateLimiter.tryAcquire()) {
+//            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
+//            if (charactersItemEquipOptional.isPresent()) {
+//
+//                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+//                JsonNode jsonInfo = null;
+//                try {
+//                    ObjectMapper objectMapper = new ObjectMapper();
+//                    jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
+//                );
+//                Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
+//                CharactersInfo charactersInfo = charactersInfoOptional.get();
+//                System.out.println(charactersInfo.getCharactersLevel() + "levellevel");
+//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialOne(), charactersInfo.getCharactersLevel());
+//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialTwo(), charactersInfo.getCharactersLevel());
+//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialThree(), charactersInfo.getCharactersLevel());
+//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalOne(), charactersInfo.getCharactersLevel());
+//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalTwo(), charactersInfo.getCharactersLevel());
+//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalThree(), charactersInfo.getCharactersLevel());
+//
+//                int hatStrPotentialPer = charactersHatInfoDTO.getStrPotentialPer();
+//                int hatDexPotentialPer = charactersHatInfoDTO.getDexPotentialPer();
+//                int hatIntPotentialPer = charactersHatInfoDTO.getIntPotentialPer();
+//                int hatLukPotentialPer = charactersHatInfoDTO.getLukPotentialPer();
+//                int hatAllStatPotentialPer = charactersHatInfoDTO.getAllStatPotentialPer();
+//                int hatStrPotentialStat = charactersHatInfoDTO.getStrPotentialStat();
+//                int hatDexPotentialStat = charactersHatInfoDTO.getDexPotentialStat();
+//                int hatIntPotentialStat = charactersHatInfoDTO.getIntPotentialStat();
+//                int hatLukPotentialStat = charactersHatInfoDTO.getLukPotentialStat();
+//                int hatAtMgPotentialPer = charactersHatInfoDTO.getAtMgPotentialPer();
+//                int hatAtMgPotentialStat = charactersHatInfoDTO.getAtMgPotentialStat();
+//
+//                System.out.println("hatStrPotentialPer" + hatStrPotentialPer);
+//                System.out.println("hatDexPotentialPer" + hatDexPotentialPer);
+//                System.out.println("hatAllStatPotentialPer" + hatAllStatPotentialPer);
+//                System.out.println("hatAtMgPotentialStat" + hatAtMgPotentialStat);
+//                System.out.println("hatStrPotentialStat" + hatStrPotentialStat);
+//                System.out.println("hatDexPotentialStat" + hatDexPotentialStat);
+//
+//
+//                return CompletableFuture.completedFuture(charactersHatInfoDTO);
+//            } else {
+//                return null;
+//            }
+//        } else {
+//            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+//        }
+//    }
 
     @Async("characterThreadPool")
     @Transactional
@@ -2088,8 +2172,8 @@ public class CharacterService {
     @Transactional
     public void setCharactersBaseTotalInfo(CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO) {
 
-        CharactersBaseTotalInfo charactersBaseTotalInfo =new CharactersBaseTotalInfo(charactersBaseTotalInfoDTO.getCharactersName(),
-                charactersBaseTotalInfoDTO.getAddAllStat(),charactersBaseTotalInfoDTO.getAddBossDamage(),charactersBaseTotalInfoDTO.getAddAtMgPower(),charactersBaseTotalInfoDTO.getPetAtMgPower(),charactersBaseTotalInfoDTO.getMainStatBase(),charactersBaseTotalInfoDTO.getMainStatSkill(),charactersBaseTotalInfoDTO.getMainStatPerBase(),charactersBaseTotalInfoDTO.getMainStatPerSkill(),charactersBaseTotalInfoDTO.getMainStatNonPer(),charactersBaseTotalInfoDTO.getSubStatBase(),charactersBaseTotalInfoDTO.getSubStatSkill(),charactersBaseTotalInfoDTO.getSubStatPerBase(),charactersBaseTotalInfoDTO.getSubStatPerSkill(),charactersBaseTotalInfoDTO.getSubStatNonPer(),charactersBaseTotalInfoDTO.getAtMgPowerBase(),charactersBaseTotalInfoDTO.getAtMgPowerSkill(),charactersBaseTotalInfoDTO.getAtMgPowerPerBase(), charactersBaseTotalInfoDTO.getAtMgPowerPerSkill(),charactersBaseTotalInfoDTO.getCriticalDamageBase(),charactersBaseTotalInfoDTO.getCriticalDamageSkill(),charactersBaseTotalInfoDTO.getDamageBase(),charactersBaseTotalInfoDTO.getDamageSkill(),charactersBaseTotalInfoDTO.getBossDamageBase(),charactersBaseTotalInfoDTO.getBossDamageSkill(),charactersBaseTotalInfoDTO.isFree());
+        CharactersBaseTotalInfo charactersBaseTotalInfo = new CharactersBaseTotalInfo(charactersBaseTotalInfoDTO.getCharactersName(),
+                charactersBaseTotalInfoDTO.getAddAllStat(), charactersBaseTotalInfoDTO.getAddBossDamage(), charactersBaseTotalInfoDTO.getAddAtMgPower(), charactersBaseTotalInfoDTO.getPetAtMgPower(), charactersBaseTotalInfoDTO.getMainStatBase(), charactersBaseTotalInfoDTO.getMainStatSkill(), charactersBaseTotalInfoDTO.getMainStatPerBase(), charactersBaseTotalInfoDTO.getMainStatPerSkill(), charactersBaseTotalInfoDTO.getMainStatNonPer(), charactersBaseTotalInfoDTO.getSubStatBase(), charactersBaseTotalInfoDTO.getSubStatSkill(), charactersBaseTotalInfoDTO.getSubStatPerBase(), charactersBaseTotalInfoDTO.getSubStatPerSkill(), charactersBaseTotalInfoDTO.getSubStatNonPer(), charactersBaseTotalInfoDTO.getAtMgPowerBase(), charactersBaseTotalInfoDTO.getAtMgPowerSkill(), charactersBaseTotalInfoDTO.getAtMgPowerPerBase(), charactersBaseTotalInfoDTO.getAtMgPowerPerSkill(), charactersBaseTotalInfoDTO.getCriticalDamageBase(), charactersBaseTotalInfoDTO.getCriticalDamageSkill(), charactersBaseTotalInfoDTO.getDamageBase(), charactersBaseTotalInfoDTO.getDamageSkill(), charactersBaseTotalInfoDTO.getBossDamageBase(), charactersBaseTotalInfoDTO.getBossDamageSkill(), charactersBaseTotalInfoDTO.isFree());
 
         charactersBaseTotalInfoRepository.deleteByCharactersName(charactersBaseTotalInfoDTO
                 .getCharactersName());
@@ -2104,8 +2188,8 @@ public class CharacterService {
                 CharactersBaseTotalInfo charactersBaseTotalInfo = charactersBaseTotalInfoOptional.get();
 
 
-                CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO =new CharactersBaseTotalInfoDTO(charactersBaseTotalInfo.getCharactersName(),
-                charactersBaseTotalInfo.getAddAllStat(),charactersBaseTotalInfo.getAddBossDamage(),charactersBaseTotalInfo.getAddAtMgPower(),charactersBaseTotalInfo.getPetAtMgPower(),charactersBaseTotalInfo.getMainStatBase(),charactersBaseTotalInfo.getMainStatSkill(),charactersBaseTotalInfo.getMainStatPerBase(),charactersBaseTotalInfo.getMainStatPerSkill(),charactersBaseTotalInfo.getMainStatNonPer(),charactersBaseTotalInfo.getSubStatBase(),charactersBaseTotalInfo.getSubStatSkill(),charactersBaseTotalInfo.getSubStatPerBase(),charactersBaseTotalInfo.getSubStatPerSkill(),charactersBaseTotalInfo.getSubStatNonPer(),charactersBaseTotalInfo.getAtMgPowerBase(),charactersBaseTotalInfo.getAtMgPowerSkill(),charactersBaseTotalInfo.getAtMgPowerPerBase(), charactersBaseTotalInfo.getAtMgPowerPerSkill(),charactersBaseTotalInfo.getCriticalDamageBase(),charactersBaseTotalInfo.getCriticalDamageSkill(),charactersBaseTotalInfo.getDamageBase(),charactersBaseTotalInfo.getDamageSkill(),charactersBaseTotalInfo.getBossDamageBase(),charactersBaseTotalInfo.getBossDamageSkill(),charactersBaseTotalInfo.isFree());
+                CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO = new CharactersBaseTotalInfoDTO(charactersBaseTotalInfo.getCharactersName(),
+                        charactersBaseTotalInfo.getAddAllStat(), charactersBaseTotalInfo.getAddBossDamage(), charactersBaseTotalInfo.getAddAtMgPower(), charactersBaseTotalInfo.getPetAtMgPower(), charactersBaseTotalInfo.getMainStatBase(), charactersBaseTotalInfo.getMainStatSkill(), charactersBaseTotalInfo.getMainStatPerBase(), charactersBaseTotalInfo.getMainStatPerSkill(), charactersBaseTotalInfo.getMainStatNonPer(), charactersBaseTotalInfo.getSubStatBase(), charactersBaseTotalInfo.getSubStatSkill(), charactersBaseTotalInfo.getSubStatPerBase(), charactersBaseTotalInfo.getSubStatPerSkill(), charactersBaseTotalInfo.getSubStatNonPer(), charactersBaseTotalInfo.getAtMgPowerBase(), charactersBaseTotalInfo.getAtMgPowerSkill(), charactersBaseTotalInfo.getAtMgPowerPerBase(), charactersBaseTotalInfo.getAtMgPowerPerSkill(), charactersBaseTotalInfo.getCriticalDamageBase(), charactersBaseTotalInfo.getCriticalDamageSkill(), charactersBaseTotalInfo.getDamageBase(), charactersBaseTotalInfo.getDamageSkill(), charactersBaseTotalInfo.getBossDamageBase(), charactersBaseTotalInfo.getBossDamageSkill(), charactersBaseTotalInfo.isFree());
 
 
                 return CompletableFuture.completedFuture(charactersBaseTotalInfoDTO);
@@ -2116,13 +2200,6 @@ public class CharacterService {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
-
-
-
-
-
-
-
 
 
     ///////////////

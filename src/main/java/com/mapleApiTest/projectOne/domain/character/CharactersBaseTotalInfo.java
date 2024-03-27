@@ -36,6 +36,8 @@ public class CharactersBaseTotalInfo {
     private  double BossDamageSkill;
     private  boolean isFree;
 
+    protected CharactersBaseTotalInfo(){};
+
     public CharactersBaseTotalInfo(String charactersName, int addAllStat, double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, double criticalDamageBase, double criticalDamageSkill, double damageBase, double damageSkill, double bossDamageBase, double bossDamageSkill, boolean isFree) {
         this.charactersName = charactersName;
         this.addAllStat = addAllStat;
