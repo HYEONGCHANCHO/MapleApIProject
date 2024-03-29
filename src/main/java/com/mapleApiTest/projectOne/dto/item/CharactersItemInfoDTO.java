@@ -33,9 +33,11 @@ public class CharactersItemInfoDTO {
     int potentialSubStatPer;
     int potentialAtMgStat;
     int potentialAtMgPer;
-    Double bossDamage;
-    Double damage;
-    int criticalDamage=0;
+    int potentialBossDamagePer;
+    int potentialDamagePer;
+    int bossDamage;
+    int damage;
+    int criticalDamage = 0;
 
 
     int excepStr;
@@ -69,6 +71,7 @@ public class CharactersItemInfoDTO {
     int atPotentialPer = 0;
     int mgPotentialStat = 0;
     int mgPotentialPer = 0;
+    int criticalDamagePotential = 0;
 
     int atMgPotentialStat = 0;
     int atMgPotentialStatPer = 0;
@@ -76,97 +79,106 @@ public class CharactersItemInfoDTO {
 
     public void processPotential(String potential, int charactersLevel) {
 
-        char type = potential.charAt(0);
-        System.out.println(charactersLevel + "level");
-        if (potential.startsWith(String.valueOf(type))) {
-            String[] parts = potential.split("\\+");
-            String lastPart = parts[1];
+        if (potential != "null") {
+            char type = potential.charAt(0);
+//            System.out.println(charactersLevel + "level");
+            if (potential.startsWith(String.valueOf(type))) {
+                String[] parts = potential.split("\\+");
+                String lastPart = parts[1];
 
-            if (lastPart.contains("%")) {
-                lastPart = lastPart.replace("%", "");
-                int number = Integer.parseInt(lastPart);
-                switch (type) {
-                    case 'S':
-                        strPotentialPer += number;
-                        break;
-                    case 'D':
-                        dexPotentialPer += number;
-                        break;
-                    case 'I':
-                        intPotentialPer += number;
-                        break;
-                    case 'L':
-                        lukPotentialPer += number;
-                        break;
-                    case '올':
-                        allStatPotentialPer += number;
-                        break;
-                    case '공':
-                        atPotentialPer += number;
-                        break;
-                    case '마':
-                        mgPotentialPer += number;
-                        break;
-                    case '크':
-                        criticalDamage += number;
-                        break;
+                if (lastPart.contains("%")) {
+                    lastPart = lastPart.replace("%", "");
+                    int number = Integer.parseInt(lastPart);
+                    switch (type) {
+                        case 'S':
+                            strPotentialPer += number;
+                            break;
+                        case 'D':
+                            dexPotentialPer += number;
+                            break;
+                        case 'I':
+                            intPotentialPer += number;
+                            break;
+                        case 'L':
+                            lukPotentialPer += number;
+                            break;
+                        case '올':
+                            allStatPotentialPer += number;
+                            break;
+                        case '공':
+                            atPotentialPer += number;
+                            break;
+                        case '마':
+                            mgPotentialPer += number;
+                            break;
+                        case '크':
+                            criticalDamagePotential += number;
+                            break;
+                        case '보':
+                            potentialBossDamagePer += number;
+                            break;
+                        case '데':
+                            potentialDamagePer += number;
+                            break;
 
-                }
-            } else {
+                    }
+                } else {
 
-                int number = Integer.parseInt(lastPart);
+                    int number = Integer.parseInt(lastPart);
 
-                switch (type) {
-                    case 'S':
-                        strPotentialStat += number;
-                        break;
-                    case 'D':
-                        dexPotentialStat += number;
-                        break;
-                    case 'I':
-                        intPotentialStat += number;
-                        break;
-                    case 'L':
-                        lukPotentialStat += number;
-                        break;
-                    case '올':
-                        allStatPotential += number;
-                        break;
-                    case '공':
-                        atPotentialStat += number;
-                        break;
-                    case '마':
-                        mgPotentialStat += number;
-                        break;
-                    case '캐':
-                        char typeTwo = potential.charAt(13);
-                        switch (typeTwo) {
-                            case 'S':
-                                strPotentialStat += number * (charactersLevel / 9);
-                                break;
-                            case 'D':
-                                dexPotentialStat += number * (charactersLevel / 9);
-                                break;
-                            case 'I':
-                                intPotentialStat += number * (charactersLevel / 9);
-                                break;
-                            case 'L':
-                                lukPotentialStat += number * (charactersLevel / 9);
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                    switch (type) {
+                        case 'S':
+                            strPotentialStat += number;
+                            break;
+                        case 'D':
+                            dexPotentialStat += number;
+                            break;
+                        case 'I':
+                            intPotentialStat += number;
+                            break;
+                        case 'L':
+                            lukPotentialStat += number;
+                            break;
+                        case '올':
+                            allStatPotential += number;
+                            break;
+                        case '공':
+                            atPotentialStat += number;
+                            break;
+                        case '마':
+                            mgPotentialStat += number;
+                            break;
+                        case '캐':
+                            char typeTwo = potential.charAt(13);
+                            switch (typeTwo) {
+                                case 'S':
+                                    strPotentialStat += number * (charactersLevel / 9);
+                                    break;
+                                case 'D':
+                                    dexPotentialStat += number * (charactersLevel / 9);
+                                    break;
+                                case 'I':
+                                    intPotentialStat += number * (charactersLevel / 9);
+                                    break;
+                                case 'L':
+                                    lukPotentialStat += number * (charactersLevel / 9);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+
         }
     }
 
     public void processSoul(String soul) {
 
-
+        if (soul != "null") {
             char type = soul.charAt(0);
             if (soul.startsWith(String.valueOf(type))) {
                 String[] parts = soul.split("\\+");
@@ -232,12 +244,13 @@ public class CharactersItemInfoDTO {
                     }
                 }
             }
+        }
     }
 
     public void setCharactersMainSubStat(String charactersClass) {
 
         if (Arrays.asList("바이퍼", "히어로").contains(charactersClass)) {
- //스탯별로 직업 분류할것
+            //스탯별로 직업 분류할것
 
             mainStat = str + excepStr;
             subStat = dex + excepDex;
@@ -254,6 +267,14 @@ public class CharactersItemInfoDTO {
 
         }
 
+    }
+
+    public int getCriticalDamagePotential() {
+        return criticalDamagePotential;
+    }
+
+    public void setCriticalDamagePotential(int criticalDamagePotential) {
+        this.criticalDamagePotential = criticalDamagePotential;
     }
 
     public String getItem_equipment_slot() {
@@ -376,11 +397,11 @@ public class CharactersItemInfoDTO {
         this.potentialAtMgPer = potentialAtMgPer;
     }
 
-    public Double getBossDamage() {
+    public int getBossDamage() {
         return bossDamage;
     }
 
-    public void setBossDamage(Double bossDamage) {
+    public void setBossDamage(int bossDamage) {
         this.bossDamage = bossDamage;
     }
 
@@ -632,11 +653,27 @@ public class CharactersItemInfoDTO {
         this.atMgPotentialStatPer = atMgPotentialStatPer;
     }
 
-    public Double getDamage() {
+    public int getDamage() {
         return damage;
     }
 
-    public void setDamage(Double damage) {
+    public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public int getPotentialBossDamagePer() {
+        return potentialBossDamagePer;
+    }
+
+    public void setPotentialBossDamagePer(int potentialBossDamagePer) {
+        this.potentialBossDamagePer = potentialBossDamagePer;
+    }
+
+    public int getPotentialDamagePer() {
+        return potentialDamagePer;
+    }
+
+    public void setPotentialDamagePer(int potentialDamagePer) {
+        this.potentialDamagePer = potentialDamagePer;
     }
 }

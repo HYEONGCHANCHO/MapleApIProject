@@ -178,4 +178,35 @@ public class ItemSetEffectDTO {
 
             }
 
+    public int getAllStat() {
+        return allStat;
+    }
+
+    public void setAllStat(int allStat) {
+        this.allStat = allStat;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public int getAtMgPower() {
+        return atMgPower;
+    }
+
+    public void setAtMgPower(int atMgPower) {
+        this.atMgPower = atMgPower;
+    }
+
+    public int getCriticalDamage() {
+        return criticalDamage;
+    }
+
+    public void setCriticalDamage(int criticalDamage) {
+        this.criticalDamage = criticalDamage;
+    }
 }

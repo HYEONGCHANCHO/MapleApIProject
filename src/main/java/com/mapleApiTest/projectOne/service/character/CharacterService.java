@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.RateLimiter;
 import com.mapleApiTest.projectOne.domain.character.*;
 import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
+import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSetEffectDTO;
 import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -94,7 +96,10 @@ public class CharacterService {
     /////////////////////////////////////////////////
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<CharactersInfoDTO> getCharactersInfo(GetCharactersInfo request, String Url, String apiKey, String ocid) {
+    public CompletableFuture<CharactersInfoDTO> getCharactersInfo(GetCharactersInfo request, String apiKey, String ocid) {
+
+        String Url = "/maplestory/v1/character/basic";
+
 
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
@@ -138,7 +143,10 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<CharactersStatInfoDTO> getCharactersStatInfo(GetCharactersInfo request, String Url, String apiKey, String ocid) {
+    public CompletableFuture<CharactersStatInfoDTO> getCharactersStatInfo(GetCharactersInfo request, String apiKey, String ocid) {
+
+        String Url = "/maplestory/v1/character/stat";
+
 
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersStatInfo> charactersStatInfoOptional = charactersStatInfoRepository.findByCharactersName(request.getCharactersName());
@@ -193,7 +201,10 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public CompletableFuture<CharactersItemEquipDTO> getCharactersItemEquip(GetCharactersInfo request, String Url, String apiKey, String ocid) {
+    public CompletableFuture<CharactersItemEquipDTO> getCharactersItemEquip(GetCharactersInfo request, String apiKey, String ocid) {
+
+        String Url = "/maplestory/v1/character/item-equipment";
+
 
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
@@ -329,95 +340,10 @@ public class CharacterService {
 
     }
 
-    ///////  각 아이템 세부 내용을 종합적으로 하나의 코드로 가져오는거
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersItemInfoDTO> getCharactersItemInfo(GetCharactersInfo request, String equipmentType) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-
-                    switch (equipmentType) {
-                        case "hat":
-                            jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
-                            break;
-                        case "glove":
-                            jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
-                            break;
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
-                CharactersInfo charactersInfo = charactersInfoOptional.get();
-                CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
-
-                charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
-                charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
-                charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
-                charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
-                charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asDouble());
-                charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asDouble());
-                charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
-                charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
-                charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
-                charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
-                charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
-                charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
-                charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
-                charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
-                charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
-                charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
-                charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
-                charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
-                charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
-                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
-                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
-                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
-                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
-                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
-                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
-                if (jsonInfo.get("soul_option").asText() != "null") {
-                    charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
-                }
-
-                charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
-
-                CharactersHatInfoDTO charactersHatInfoDTO =new CharactersHatInfoDTO();
-
-                switch (equipmentType) {
-                    case "hat":
-//                        CharactersHatInfoDTO
-                                charactersHatInfoDTO = new CharactersHatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getCriticalDamage());
-
-                        break;
-                    case "glove":
-//                        CharactersHatInfoDTO
-                                charactersHatInfoDTO = new CharactersHatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getCriticalDamage());
-                        break;
-                }
-
-                return CompletableFuture.completedFuture(charactersItemInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-
-    //////////
-//
+    ///////  각 아이템 세부 내용을 종합적으로 하나의 코드로 가져오는거  잠시 주석처리
 //    @Async("characterThreadPool")
 //    @Transactional
-//    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(GetCharactersInfo request) {
+//    public CompletableFuture<CharactersItemStatInfoDTO> getCharactersItemInfo(GetCharactersInfo request, String equipmentType) {
 //        if (rateLimiter.tryAcquire()) {
 //            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
 //            if (charactersItemEquipOptional.isPresent()) {
@@ -426,43 +352,121 @@ public class CharacterService {
 //                JsonNode jsonInfo = null;
 //                try {
 //                    ObjectMapper objectMapper = new ObjectMapper();
-//                    jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+//
+//                    switch (equipmentType) {
+//                        case "hat":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+//                            break;
+//                        case "top":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getTopInfo());
+//                            break;
+//                        case "bottom":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBottomInfo());
+//                            break;
+//                        case "cape":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getCapeInfo());
+//                            break;
+//                        case "shoes":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getShoesInfo());
+//                            break;
+//                        case "gloves":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
+//                            break;
+//                        case "shoulder":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getShoulderInfo());
+//                            break;
+//                        case "face":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getFaceInfo());
+//                            break;
+//                        case "eye":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEyeInfo());
+//                            break;
+//                        case "ear":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEarInfo());
+//                            break;
+//                        case "pendantOne":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantOneInfo());
+//                            break;
+//                        case "pendantTwo":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantTwoInfo());
+//                            break;
+//                        case "belt":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBeltInfo());
+//                            break;
+//                        case "ringOne":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingOneInfo());
+//                            break;
+//                        case "ringTwo":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingTwoInfo());
+//                            break;
+//                        case "ringThree":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingThreeInfo());
+//                            break;
+//                        case "ringFour":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingFourInfo());
+//                            break;
+//                        case "weapon":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
+//                            break;
+//                        case "subWeapon":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getSubWeaponInfo());
+//                            break;
+//                        case "emblem":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEmblemInfo());
+//                            break;
+//                        case "badge":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBadgeInfo());
+//                            break;
+//                        case "medal":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getMedalInfo());
+//                            break;
+//                        case "poket":
+//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPoketInfo());
+//                            break;
+//                    }
+//
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
-//                CharactersHatInfoDTO charactersHatInfoDTO = new CharactersHatInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
-//                );
 //                Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
 //                CharactersInfo charactersInfo = charactersInfoOptional.get();
-//                System.out.println(charactersInfo.getCharactersLevel() + "levellevel");
-//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialOne(), charactersInfo.getCharactersLevel());
-//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialTwo(), charactersInfo.getCharactersLevel());
-//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getPotentialThree(), charactersInfo.getCharactersLevel());
-//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalOne(), charactersInfo.getCharactersLevel());
-//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalTwo(), charactersInfo.getCharactersLevel());
-//                charactersHatInfoDTO.processPotential(charactersHatInfoDTO.getAdditionalThree(), charactersInfo.getCharactersLevel());
+//                CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
 //
-//                int hatStrPotentialPer = charactersHatInfoDTO.getStrPotentialPer();
-//                int hatDexPotentialPer = charactersHatInfoDTO.getDexPotentialPer();
-//                int hatIntPotentialPer = charactersHatInfoDTO.getIntPotentialPer();
-//                int hatLukPotentialPer = charactersHatInfoDTO.getLukPotentialPer();
-//                int hatAllStatPotentialPer = charactersHatInfoDTO.getAllStatPotentialPer();
-//                int hatStrPotentialStat = charactersHatInfoDTO.getStrPotentialStat();
-//                int hatDexPotentialStat = charactersHatInfoDTO.getDexPotentialStat();
-//                int hatIntPotentialStat = charactersHatInfoDTO.getIntPotentialStat();
-//                int hatLukPotentialStat = charactersHatInfoDTO.getLukPotentialStat();
-//                int hatAtMgPotentialPer = charactersHatInfoDTO.getAtMgPotentialPer();
-//                int hatAtMgPotentialStat = charactersHatInfoDTO.getAtMgPotentialStat();
+//                charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
+//                charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
+//                charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
+//                charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
+//                charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
+//                charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
+//                charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
+//                charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
+//                charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
+//                charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
+//                charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
+//                charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
+//                charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
+//                charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
+//                charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
+//                charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
+//                charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
+//                charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
+//                charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
+//                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
+//                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
+//                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
+//                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
+//                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
+//                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
+//                charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
 //
-//                System.out.println("hatStrPotentialPer" + hatStrPotentialPer);
-//                System.out.println("hatDexPotentialPer" + hatDexPotentialPer);
-//                System.out.println("hatAllStatPotentialPer" + hatAllStatPotentialPer);
-//                System.out.println("hatAtMgPotentialStat" + hatAtMgPotentialStat);
-//                System.out.println("hatStrPotentialStat" + hatStrPotentialStat);
-//                System.out.println("hatDexPotentialStat" + hatDexPotentialStat);
+//                charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
+//
+//                CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO();
 //
 //
-//                return CompletableFuture.completedFuture(charactersHatInfoDTO);
+//                charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer());
+//
+//                return CompletableFuture.completedFuture(charactersItemStatInfoDTO);
 //            } else {
 //                return null;
 //            }
@@ -470,6 +474,204 @@ public class CharacterService {
 //            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
 //        }
 //    }
+
+
+    @Async("characterThreadPool")
+    @Transactional
+    public CompletableFuture<CharactersItemTotalStatInfoDTO> getCharactersItemTotalInfo(GetCharactersInfo request) {
+        if (rateLimiter.tryAcquire()) {
+            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
+            if (charactersItemEquipOptional.isPresent()) {
+
+                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+                JsonNode jsonInfo = null;
+                CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO();
+
+                List<String> equipmentTypes = List.of("hat", "top", "bottom", "cape", "shoes", "gloves", "shoulder", "face", "eye", "ear", "pendantOne", "pendantTwo", "belt", "ringOne", "ringTwo", "ringThree", "ringFour", "weapon", "subWeapon", "emblem", "badge", "medal", "poket", "heart");
+                int mainStat = 0;
+                int subStat = 0;
+                int mainStatPer = 0;
+                int subStatPer = 0;
+                int atMgStat = 0;
+                int atMgStatPer = 0;
+                int bossDamage = 0;
+                int damage = 0;
+                int criticalDamage = 0;
+                for (String equipmentType : equipmentTypes) {
+//                    switch (equipmentType) {
+                    try {
+                        ObjectMapper objectMapper = new ObjectMapper();
+
+                        switch (equipmentType) {
+                            case "hat":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+                                break;
+                            case "top":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getTopInfo());
+                                break;
+                            case "bottom":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getBottomInfo());
+                                break;
+                            case "cape":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getCapeInfo());
+                                break;
+                            case "shoes":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getShoesInfo());
+                                break;
+                            case "gloves":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
+                                break;
+                            case "shoulder":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getShoulderInfo());
+                                break;
+                            case "face":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getFaceInfo());
+                                break;
+                            case "eye":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getEyeInfo());
+                                break;
+                            case "ear":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getEarInfo());
+                                break;
+                            case "pendantOne":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantOneInfo());
+                                break;
+                            case "pendantTwo":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantTwoInfo());
+                                break;
+                            case "belt":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getBeltInfo());
+                                break;
+                            case "ringOne":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getRingOneInfo());
+                                break;
+                            case "ringTwo":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getRingTwoInfo());
+                                break;
+                            case "ringThree":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getRingThreeInfo());
+                                break;
+                            case "ringFour":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getRingFourInfo());
+                                break;
+                            case "weapon":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
+                                break;
+                            case "subWeapon":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getSubWeaponInfo());
+                                break;
+                            case "emblem":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getEmblemInfo());
+                                break;
+                            case "badge":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getBadgeInfo());
+                                break;
+                            case "medal":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getMedalInfo());
+                                break;
+                            case "poket":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getPoketInfo());
+                                break;
+                            case "heart":
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getHeartInfo());
+                                break;
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
+                    CharactersInfo charactersInfo = charactersInfoOptional.get();
+                    CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
+
+                    charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
+                    charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
+                    charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
+                    charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
+                    charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
+                    charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
+                    charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
+                    charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
+                    charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
+                    charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
+                    charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
+                    charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
+                    charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
+                    charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
+                    charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
+                    charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
+                    charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
+                    charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
+                    charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
+
+                    charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
+
+
+                    CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer(), charactersItemInfoDTO.getCriticalDamagePotential());
+
+                    System.out.println("Item Equipment Slot: " + charactersItemStatInfoDTO.getItem_equipment_slot());
+                    System.out.println("Item Name: " + charactersItemStatInfoDTO.getItemName());
+                    System.out.println("Main Stat: " + charactersItemStatInfoDTO.getMainStat());
+                    System.out.println("Sub Stat: " + charactersItemStatInfoDTO.getSubStat());
+                    System.out.println("Main Stat Percentage: " + charactersItemStatInfoDTO.getMainStatPer());
+                    System.out.println("Sub Stat Percentage: " + charactersItemStatInfoDTO.getSubStatPer());
+                    System.out.println("Attack/Magic Stat: " + charactersItemStatInfoDTO.getAtMgStat());
+                    System.out.println("Potential Main Stat: " + charactersItemStatInfoDTO.getPotentialMainStat());
+                    System.out.println("Potential Sub Stat: " + charactersItemStatInfoDTO.getPotentialSubStat());
+                    System.out.println("Potential Main Stat Percentage: " + charactersItemStatInfoDTO.getPotentialMainStatPer());
+                    System.out.println("Potential Sub Stat Percentage: " + charactersItemStatInfoDTO.getPotentialSubStatPer());
+                    System.out.println("Potential Attack/Magic Stat: " + charactersItemStatInfoDTO.getPotentialAtMgStat());
+                    System.out.println("Potential Attack/Magic Percentage: " + charactersItemStatInfoDTO.getPotentialAtMgPer());
+                    System.out.println("Boss Damage: " + charactersItemStatInfoDTO.getBossDamage());
+                    System.out.println("Damage: " + charactersItemStatInfoDTO.getDamage());
+                    System.out.println("Critical Damage: " + charactersItemStatInfoDTO.getCriticalDamage());
+                    System.out.println("Potential Boss Damage Percentage: " + charactersItemStatInfoDTO.getPotentialBossDamagePer());
+                    System.out.println("Potential Damage Percentage: " + charactersItemStatInfoDTO.getPotentialDamagePer());
+                    System.out.println("Potential Critical Damage: " + charactersItemStatInfoDTO.getPotentialCriticalDamage());
+
+
+                    mainStat += charactersItemStatInfoDTO.getMainStat() + charactersItemStatInfoDTO.getPotentialMainStat();
+                    subStat += charactersItemStatInfoDTO.getSubStat() + charactersItemStatInfoDTO.getPotentialSubStat();
+                    mainStatPer += charactersItemStatInfoDTO.getMainStatPer() + charactersItemStatInfoDTO.getPotentialMainStatPer();
+                    subStatPer += charactersItemStatInfoDTO.getSubStatPer() + charactersItemStatInfoDTO.getPotentialSubStatPer();
+                    atMgStat += charactersItemStatInfoDTO.getAtMgStat() + charactersItemStatInfoDTO.getPotentialAtMgStat();
+                    atMgStatPer += charactersItemStatInfoDTO.getPotentialAtMgPer();
+                    bossDamage += charactersItemStatInfoDTO.getBossDamage() + charactersItemStatInfoDTO.getPotentialBossDamagePer();
+                    damage += charactersItemStatInfoDTO.getDamage() + charactersItemStatInfoDTO.getPotentialDamagePer();
+                    criticalDamage += charactersItemStatInfoDTO.getCriticalDamage() + charactersItemStatInfoDTO.getPotentialCriticalDamage();
+
+                    System.out.println("mainStat : " + mainStat);
+                    System.out.println("subStat : " + subStat);
+                    System.out.println("mainStatPer : " + mainStatPer);
+                    System.out.println("subStatPer : " + subStatPer);
+                    System.out.println("atMgStat : " + atMgStat);
+                    System.out.println("atMgStatPer : " + atMgStatPer);
+                    System.out.println("bossDamage : " + bossDamage);
+                    System.out.println("damage : " + damage);
+                    System.out.println("criticalDamage : " + criticalDamage);
+
+
+                    charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO(mainStat, subStat, mainStatPer, subStatPer, atMgStat, atMgStatPer, bossDamage, damage, criticalDamage);
+
+                }
+                return CompletableFuture.completedFuture(charactersItemTotalStatInfoDTO);
+
+
+            } else {
+                return null;
+            }
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+
+    }
 
     @Async("characterThreadPool")
     @Transactional
@@ -2295,10 +2497,12 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public void getCharactersSetInfo(String charactersName, String ocid) {
+    public CompletableFuture<CharactersSetEffectInfoDTO>  getCharactersSetInfo(String charactersName, String ocid) {
         if (rateLimiter.tryAcquire()) {
             String Url = "/maplestory/v1/character/set-effect";
-            webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+
+            Mono<CharactersSetEffectInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                 try {
                     int absolSetCount = 0;
                     int arcaneSetCount = 0;
@@ -2340,22 +2544,62 @@ public class CharacterService {
                                 break;
                         }
 
-                        CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = new CharactersSetEffectInfoDTO(charactersName, ocid, absolSetCount, arcaneSetCount, bossAcSetCount, cvelSetCount, lucidAcSetCount, eternalSetCount, lomienSetCount, mystarSetCount);
-
 
                     }
+                    CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = new CharactersSetEffectInfoDTO(charactersName, ocid, absolSetCount, arcaneSetCount, bossAcSetCount, cvelSetCount, lucidAcSetCount, eternalSetCount, lomienSetCount, mystarSetCount);
+
+                    System.out.println("앱솔세트 :"+ absolSetCount);
+                    System.out.println("아케인세트 :"+ arcaneSetCount);
+                    System.out.println("보장세트 :"+ bossAcSetCount);
+                    System.out.println("칠흙세트 :"+ cvelSetCount);
+                    System.out.println("여명?세트 :"+ lucidAcSetCount);
+                    System.out.println("에테세트 :"+ eternalSetCount);
+                    System.out.println("루타세트 :"+ lomienSetCount);
+                    System.out.println("마이세트 :"+ mystarSetCount);
+
+                    return Mono.just(charactersSetEffectInfoDTO);
+
                 } catch (Exception exception) {
                     System.err.println("에러: " + exception.getMessage());
                     return Mono.error(exception);
                 }
-                return Mono.empty(); // 반환값이 없는 경우에는 empty로 처리
+//                return Mono.empty(); // 반환값이 없는 경우에는 empty로 처리
             }).onErrorResume(exception -> {
                 System.err.println("에러: " + exception.getMessage());
                 exception.printStackTrace(); // 추가된 부분
                 return Mono.error(exception);
             });
+            CompletableFuture<CharactersSetEffectInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        }else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
+
+    @Async("characterThreadPool")
+    @Transactional
+    public ItemSetEffectDTO getCharactersSetStatInfo(CharactersSetEffectInfoDTO charactersSetEffectInfoDTO) {
+
+            ItemSetEffectDTO itemSetEffectDTO =new ItemSetEffectDTO();
+            itemSetEffectDTO.setItemSetEffect(charactersSetEffectInfoDTO.getAbsolSetCount(),charactersSetEffectInfoDTO.getArcaneSetCount(),charactersSetEffectInfoDTO.getBossAcSetCount(),charactersSetEffectInfoDTO.getCvelSetCount(),charactersSetEffectInfoDTO.getLucidAcSetCount(),charactersSetEffectInfoDTO.getLomienSetCount(),charactersSetEffectInfoDTO.getEternalSetCount(),charactersSetEffectInfoDTO.getMystarSetCount());
+            System.out.println("세트 allstat : "+itemSetEffectDTO.getAllStat());
+            System.out.println("세트 공격력 : "+itemSetEffectDTO.getAtMgPower());
+            System.out.println("세트 보공 : "+itemSetEffectDTO.getDamage()); //보스데미지
+            System.out.println("세트 크뎀 : "+itemSetEffectDTO.getCriticalDamage());
+
+
+            return itemSetEffectDTO;
+
+    }
+
+
+
+
+
+
+    ///////
+
 
 
 }

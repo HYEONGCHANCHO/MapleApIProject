@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,48 +43,107 @@ public class CharacterController {
         return characterService.getCharacterOcid(getCharactersInfo);
     }
 
-    /////////////////////////////////
-
     @GetMapping("/maplestory/v1/character/basic")
-    public CompletableFuture<CharactersInfoDTO> getCharacterInfo(HttpServletRequest request, @RequestParam String charactersName) {
+    public CompletableFuture<CharactersInfoDTO> getCharacterInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
-        String Url = request.getRequestURI();
-        return characterService.getCharactersInfo(getCharactersInfo, Url, apiKey, ocid);
+        return characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid);
 
     }
 
     @GetMapping("/maplestory/v1/character/stat")
-    public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(HttpServletRequest request, @RequestParam String charactersName) {
+    public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
-        String Url = request.getRequestURI();
-        return characterService.getCharactersStatInfo(getCharactersInfo, Url, apiKey, ocid);
+        return characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid);
 
     }
-
 
     @GetMapping("/maplestory/v1/character/item-equipment")
-    public CompletableFuture<CharactersItemEquipDTO> getCharacterItemEquipInfo(HttpServletRequest request, @RequestParam String charactersName) {
+    public CompletableFuture<CharactersItemEquipDTO> getCharacterItemEquipInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
-        String Url = request.getRequestURI();
-        return characterService.getCharactersItemEquip(getCharactersInfo, Url, apiKey, ocid);
+        return characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid);
 
     }
 
+    //이것만 호출해도 장비 정보 다 확인 가능
+//    @GetMapping("/CharactersEquipInfo")
+//    public CompletableFuture<CharactersItemStatInfoDTO> getCharactersItemStatInfo(@RequestParam String charactersName, String equipmentType) {
+//        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+//        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+//        String ocid = CompletableFutureOcid.join();
+//        CharactersInfoDTO charactersInfoDTO = characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid).join();
+//        CharactersStatInfoDTO charactersStatInfoDTO =
+//                characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
+//        CharactersItemEquipDTO charactersItemEquipDTO = characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid).join();
+//
+//        return characterService.getCharactersItemInfo(getCharactersInfo, equipmentType);
+//    }
 
-    @GetMapping("/totalInfo")
-    public CompletableFuture<CharactersTotalInfoDTO> getCharacterItemEquipInfo(@RequestParam String charactersName) {
+    //이것만 호출해도 장비 정보 다 확인 가능
+    @GetMapping("/CharactersItemTotalStatInfo")
+    public CompletableFuture<CharactersItemTotalStatInfoDTO> getCharactersItemTotalStatInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        CharactersInfoDTO charactersInfoDTO = characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid).join();
+        CharactersStatInfoDTO charactersStatInfoDTO =
+                characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
+        CharactersItemEquipDTO charactersItemEquipDTO = characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid).join();
 
-        return characterService.getCharactersTotalInfo(getCharactersInfo);
-
+        return characterService.getCharactersItemTotalInfo(getCharactersInfo);
     }
 
+//        CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO();
+//        List<String> equipmentTypes = List.of("hat", "top");
+//
+//
+//        for (String equipmentType : equipmentTypes) { // 모든 equipmentType에 대해 반복
+//            CharactersItemStatInfoDTO charactersItemStatInfoDTO =
+//                    characterService.getCharactersItemInfo(getCharactersInfo, equipmentType).join();
+//        }
+    //서비스 코드에서 하려고 수정중.
+//    }
+
+//    public CharactersItemStatInfoDTO processCharacterItems(@RequestBody GetCharactersInfo characterInfo, @RequestParam List<String> equipmentTypes) {
+//        CharactersItemStatInfoDTO totalResult = new CharactersItemStatInfoDTO(); // 모든 결과를 누적할 객체 생성
+//
+//        for (String equipmentType : equipmentTypes) { // 모든 equipmentType에 대해 반복
+//            CharactersItemStatInfoDTO result = characterService.processCharacterItems(characterInfo, equipmentType).join(); // 각 equipmentType에 대한 처리 수행
+//            addResultToTotal(totalResult, result); // 각 결과를 총 결과에 누적
+//        }
+//
+//        return totalResult;
+//    }
+//
+//    // 개별 결과를 총 결과에 누적하는 메서드
+//    private void addResultToTotal(CharactersItemStatInfoDTO totalResult, CharactersItemStatInfoDTO result) {
+//        // 결과를 누적하는 로직 작성
+//    }
+
+
+//    @GetMapping("/CharactersEquipInfo")
+//    public CompletableFuture<CharactersItemStatInfoDTO> getCharactersTopInfo(@RequestParam String charactersName,String equipmentType) {
+//        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+//
+//
+//
+//
+//        return characterService.getCharactersItemInfo(getCharactersInfo,equipmentType);
+//    }
+
+
+//    @GetMapping("/totalInfo")
+//    public CompletableFuture<CharactersTotalInfoDTO> getCharacterItemEquipInfo(@RequestParam String charactersName) {
+//        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+//
+//        return characterService.getCharactersTotalInfo(getCharactersInfo);
+//
+//    }
 //    @GetMapping("/HatInfo")
 //    public CompletableFuture<CharactersHatInfoDTO> getCharactersHatInfo(@RequestParam String charactersName) {
 //        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
@@ -98,16 +158,6 @@ public class CharacterController {
 
         return characterService.getCharactersTopInfo(getCharactersInfo);
     }
-
-    @GetMapping("/CharactersEquipInfo")
-    public CompletableFuture<CharactersItemInfoDTO> getCharactersTopInfo(@RequestParam String charactersName,String equipmentType) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
-
-        return characterService.getCharactersItemInfo(getCharactersInfo,equipmentType);
-    }
-
-
-
 
 
 //    @GetMapping("/ItemInfoTest")
@@ -210,32 +260,41 @@ public class CharacterController {
 //    }
 
     @GetMapping("/choiceItem")
-    public void choiceItem(@RequestParam int limitPrice, int goalMesoNum, int goalDropNum){
+    public void choiceItem(@RequestParam int limitPrice, int goalMesoNum, int goalDropNum) {
 
-        DropItemChoiceService dropItemChoiceService =new DropItemChoiceService();
-        dropItemChoiceService.dropItemChoice(limitPrice,goalMesoNum,goalDropNum);
+        DropItemChoiceService dropItemChoiceService = new DropItemChoiceService();
+        dropItemChoiceService.dropItemChoice(limitPrice, goalMesoNum, goalDropNum);
 
     }
 
 
     @PostMapping("/setCharactersBaseTotalInfo")
-    public void setCharactersBaseTotalInfo(@RequestParam String charactersName, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree){
-        CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO =new CharactersBaseTotalInfoDTO(charactersName, addAllStat,  addBossDamage, addAtMgPower, petAtMgPower,  mainStatBase,mainStatSkill, mainStatPerBase, mainStatPerSkill,  mainStatNonPer,subStatBase,  subStatSkill, subStatPerBase, subStatPerSkill,  subStatNonPer, atMgPowerBase,  atMgPowerSkill,  atMgPowerPerBase,atMgPowerPerSkill, criticalDamageBase,  criticalDamageSkill,damageBase,  damageSkill, BossDamageBase,BossDamageSkill, isFree);
+    public void setCharactersBaseTotalInfo(@RequestParam String charactersName, int addAllStat, Double addBossDamage, int addAtMgPower, int petAtMgPower, int mainStatBase, int mainStatSkill, int mainStatPerBase, int mainStatPerSkill, int mainStatNonPer, int subStatBase, int subStatSkill, int subStatPerBase, int subStatPerSkill, int subStatNonPer, int atMgPowerBase, int atMgPowerSkill, int atMgPowerPerBase, int atMgPowerPerSkill, Double criticalDamageBase, Double criticalDamageSkill, Double damageBase, Double damageSkill, Double BossDamageBase, Double BossDamageSkill, boolean isFree) {
+        CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO = new CharactersBaseTotalInfoDTO(charactersName, addAllStat, addBossDamage, addAtMgPower, petAtMgPower, mainStatBase, mainStatSkill, mainStatPerBase, mainStatPerSkill, mainStatNonPer, subStatBase, subStatSkill, subStatPerBase, subStatPerSkill, subStatNonPer, atMgPowerBase, atMgPowerSkill, atMgPowerPerBase, atMgPowerPerSkill, criticalDamageBase, criticalDamageSkill, damageBase, damageSkill, BossDamageBase, BossDamageSkill, isFree);
         characterService.setCharactersBaseTotalInfo(charactersBaseTotalInfoDTO);
 
     }
 
     @GetMapping("/calCharactersCombat")
-    public String getCharactersCombat(@RequestParam String charactersName){
+    public String getCharactersCombat(@RequestParam String charactersName) {
 
-        CompletableFuture<CharactersBaseTotalInfoDTO> future =characterService.getCharactersBaseTotalInfoDTO(charactersName);
+        CompletableFuture<CharactersBaseTotalInfoDTO> future = characterService.getCharactersBaseTotalInfoDTO(charactersName);
         CharactersBaseTotalInfoDTO charactersBaseTotalInfoDTO = future.join();
         return characterService.getCharactersCombat(charactersBaseTotalInfoDTO);
 
     }
+    @GetMapping("/charactersSetEffect")
+    public void getCharactersSetEffect(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+
+        CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = characterService.getCharactersSetInfo(charactersName,  ocid).join();
 
 
+        characterService.getCharactersSetStatInfo(charactersSetEffectInfoDTO);
 
-
+    }
 
 }
