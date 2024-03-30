@@ -2428,6 +2428,25 @@ public class CharacterService {
         Double criticalDamageBase = request.getCriticalDamageBase() - request.getCriticalDamageSkill();
         Double DamageBase = request.getDamageBase() - request.getDamageSkill();
         Double BossDamageBase = request.getBossDamageBase() - request.getBossDamageSkill();
+        ////전투력 실험용
+
+        mainStatBase = 2813+40+150+10+39;
+        mainStatNonPer =25010;
+        mainStatPerBase=370;
+        subStatBase=1898+25+150+10+39;
+        subStatNonPer=560;
+        subStatPerBase=144;
+        atMgPowerBase=45+1808+35+21+30+5+129;
+        atMgPowerPerBase=99;
+        criticalDamageBase=16.0+25+13+4;
+        DamageBase=4.0+39+15;
+        BossDamageBase=3.0+158+5+15;
+
+
+
+        /////
+
+
 
 
         BigDecimal criticalDamageBaseBD = BigDecimal.valueOf(criticalDamageBase);
