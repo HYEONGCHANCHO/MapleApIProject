@@ -40,6 +40,7 @@ public class CharactersItemInfoDTO {
     int criticalDamage = 0;
 
 
+
     int excepStr;
     int excepDex;
     int excepInt;
@@ -76,6 +77,23 @@ public class CharactersItemInfoDTO {
     int atMgPotentialStat = 0;
     int atMgPotentialStatPer = 0;
 
+
+    int allStatTitlePer = 0;
+    int allStatTitle = 0;
+    int atMgTitleStat = 0;
+//    int criticalDamageTitle = 0;
+    int atMgTitleStatPer = 0;
+    int bossDamageTitlePer=0;
+    int damageTitlePer=0;
+
+    int strTitlePer = 0;
+    int dexTitlePer = 0;
+    int intTitlePer = 0;
+    int lukTitlePer = 0;
+    int strTitleStat = 0;
+    int dexTitleStat = 0;
+    int intTitleStat = 0;
+    int lukTitleStat = 0;
 
     public void processPotential(String potential, int charactersLevel) {
 
@@ -209,6 +227,12 @@ public class CharactersItemInfoDTO {
                         case '마':
                             mgPotentialPer += number;
                             break;
+                        case '보':
+                            potentialBossDamagePer += number;
+                            break;
+                        case '데':
+                            potentialDamagePer += number;
+                            break;
                         default:
                             break;
 
@@ -247,16 +271,103 @@ public class CharactersItemInfoDTO {
         }
     }
 
+    public void processTitle(String title) {
+
+        if (title != null) {
+            String[] titleParts = title.split("\\\\n");
+            for (String part : titleParts) {
+                if (!part.isEmpty()) { // 빈 문자열은 무시합니다.
+                    System.out.println("a"+part+"dadadadadadad");
+
+                    char type = part.charAt(0);
+                    if (part.startsWith(String.valueOf(type))&& part.contains("+")) {
+                        String[] parts = part.split("\\+");
+                        String lastPart = parts[1];
+                        System.out.println("a"+parts[0]+"dadadadadadad");
+                        System.out.println("a"+parts[1]+"dadadadadadad");
+
+                        if (lastPart.contains("%")) {
+                            lastPart = lastPart.replace("%", "").trim();
+                            int number = Integer.parseInt(lastPart);
+                            switch (type) {
+                                case 'S':
+                                    strTitlePer += number;
+                                    break;
+                                case 'D':
+                                    dexTitlePer += number;
+                                    break;
+                                case 'I':
+                                    intTitlePer += number;
+                                    break;
+                                case 'L':
+                                    lukTitlePer += number;
+                                    break;
+                                case '올':
+                                    allStatTitlePer += number;
+                                    break;
+                                case '공':
+                                    atMgTitleStatPer += number;
+                                    break;
+                                case '마':
+                                    atMgTitleStatPer += number;
+                                    break;
+                                case '보':
+                                    System.out.println("dadadad"+number);
+                                    bossDamageTitlePer += number;
+                                    System.out.println("dadadad"+number);
+                                    break;
+                                case '데':
+                                    damageTitlePer += number;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else {
+
+                            int number = Integer.parseInt(lastPart);
+
+                            switch (type) {
+                                case 'S':
+                                    strTitleStat += number;
+                                    break;
+                                case 'D':
+                                    dexTitleStat += number;
+                                    break;
+                                case 'I':
+                                    intTitleStat += number;
+                                    break;
+                                case 'L':
+                                    lukTitleStat += number;
+                                    break;
+                                case '공':
+                                    atMgTitleStat += number;
+                                    break;
+                                case '올':
+                                    allStatTitle += number;
+                                    break;
+                                case '마':
+                                    atMgTitleStat += number;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void setCharactersMainSubStat(String charactersClass) {
 
         if (Arrays.asList("바이퍼", "히어로").contains(charactersClass)) {
             //스탯별로 직업 분류할것
 
-            mainStat = str + excepStr;
-            subStat = dex + excepDex;
-            mainStatPer = allStat;
-            subStatPer = allStat;
-            atMgStat = attactPower + excepAtPower;
+            mainStat = str + excepStr+strTitleStat+allStatTitle;
+            subStat = dex + excepDex+dexTitleStat+allStatTitle;
+            mainStatPer = allStat+strTitlePer+allStatTitlePer;
+            subStatPer = allStat+dexTitlePer+allStatTitlePer;
+            atMgStat = attactPower + excepAtPower+atMgTitleStat;
 
             potentialMainStat = strPotentialStat + allStatPotential;
             potentialSubStat = dexPotentialStat + allStatPotential;
@@ -267,6 +378,62 @@ public class CharactersItemInfoDTO {
 
         }
 
+    }
+
+    public int getAllStatTitlePer() {
+        return allStatTitlePer;
+    }
+
+    public int getAllStatTitle() {
+        return allStatTitle;
+    }
+
+    public int getAtMgTitleStat() {
+        return atMgTitleStat;
+    }
+
+    public int getAtMgTitleStatPer() {
+        return atMgTitleStatPer;
+    }
+
+    public int getBossDamageTitlePer() {
+        return bossDamageTitlePer;
+    }
+
+    public int getDamageTitlePer() {
+        return damageTitlePer;
+    }
+
+    public int getStrTitlePer() {
+        return strTitlePer;
+    }
+
+    public int getDexTitlePer() {
+        return dexTitlePer;
+    }
+
+    public int getIntTitlePer() {
+        return intTitlePer;
+    }
+
+    public int getLukTitlePer() {
+        return lukTitlePer;
+    }
+
+    public int getStrTitleStat() {
+        return strTitleStat;
+    }
+
+    public int getDexTitleStat() {
+        return dexTitleStat;
+    }
+
+    public int getIntTitleStat() {
+        return intTitleStat;
+    }
+
+    public int getLukTitleStat() {
+        return lukTitleStat;
     }
 
     public int getCriticalDamagePotential() {

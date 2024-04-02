@@ -11,9 +11,6 @@ public class CharactersItemEquip {
     @Column(nullable = false)
     private String charactersName;
 
-//    @Column(nullable = false)
-//    private String date;
-
     @Column(columnDefinition = "json")
     private String hatInfo;
     @Column(columnDefinition = "json")
@@ -63,16 +60,33 @@ public class CharactersItemEquip {
     @Column(columnDefinition = "json")
     private String heartInfo;
 
+   @Column(columnDefinition = "json")
+    private String titleInfo;
+   @Column(columnDefinition = "json")
+    private String dragonHat;
+   @Column(columnDefinition = "json")
+    private String dragonPendant;
+   @Column(columnDefinition = "json")
+    private String dragonWing;
+   @Column(columnDefinition = "json")
+    private String dragonTail;
+   @Column(columnDefinition = "json")
+    private String mechanicEngine;
+   @Column(columnDefinition = "json")
+    private String mechanicArm;
+   @Column(columnDefinition = "json")
+    private String mechanicLeg;
+   @Column(columnDefinition = "json")
+    private String mechanicTran;
+
+
+
 
 
 
     public String getCharactersName() {
         return charactersName;
     }
-
-//    public String getDate() {
-//        return date;
-//    }
 
     public String getHatInfo() {
         return hatInfo;
@@ -170,11 +184,46 @@ public class CharactersItemEquip {
         return beltInfo;
     }
 
+    public String getTitleInfo() {
+        return titleInfo;
+    }
+
+    public String getDragonHat() {
+        return dragonHat;
+    }
+
+    public String getDragonPendant() {
+        return dragonPendant;
+    }
+
+    public String getDragonWing() {
+        return dragonWing;
+    }
+
+    public String getDragonTail() {
+        return dragonTail;
+    }
+
+    public String getMechanicEngine() {
+        return mechanicEngine;
+    }
+
+    public String getMechanicArm() {
+        return mechanicArm;
+    }
+
+    public String getMechanicLeg() {
+        return mechanicLeg;
+    }
+
+    public String getMechanicTran() {
+        return mechanicTran;
+    }
+
     protected CharactersItemEquip(){}
 
-    public CharactersItemEquip(String charactersName,  String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
+    public CharactersItemEquip(String charactersName, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo, String titleInfo, String dragonHat, String dragonPendant, String dragonWing, String dragonTail, String mechanicEngine, String mechanicArm, String mechanicLeg, String mechanicTran) {
         this.charactersName = charactersName;
-//        this.date = date;
         this.hatInfo = hatInfo;
         this.topInfo = topInfo;
         this.bottomInfo = bottomInfo;
@@ -199,5 +248,14 @@ public class CharactersItemEquip {
         this.medalInfo = medalInfo;
         this.poketInfo = poketInfo;
         this.heartInfo = heartInfo;
+        this.titleInfo = titleInfo;
+        this.dragonHat = dragonHat;
+        this.dragonPendant = dragonPendant;
+        this.dragonWing = dragonWing;
+        this.dragonTail = dragonTail;
+        this.mechanicEngine = mechanicEngine;
+        this.mechanicArm = mechanicArm;
+        this.mechanicLeg = mechanicLeg;
+        this.mechanicTran = mechanicTran;
     }
 }

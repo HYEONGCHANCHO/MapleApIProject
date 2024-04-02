@@ -36,14 +36,13 @@ public class CharacterController {
         this.characterService = characterService;
     }
 
-
-    @GetMapping("/maplestory/v1/id")
+    @GetMapping("/maplestory/v1/id") //캐릭터 고유 ocid 불러오기
     public CompletableFuture<String> getCharacterOcid(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         return characterService.getCharacterOcid(getCharactersInfo);
     }
 
-    @GetMapping("/maplestory/v1/character/basic")
+    @GetMapping("/maplestory/v1/character/basic") //캐릭터 기본정보 불러오기 이름 직업 레벨 서  CharactersInfoDTO
     public CompletableFuture<CharactersInfoDTO> getCharacterInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
@@ -52,7 +51,7 @@ public class CharacterController {
 
     }
 
-    @GetMapping("/maplestory/v1/character/stat")
+    @GetMapping("/maplestory/v1/character/stat") //캐릭터 스탯정보 불러오기 CharactersStatInfoDTO
     public CompletableFuture<CharactersStatInfoDTO> getCharacterStatInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
@@ -61,7 +60,7 @@ public class CharacterController {
 
     }
 
-    @GetMapping("/maplestory/v1/character/item-equipment")
+    @GetMapping("/maplestory/v1/character/item-equipment") //캐릭터 착용 장비 정보 불러오기 CharactersItemEquipDTO
     public CompletableFuture<CharactersItemEquipDTO> getCharacterItemEquipInfo(@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
@@ -70,7 +69,24 @@ public class CharacterController {
 
     }
 
-    //이것만 호출해도 장비 정보 다 확인 가능
+    @GetMapping("/CharactersItemTotalStatInfo") //착용 아이템 스탯정보 종합 (세트효과 미포함) CharactersItemTotalStatInfoDTO
+
+    public CompletableFuture<CharactersItemTotalStatInfoDTO> getCharactersItemTotalStatInfo(@RequestParam String charactersName) {
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        CharactersInfoDTO charactersInfoDTO = characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid).join();
+
+        CharactersStatInfoDTO charactersStatInfoDTO =
+                characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
+        CharactersItemEquipDTO charactersItemEquipDTO = characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid).join();
+
+        return characterService.getCharactersItemTotalInfo(getCharactersInfo);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////
+
 //    @GetMapping("/CharactersEquipInfo")
 //    public CompletableFuture<CharactersItemStatInfoDTO> getCharactersItemStatInfo(@RequestParam String charactersName, String equipmentType) {
 //        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
@@ -84,19 +100,7 @@ public class CharacterController {
 //        return characterService.getCharactersItemInfo(getCharactersInfo, equipmentType);
 //    }
 
-    //이것만 호출해도 장비 정보 다 확인 가능
-    @GetMapping("/CharactersItemTotalStatInfo")
-    public CompletableFuture<CharactersItemTotalStatInfoDTO> getCharactersItemTotalStatInfo(@RequestParam String charactersName) {
-        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
-        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
-        String ocid = CompletableFutureOcid.join();
-        CharactersInfoDTO charactersInfoDTO = characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid).join();
-        CharactersStatInfoDTO charactersStatInfoDTO =
-                characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
-        CharactersItemEquipDTO charactersItemEquipDTO = characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid).join();
 
-        return characterService.getCharactersItemTotalInfo(getCharactersInfo);
-    }
 
 //        CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO();
 //        List<String> equipmentTypes = List.of("hat", "top");

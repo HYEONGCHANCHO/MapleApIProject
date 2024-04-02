@@ -6,9 +6,6 @@ import javax.persistence.Column;
 public class CharactersItemEquipDTO {
 
     private String charactersName;
-
-//    private String date;
-
     private String hatInfo;
     private String topInfo;
     private String bottomInfo;
@@ -33,11 +30,19 @@ public class CharactersItemEquipDTO {
     private String medalInfo;
     private String poketInfo;
     private String heartInfo;
+    private String titleInfo;
+    private String dragonHat;
+    private String dragonPendant;
+    private String dragonWing;
+    private String dragonTail;
+    private String mechanicEngine;
+    private String mechanicArm;
+    private String mechanicLeg;
+    private String mechanicTran;
 
 
-    public CharactersItemEquipDTO(String charactersName, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo) {
+    public CharactersItemEquipDTO(String charactersName, String hatInfo, String topInfo, String bottomInfo, String capeInfo, String shoesInfo, String glovesInfo, String shoulderInfo, String faceInfo, String eyeInfo, String earInfo, String pendantOneInfo, String pendantTwoInfo, String beltInfo, String ringOneInfo, String ringTwoInfo, String ringThreeInfo, String ringFourInfo, String weaponInfo, String subWeaponInfo, String emblemInfo, String badgeInfo, String medalInfo, String poketInfo, String heartInfo, String titleInfo, String dragonHat, String dragonPendant, String dragonWing, String dragonTail, String mechanicEngine, String mechanicArm, String mechanicLeg, String mechanicTran) {
         this.charactersName = charactersName;
-//        this.date = date;
         this.hatInfo = hatInfo;
         this.topInfo = topInfo;
         this.bottomInfo = bottomInfo;
@@ -62,6 +67,15 @@ public class CharactersItemEquipDTO {
         this.medalInfo = medalInfo;
         this.poketInfo = poketInfo;
         this.heartInfo = heartInfo;
+        this.titleInfo = titleInfo;
+        this.dragonHat = dragonHat;
+        this.dragonPendant = dragonPendant;
+        this.dragonWing = dragonWing;
+        this.dragonTail = dragonTail;
+        this.mechanicEngine = mechanicEngine;
+        this.mechanicArm = mechanicArm;
+        this.mechanicLeg = mechanicLeg;
+        this.mechanicTran = mechanicTran;
     }
 
     public String getFaceInfo() {
@@ -164,14 +178,39 @@ public class CharactersItemEquipDTO {
         return charactersName;
     }
 
-//    public String getDate() {
-//        return date;
-//    }
+    public String getTitleInfo() {
+        return titleInfo;
+    }
 
-//    public String getItem_equipment() {
-//        return item_equipment;
-//    }
+    public String getDragonHat() {
+        return dragonHat;
+    }
 
+    public String getDragonPendant() {
+        return dragonPendant;
+    }
 
+    public String getDragonWing() {
+        return dragonWing;
+    }
 
+    public String getDragonTail() {
+        return dragonTail;
+    }
+
+    public String getMechanicEngine() {
+        return mechanicEngine;
+    }
+
+    public String getMechanicArm() {
+        return mechanicArm;
+    }
+
+    public String getMechanicLeg() {
+        return mechanicLeg;
+    }
+
+    public String getMechanicTran() {
+        return mechanicTran;
+    }
 }
