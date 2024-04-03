@@ -40,7 +40,6 @@ public class CharactersItemInfoDTO {
     int criticalDamage = 0;
 
 
-
     int excepStr;
     int excepDex;
     int excepInt;
@@ -81,10 +80,10 @@ public class CharactersItemInfoDTO {
     int allStatTitlePer = 0;
     int allStatTitle = 0;
     int atMgTitleStat = 0;
-//    int criticalDamageTitle = 0;
+    //    int criticalDamageTitle = 0;
     int atMgTitleStatPer = 0;
-    int bossDamageTitlePer=0;
-    int damageTitlePer=0;
+    int bossDamageTitlePer = 0;
+    int damageTitlePer = 0;
 
     int strTitlePer = 0;
     int dexTitlePer = 0;
@@ -277,19 +276,21 @@ public class CharactersItemInfoDTO {
             String[] titleParts = title.split("\\\\n");
             for (String part : titleParts) {
                 if (!part.isEmpty()) { // 빈 문자열은 무시합니다.
-                    System.out.println("a"+part+"dadadadadadad");
-
-                    char type = part.charAt(0);
-                    if (part.startsWith(String.valueOf(type))&& part.contains("+")) {
+                    char firstWord ='a';
+                    if (Character.isLetter(part.charAt(0))) {
+                        firstWord = part.charAt(0);
+                    } else if (Character.isLetter(part.charAt(1))) {
+                        firstWord = part.charAt(1);
+                    } else if (Character.isLetter(part.charAt(2))) {
+                        firstWord = part.charAt(2);
+                    }
+                    if (part.contains("+")) {
                         String[] parts = part.split("\\+");
                         String lastPart = parts[1];
-                        System.out.println("a"+parts[0]+"dadadadadadad");
-                        System.out.println("a"+parts[1]+"dadadadadadad");
-
                         if (lastPart.contains("%")) {
                             lastPart = lastPart.replace("%", "").trim();
                             int number = Integer.parseInt(lastPart);
-                            switch (type) {
+                            switch (firstWord) {
                                 case 'S':
                                     strTitlePer += number;
                                     break;
@@ -312,9 +313,7 @@ public class CharactersItemInfoDTO {
                                     atMgTitleStatPer += number;
                                     break;
                                 case '보':
-                                    System.out.println("dadadad"+number);
                                     bossDamageTitlePer += number;
-                                    System.out.println("dadadad"+number);
                                     break;
                                 case '데':
                                     damageTitlePer += number;
@@ -326,7 +325,7 @@ public class CharactersItemInfoDTO {
 
                             int number = Integer.parseInt(lastPart);
 
-                            switch (type) {
+                            switch (firstWord) {
                                 case 'S':
                                     strTitleStat += number;
                                     break;
@@ -363,11 +362,11 @@ public class CharactersItemInfoDTO {
         if (Arrays.asList("바이퍼", "히어로").contains(charactersClass)) {
             //스탯별로 직업 분류할것
 
-            mainStat = str + excepStr+strTitleStat+allStatTitle;
-            subStat = dex + excepDex+dexTitleStat+allStatTitle;
-            mainStatPer = allStat+strTitlePer+allStatTitlePer;
-            subStatPer = allStat+dexTitlePer+allStatTitlePer;
-            atMgStat = attactPower + excepAtPower+atMgTitleStat;
+            mainStat = str + excepStr + strTitleStat + allStatTitle;
+            subStat = dex + excepDex + dexTitleStat + allStatTitle;
+            mainStatPer = allStat + strTitlePer + allStatTitlePer;
+            subStatPer = allStat + dexTitlePer + allStatTitlePer;
+            atMgStat = attactPower + excepAtPower + atMgTitleStat;
 
             potentialMainStat = strPotentialStat + allStatPotential;
             potentialSubStat = dexPotentialStat + allStatPotential;

@@ -24,9 +24,18 @@ public class CharactersItemStatInfoDTO {
     int potentialDamagePer;
     int potentialCriticalDamage;
 
+    public CharactersItemStatInfoDTO(String item_equipment_slot, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int bossDamage, int damage) {
+        this.item_equipment_slot = item_equipment_slot;
+        this.mainStat = mainStat;
+        this.subStat = subStat;
+        this.mainStatPer = mainStatPer;
+        this.subStatPer = subStatPer;
+        this.atMgStat = atMgStat;
+        this.bossDamage = bossDamage;
+        this.damage = damage;
+    }
 
-
-    public CharactersItemStatInfoDTO(String item_equipment_slot, String itemName, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int potentialMainStat, int potentialSubStat, int potentialMainStatPer, int potentialSubStatPer, int potentialAtMgStat, int potentialAtMgPer, int bossDamage,int damage, int criticalDamage, int potentialBossDamagePer, int potentialDamagePer,int potentialCriticalDamage) {
+    public CharactersItemStatInfoDTO(String item_equipment_slot, String itemName, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int potentialMainStat, int potentialSubStat, int potentialMainStatPer, int potentialSubStatPer, int potentialAtMgStat, int potentialAtMgPer, int bossDamage, int damage, int criticalDamage, int potentialBossDamagePer, int potentialDamagePer, int potentialCriticalDamage) {
         this.item_equipment_slot = item_equipment_slot;
         this.itemName = itemName;
         this.mainStat = mainStat;

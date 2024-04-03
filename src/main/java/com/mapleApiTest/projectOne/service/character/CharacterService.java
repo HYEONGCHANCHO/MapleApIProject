@@ -93,7 +93,7 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
-    @Transactional
+    @Transactional //캐릭터 기본정보 불러오기
     public CompletableFuture<CharactersInfoDTO> getCharactersInfo(GetCharactersInfo request, String apiKey, String ocid) {
 
         String Url = "/maplestory/v1/character/basic";
@@ -137,7 +137,7 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
-    @Transactional
+    @Transactional //캐릭터 스탯 정보 불러오기
     public CompletableFuture<CharactersStatInfoDTO> getCharactersStatInfo(GetCharactersInfo request, String apiKey, String ocid) {
 
         String Url = "/maplestory/v1/character/stat";
@@ -192,7 +192,7 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
-    @Transactional
+    @Transactional //캐릭터 착용 장비 전체 저장하기
     public CompletableFuture<CharactersItemEquipDTO> getCharactersItemEquip(GetCharactersInfo request, String apiKey, String ocid) {
 
         String Url = "/maplestory/v1/character/item-equipment";
@@ -312,7 +312,7 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
-    @Transactional
+    @Transactional //캐릭터 착용 장비 전체 스탯 불러오기
     public CompletableFuture<CharactersItemTotalStatInfoDTO> getCharactersItemTotalInfo(GetCharactersInfo request) {
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
@@ -325,16 +325,16 @@ public class CharacterService {
 
                 List<String> equipmentTypes = List.of("hat", "top", "bottom", "cape", "shoes", "gloves", "shoulder", "face", "eye", "ear", "pendantOne", "pendantTwo", "belt", "ringOne", "ringTwo", "ringThree", "ringFour", "weapon", "subWeapon", "emblem", "badge", "medal", "poket", "heart", "dragonHat", "dragonPendant", "dragonWing", "dragonTail", "mechanicEngine", "mechanicArm", "mechanicLeg", "mechanicTran");
 
-                int titleMainStat =0;
-                int titleSubStat=0;
-                int titleAtMgStat=0;
-                int titleBossDamage=0;
-                int titleDamage=0;
+                int titleMainStat = 0;
+                int titleSubStat = 0;
+                int titleAtMgStat = 0;
+                int titleBossDamage = 0;
+                int titleDamage = 0;
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 InfoTitle = charactersItemEquip.getTitleInfo();
-                if (InfoTitle!=null) {
-                    CharactersItemInfoDTO charactersItemInfoDTO= new CharactersItemInfoDTO();
+                if (InfoTitle != null) {
+                    CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
                     Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
                     CharactersInfo charactersInfo = charactersInfoOptional.get();
 
@@ -350,11 +350,11 @@ public class CharacterService {
                     charactersItemInfoDTO.setAllStat(charactersItemInfoDTO.getAllStatTitle());
                     charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
 
-                    titleMainStat =charactersItemInfoDTO.getMainStat();
-                    titleSubStat=charactersItemInfoDTO.getSubStat();
-                    titleAtMgStat=charactersItemInfoDTO.getAtMgStat();
-                    titleBossDamage=charactersItemInfoDTO.getBossDamageTitlePer();
-                    titleDamage=charactersItemInfoDTO.getDamageTitlePer();
+                    titleMainStat = charactersItemInfoDTO.getMainStat();
+                    titleSubStat = charactersItemInfoDTO.getSubStat();
+                    titleAtMgStat = charactersItemInfoDTO.getAtMgStat();
+                    titleBossDamage = charactersItemInfoDTO.getBossDamageTitlePer();
+                    titleDamage = charactersItemInfoDTO.getDamageTitlePer();
 
 
                 }
@@ -447,40 +447,48 @@ public class CharacterService {
                                 break;
 
                             case "dragonHat":
-                                if (charactersItemEquip.getDragonHat()!=null){
-                                jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonHat());}
+                                if (charactersItemEquip.getDragonHat() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonHat());
+                                }
                                 break;
                             case "dragonPendant":
-                                if (charactersItemEquip.getDragonPendant()!=null){
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonPendant());}
+                                if (charactersItemEquip.getDragonPendant() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonPendant());
+                                }
                                 break;
                             case "dragonWing":
-                                if (charactersItemEquip.getDragonWing()!=null){
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonWing());}
+                                if (charactersItemEquip.getDragonWing() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonWing());
+                                }
                                 break;
                             case "dragonTail":
-                                if (charactersItemEquip.getDragonTail()!=null){
+                                if (charactersItemEquip.getDragonTail() != null) {
 
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonTail());}
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonTail());
+                                }
                                 break;
                             case "mechanicEngine":
-                                if (charactersItemEquip.getMechanicEngine()!=null){
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicEngine());}
+                                if (charactersItemEquip.getMechanicEngine() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicEngine());
+                                }
                                 break;
                             case "mechanicArm":
-                                if (charactersItemEquip.getMechanicArm()!=null){
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicArm());}
+                                if (charactersItemEquip.getMechanicArm() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicArm());
+                                }
                                 break;
                             case "mechanicLeg":
-                                if (charactersItemEquip.getMechanicLeg()!=null){
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicLeg());}
+                                if (charactersItemEquip.getMechanicLeg() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicLeg());
+                                }
                                 break;
                             case "mechanicTran":
-                                if (charactersItemEquip.getMechanicTran()!=null){
-                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicTran());}
+                                if (charactersItemEquip.getMechanicTran() != null) {
+                                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicTran());
+                                }
                                 break;
 
-                    }
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -491,89 +499,82 @@ public class CharacterService {
                     CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
 
 
-                        charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
-                        charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
-                        charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
-                        charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
-                        charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
-                        charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
-                        charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
-                        charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
-                        charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
-                        charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
-                        charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
-                        charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
-                        charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
-                        charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
-                        charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
-                        charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
-                        charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
-                        charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
-                        charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
-                        charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
-                        charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
-                        charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
-                        charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
-                        charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
-                        charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
-                        charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
+                    charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
+                    charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
+                    charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
+                    charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
+                    charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
+                    charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
+                    charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
+                    charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
+                    charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
+                    charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
+                    charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
+                    charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
+                    charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
+                    charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
+                    charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
+                    charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
+                    charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
+                    charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
+                    charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
 
 
+                    charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
+
+                    CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer(), charactersItemInfoDTO.getCriticalDamagePotential());
+
+                    System.out.println("Item Equipment Slot: " + charactersItemStatInfoDTO.getItem_equipment_slot());
+                    System.out.println("Item Name: " + charactersItemStatInfoDTO.getItemName());
+                    System.out.println("Main Stat: " + charactersItemStatInfoDTO.getMainStat());
+                    System.out.println("Sub Stat: " + charactersItemStatInfoDTO.getSubStat());
+                    System.out.println("Main Stat Percentage: " + charactersItemStatInfoDTO.getMainStatPer());
+                    System.out.println("Sub Stat Percentage: " + charactersItemStatInfoDTO.getSubStatPer());
+                    System.out.println("Attack/Magic Stat: " + charactersItemStatInfoDTO.getAtMgStat());
+                    System.out.println("Potential Main Stat: " + charactersItemStatInfoDTO.getPotentialMainStat());
+                    System.out.println("Potential Sub Stat: " + charactersItemStatInfoDTO.getPotentialSubStat());
+                    System.out.println("Potential Main Stat Percentage: " + charactersItemStatInfoDTO.getPotentialMainStatPer());
+                    System.out.println("Potential Sub Stat Percentage: " + charactersItemStatInfoDTO.getPotentialSubStatPer());
+                    System.out.println("Potential Attack/Magic Stat: " + charactersItemStatInfoDTO.getPotentialAtMgStat());
+                    System.out.println("Potential Attack/Magic Percentage: " + charactersItemStatInfoDTO.getPotentialAtMgPer());
+                    System.out.println("Boss Damage: " + charactersItemStatInfoDTO.getBossDamage());
+                    System.out.println("Damage: " + charactersItemStatInfoDTO.getDamage());
+                    System.out.println("Critical Damage: " + charactersItemStatInfoDTO.getCriticalDamage());
+                    System.out.println("Potential Boss Damage Percentage: " + charactersItemStatInfoDTO.getPotentialBossDamagePer());
+                    System.out.println("Potential Damage Percentage: " + charactersItemStatInfoDTO.getPotentialDamagePer());
+                    System.out.println("Potential Critical Damage: " + charactersItemStatInfoDTO.getPotentialCriticalDamage());
 
 
+                    mainStat += charactersItemStatInfoDTO.getMainStat() + charactersItemStatInfoDTO.getPotentialMainStat();
+                    subStat += charactersItemStatInfoDTO.getSubStat() + charactersItemStatInfoDTO.getPotentialSubStat();
+                    mainStatPer += charactersItemStatInfoDTO.getMainStatPer() + charactersItemStatInfoDTO.getPotentialMainStatPer();
+                    subStatPer += charactersItemStatInfoDTO.getSubStatPer() + charactersItemStatInfoDTO.getPotentialSubStatPer();
+                    atMgStat += charactersItemStatInfoDTO.getAtMgStat() + charactersItemStatInfoDTO.getPotentialAtMgStat();
+                    atMgStatPer += charactersItemStatInfoDTO.getPotentialAtMgPer();
+                    bossDamage += charactersItemStatInfoDTO.getBossDamage() + charactersItemStatInfoDTO.getPotentialBossDamagePer();
+                    damage += charactersItemStatInfoDTO.getDamage() + charactersItemStatInfoDTO.getPotentialDamagePer();
+                    criticalDamage += charactersItemStatInfoDTO.getCriticalDamage() + charactersItemStatInfoDTO.getPotentialCriticalDamage();
 
 
-
-                        charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
-
-                        CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer(), charactersItemInfoDTO.getCriticalDamagePotential());
-
-                        System.out.println("Item Equipment Slot: " + charactersItemStatInfoDTO.getItem_equipment_slot());
-                        System.out.println("Item Name: " + charactersItemStatInfoDTO.getItemName());
-                        System.out.println("Main Stat: " + charactersItemStatInfoDTO.getMainStat());
-                        System.out.println("Sub Stat: " + charactersItemStatInfoDTO.getSubStat());
-                        System.out.println("Main Stat Percentage: " + charactersItemStatInfoDTO.getMainStatPer());
-                        System.out.println("Sub Stat Percentage: " + charactersItemStatInfoDTO.getSubStatPer());
-                        System.out.println("Attack/Magic Stat: " + charactersItemStatInfoDTO.getAtMgStat());
-                        System.out.println("Potential Main Stat: " + charactersItemStatInfoDTO.getPotentialMainStat());
-                        System.out.println("Potential Sub Stat: " + charactersItemStatInfoDTO.getPotentialSubStat());
-                        System.out.println("Potential Main Stat Percentage: " + charactersItemStatInfoDTO.getPotentialMainStatPer());
-                        System.out.println("Potential Sub Stat Percentage: " + charactersItemStatInfoDTO.getPotentialSubStatPer());
-                        System.out.println("Potential Attack/Magic Stat: " + charactersItemStatInfoDTO.getPotentialAtMgStat());
-                        System.out.println("Potential Attack/Magic Percentage: " + charactersItemStatInfoDTO.getPotentialAtMgPer());
-                        System.out.println("Boss Damage: " + charactersItemStatInfoDTO.getBossDamage());
-                        System.out.println("Damage: " + charactersItemStatInfoDTO.getDamage());
-                        System.out.println("Critical Damage: " + charactersItemStatInfoDTO.getCriticalDamage());
-                        System.out.println("Potential Boss Damage Percentage: " + charactersItemStatInfoDTO.getPotentialBossDamagePer());
-                        System.out.println("Potential Damage Percentage: " + charactersItemStatInfoDTO.getPotentialDamagePer());
-                        System.out.println("Potential Critical Damage: " + charactersItemStatInfoDTO.getPotentialCriticalDamage());
+                    System.out.println("mainStat : " + mainStat);
+                    System.out.println("subStat : " + subStat);
+                    System.out.println("mainStatPer : " + mainStatPer);
+                    System.out.println("subStatPer : " + subStatPer);
+                    System.out.println("atMgStat : " + atMgStat);
+                    System.out.println("atMgStatPer : " + atMgStatPer);
+                    System.out.println("bossDamage : " + bossDamage);
+                    System.out.println("damage : " + damage);
+                    System.out.println("criticalDamage : " + criticalDamage);
 
 
-                        mainStat += charactersItemStatInfoDTO.getMainStat() + charactersItemStatInfoDTO.getPotentialMainStat();
-                        subStat += charactersItemStatInfoDTO.getSubStat() + charactersItemStatInfoDTO.getPotentialSubStat();
-                        mainStatPer += charactersItemStatInfoDTO.getMainStatPer() + charactersItemStatInfoDTO.getPotentialMainStatPer();
-                        subStatPer += charactersItemStatInfoDTO.getSubStatPer() + charactersItemStatInfoDTO.getPotentialSubStatPer();
-                        atMgStat += charactersItemStatInfoDTO.getAtMgStat() + charactersItemStatInfoDTO.getPotentialAtMgStat();
-                        atMgStatPer += charactersItemStatInfoDTO.getPotentialAtMgPer();
-                        bossDamage += charactersItemStatInfoDTO.getBossDamage() + charactersItemStatInfoDTO.getPotentialBossDamagePer();
-                        damage += charactersItemStatInfoDTO.getDamage() + charactersItemStatInfoDTO.getPotentialDamagePer();
-                        criticalDamage += charactersItemStatInfoDTO.getCriticalDamage() + charactersItemStatInfoDTO.getPotentialCriticalDamage();
-
-
-
-
-                        System.out.println("mainStat : " + mainStat);
-                        System.out.println("subStat : " + subStat);
-                        System.out.println("mainStatPer : " + mainStatPer);
-                        System.out.println("subStatPer : " + subStatPer);
-                        System.out.println("atMgStat : " + atMgStat);
-                        System.out.println("atMgStatPer : " + atMgStatPer);
-                        System.out.println("bossDamage : " + bossDamage);
-                        System.out.println("damage : " + damage);
-                        System.out.println("criticalDamage : " + criticalDamage);
-
-
-                        charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO(mainStat, subStat, mainStatPer, subStatPer, atMgStat, atMgStatPer, bossDamage, damage, criticalDamage);
+                    charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO(mainStat, subStat, mainStatPer, subStatPer, atMgStat, atMgStatPer, bossDamage, damage, criticalDamage);
 
                 }
 
@@ -590,1072 +591,537 @@ public class CharacterService {
 
     }
 
+    @Async("characterThreadPool")
+    @Transactional //캐릭터 착용 장비 부위별 스탯 불러오기
+    public CompletableFuture<CharactersItemStatInfoDTO> getCharactersItemInfo(GetCharactersInfo request, String equipmentType) {
+        if (rateLimiter.tryAcquire()) {
+            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
+            if (charactersItemEquipOptional.isPresent()) {
+
+                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+                JsonNode jsonInfo = null;
+                String InfoTitle = null;
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+
+                    switch (equipmentType) {
+                        case "hat":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
+                            break;
+                        case "top":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getTopInfo());
+                            break;
+                        case "bottom":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBottomInfo());
+                            break;
+                        case "cape":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getCapeInfo());
+                            break;
+                        case "shoes":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getShoesInfo());
+                            break;
+                        case "gloves":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
+                            break;
+                        case "shoulder":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getShoulderInfo());
+                            break;
+                        case "face":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getFaceInfo());
+                            break;
+                        case "eye":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEyeInfo());
+                            break;
+                        case "ear":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEarInfo());
+                            break;
+                        case "pendantOne":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantOneInfo());
+                            break;
+                        case "pendantTwo":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantTwoInfo());
+                            break;
+                        case "belt":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBeltInfo());
+                            break;
+                        case "ringOne":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingOneInfo());
+                            break;
+                        case "ringTwo":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingTwoInfo());
+                            break;
+                        case "ringThree":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingThreeInfo());
+                            break;
+                        case "ringFour":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingFourInfo());
+                            break;
+                        case "weapon":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
+                            break;
+                        case "subWeapon":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getSubWeaponInfo());
+                            break;
+                        case "emblem":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEmblemInfo());
+                            break;
+                        case "badge":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBadgeInfo());
+                            break;
+                        case "medal":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getMedalInfo());
+                            break;
+                        case "poket":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPoketInfo());
+                            break;
+                        case "heart":
+                            jsonInfo = objectMapper.readTree(charactersItemEquip.getHeartInfo());
+                            break;
+                        case "dragonHat":
+                            if (charactersItemEquip.getDragonHat() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonHat());
+                            }
+                            break;
+                        case "dragonPendant":
+                            if (charactersItemEquip.getDragonPendant() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonPendant());
+                            }
+                            break;
+                        case "dragonWing":
+                            if (charactersItemEquip.getDragonWing() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonWing());
+                            }
+                            break;
+                        case "dragonTail":
+                            if (charactersItemEquip.getDragonTail() != null) {
+
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getDragonTail());
+                            }
+                            break;
+                        case "mechanicEngine":
+                            if (charactersItemEquip.getMechanicEngine() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicEngine());
+                            }
+                            break;
+                        case "mechanicArm":
+                            if (charactersItemEquip.getMechanicArm() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicArm());
+                            }
+                            break;
+                        case "mechanicLeg":
+                            if (charactersItemEquip.getMechanicLeg() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicLeg());
+                            }
+                            break;
+                        case "mechanicTran":
+                            if (charactersItemEquip.getMechanicTran() != null) {
+                                jsonInfo = objectMapper.readTree(charactersItemEquip.getMechanicTran());
+                            }
+                            break;
+                        case "title":
+                            if (charactersItemEquip.getTitleInfo() != null) {
+                                InfoTitle = charactersItemEquip.getTitleInfo();
+                            }
+                            break;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
+                CharactersInfo charactersInfo = charactersInfoOptional.get();
+                CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
+
+
+                if (jsonInfo != null) {
+                    charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
+                    charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
+                    charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
+                    charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
+                    charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
+                    charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
+                    charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
+                    charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
+                    charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
+                    charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
+                    charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
+                    charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
+                    charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
+                    charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
+                    charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
+                    charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
+                    charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
+                    charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
+                    charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                    charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
+
+                    charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
+
+                }
+                if (jsonInfo == null && InfoTitle != null) {
+                    charactersItemInfoDTO.processTitle(InfoTitle);
+                    charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
+                }
+
+
+                CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage() + charactersItemInfoDTO.getBossDamageTitlePer(), charactersItemInfoDTO.getDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer(), charactersItemInfoDTO.getCriticalDamagePotential());
+
+
+                return CompletableFuture.completedFuture(charactersItemStatInfoDTO);
+            } else {
+                return null;
+            }
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+    @Async("characterThreadPool")
+    @Transactional  //캐릭터 세트효과 적용중인거 불러오기
+    public CompletableFuture<CharactersSetEffectInfoDTO> getCharactersSetInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/set-effect";
+
+            Mono<CharactersSetEffectInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int absolSetCount = 0;
+                    int arcaneSetCount = 0;
+                    int bossAcSetCount = 0;
+                    int cvelSetCount = 0; //칠흑
+                    int lucidAcSetCount = 0; //여명
+                    int lomienSetCount = 0; //루타
+                    int eternalSetCount = 0; //에테
+                    int mystarSetCount = 0; //에테
+                    for (JsonNode setEffectNode : jsonNode.get("set_effect")) {
+                        String setName = setEffectNode.get("set_name").asText();
+                        char firstLetter = setName.charAt(0);
+                        switch (firstLetter) {
+                            case '앱':
+                                absolSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '아':
+                                arcaneSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '보':
+                                bossAcSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '칠':
+                                cvelSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '여':
+                                lucidAcSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '에':
+                                eternalSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '루':
+                                lomienSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            case '마':
+                                mystarSetCount = setEffectNode.get("total_set_count").asInt();
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                    }
+                    CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = new CharactersSetEffectInfoDTO(charactersName, ocid, absolSetCount, arcaneSetCount, bossAcSetCount, cvelSetCount, lucidAcSetCount, eternalSetCount, lomienSetCount, mystarSetCount);
+
+                    System.out.println("앱솔세트 :" + absolSetCount);
+                    System.out.println("아케인세트 :" + arcaneSetCount);
+                    System.out.println("보장세트 :" + bossAcSetCount);
+                    System.out.println("칠흙세트 :" + cvelSetCount);
+                    System.out.println("여명세트 :" + lucidAcSetCount);
+                    System.out.println("에테세트 :" + eternalSetCount);
+                    System.out.println("루타세트 :" + lomienSetCount);
+                    System.out.println("마이세트 :" + mystarSetCount);
+
+                    return Mono.just(charactersSetEffectInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+//                return Mono.empty(); // 반환값이 없는 경우에는 empty로 처리
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersSetEffectInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+    @Async("characterThreadPool")
+    @Transactional //캐릭터 세트효과 적용중인 스탯 불러오기
+    public ItemSetEffectDTO getCharactersSetStatInfo(CharactersSetEffectInfoDTO charactersSetEffectInfoDTO) {
+
+        ItemSetEffectDTO itemSetEffectDTO = new ItemSetEffectDTO();
+        itemSetEffectDTO.setItemSetEffect(charactersSetEffectInfoDTO.getAbsolSetCount(), charactersSetEffectInfoDTO.getArcaneSetCount(), charactersSetEffectInfoDTO.getBossAcSetCount(), charactersSetEffectInfoDTO.getCvelSetCount(), charactersSetEffectInfoDTO.getLucidAcSetCount(), charactersSetEffectInfoDTO.getLomienSetCount(), charactersSetEffectInfoDTO.getEternalSetCount(), charactersSetEffectInfoDTO.getMystarSetCount());
+        System.out.println("세트 allstat : " + itemSetEffectDTO.getAllStat());
+        System.out.println("세트 공격력 : " + itemSetEffectDTO.getAtMgPower());
+        System.out.println("세트 보공 : " + itemSetEffectDTO.getDamage()); //보스데미지
+        System.out.println("세트 크뎀 : " + itemSetEffectDTO.getCriticalDamage());
+
+        return itemSetEffectDTO;
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    //유니온 아티팩트
     @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersTopInfoDTO> getCharactersTopInfo(GetCharactersInfo request) {
+    @Transactional  //캐릭터 세트효과 적용중인거 불러오기
+    public CompletableFuture<CharactersArtiInfoDTO> getCharactersArtiInfo(String charactersName, String ocid) {
         if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
+            String Url = "/maplestory/v1/user/union-artifact";
 
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
+            Mono<CharactersArtiInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                 try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getTopInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    int artiAllStat = 0;
+                    int artiAtMgPower = 0;
+                    Double artiDamage = 0.0;
+                    Double artiBossDamage = 0.0;
+                    Double artiCriticalDamage = 0.0;
+
+                    int artiAllStatOneLevel = 15;
+                    int artiAtMgPowerOneLevel = 3;
+                    Double artiDamageOneLevel = 1.5;
+                    Double artiBossDamageOneLevel = 1.5;
+                    Double artiCriticalDamageOneLevel = 0.4;
+
+
+                    System.out.println("jsonNode.get(\"union_artifact_effect\")" + jsonNode.get("union_artifact_effect"));
+
+                    for (JsonNode artiNode : jsonNode.get("union_artifact_effect")) {
+                        String artiName = artiNode.get("name").asText();
+                        int artiLevel = artiNode.get("level").asInt();
+                        char firstLetter = artiName.charAt(0);
+                        switch (firstLetter) {
+                            case '올':
+                                artiAllStat = artiLevel * artiAllStatOneLevel;
+                                break;
+                            case '공':
+                                artiAtMgPower = artiLevel * artiAtMgPowerOneLevel;
+                                break;
+                            case '데':
+                                artiDamage = artiLevel * artiDamageOneLevel;
+                                break;
+                            case '보':
+                                artiBossDamage = artiLevel * artiBossDamageOneLevel;
+                                break;
+                            case '크':
+                                if (artiName.charAt(5) == '데') {
+                                    artiCriticalDamage = artiLevel * artiCriticalDamageOneLevel;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                    }
+                    CharactersArtiInfoDTO charactersArtiInfoDTO = new CharactersArtiInfoDTO(charactersName, artiAllStat, artiAtMgPower, artiDamage, artiBossDamage, artiCriticalDamage);
+
+                    System.out.println("artiAllStat :" + artiAllStat);
+                    System.out.println("artiAtMgPower :" + artiAtMgPower);
+                    System.out.println("artiDamage :" + artiDamage);
+                    System.out.println("artiBossDamage :" + artiBossDamage);
+                    System.out.println("artiCriticalDamage" + artiCriticalDamage);
+
+                    return Mono.just(charactersArtiInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
                 }
-                CharactersTopInfoDTO charactersTopInfoDTO = new CharactersTopInfoDTO(jsonInfo.get("item_equipment_slot").asText(), jsonInfo.get("item_name").asText(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("str").asInt(), jsonInfo.get("item_total_option").get("int").asInt(), jsonInfo.get("item_total_option").get("luk").asInt(), jsonInfo.get("item_total_option").get("max_hp").asInt(), jsonInfo.get("item_total_option").get("attack_power").asInt(), jsonInfo.get("item_total_option").get("magic_power").asInt(), jsonInfo.get("item_total_option").get("boss_damage").asDouble(), jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(), jsonInfo.get("item_total_option").get("all_stat").asInt(), jsonInfo.get("potential_option_1").asText(), jsonInfo.get("potential_option_2").asText(), jsonInfo.get("potential_option_3").asText(), jsonInfo.get("additional_potential_option_1").asText(), jsonInfo.get("additional_potential_option_2").asText(), jsonInfo.get("additional_potential_option_3").asText(), jsonInfo.get("item_exceptional_option"), jsonInfo.get("soul_option").asText()
-                );
-                return CompletableFuture.completedFuture(charactersTopInfoDTO);
-            } else {
-                return null;
-            }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersArtiInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
         } else {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
 
     @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersBottomInfoDTO> getCharactersBottomInfo(GetCharactersInfo request) {
+    @Transactional  //캐릭터 세트효과 적용중인거 불러오기
+    public CompletableFuture<CharactersUnionInfoDTO> getCharactersUnionInfo(String charactersName, String ocid) {
         if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
+            String Url = "/maplestory/v1/user/union-raider";
+
+            Mono<CharactersUnionInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                 try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getBottomInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    int UnionRaiderStr = 0;
+                    int UnionRaiderDex = 0;
+                    int UnionRaiderInt = 0;
+                    int UnionRaiderLuk = 0;
+                    int UnionRaiderAtMgPower = 0;
+                    Double UnionRaiderCriticalDamage = 0.0;
+                    Double UnionRaiderBossDamage = 0.0;
+                    System.out.println("jsonNode.get(union_raider_stat" + jsonNode.get("union_raider_stat"));
+
+                    String unionRaiderStat = jsonNode.get("union_raider_stat").toString();
+                    System.out.println("union_raider_stat :" + unionRaiderStat);
+
+                    String[] unionRaiderParts = unionRaiderStat.split(",");
+
+                    for (String part : unionRaiderParts) {
+                        // 부분에서 숫자 추출
+                        String[] tokens = part.split("\\s+");
+                        int value = 0; // 숫자를 저장할 변수 초기화
+
+                        System.out.println("part :" + part);
+
+                        for (String token : tokens) {
+                            if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                // %를 제거하고 숫자만 추출하여 정수로 변환
+                                value = Integer.parseInt(token.replaceAll("%", ""));
+                                System.out.println("value :" + value);
+                            } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                value = Integer.parseInt(token);
+                                System.out.println("value :" + value);
+                            }
+                        }
+                        // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                        if (part.contains("공격력") || part.contains("마력")) {
+                            UnionRaiderAtMgPower += value;
+                        } else if (part.contains("STR")&&part.contains("DEX")&&part.contains("LUK")) {
+                            UnionRaiderStr += value;
+                            UnionRaiderDex += value;
+                            UnionRaiderLuk += value;
+                        }else if (part.contains("STR")) {
+                            UnionRaiderStr += value;
+                        }else if (part.contains("DEX")) {
+                            UnionRaiderDex += value;
+                        }else if (part.contains("LUK")) {
+                            UnionRaiderLuk += value;
+                        }else if (part.contains("INT")) {
+                            UnionRaiderInt += value;
+                        }else if (part.contains("크리티컬 데미지")) {
+                            UnionRaiderCriticalDamage += value;
+                        }else if (part.contains("보스 몬스터 공격 시 데미지")) {
+                            UnionRaiderBossDamage += value;
+                        }
+                    }
+
+                    // union_occupied_stat
+                    int UnionOccupiedStr = 0;
+                    int UnionOccupiedDex = 0;
+                    int UnionOccupiedInt = 0;
+                    int UnionOccupiedLuk = 0;
+                    int UnionOccupiedAtMgPower = 0;
+                    Double UnionOccupiedCriticalDamage = 0.0;
+                    Double UnionOccupiedBossDamage = 0.0;
+
+                    String union_occupied_stat = jsonNode.get("union_occupied_stat").asText();
+                    String[] unionOccupiedParts = unionRaiderStat.split(",");
+                    System.out.println("union_occupied_stat :" + union_occupied_stat);
+
+                    for (String part : unionOccupiedParts) {
+                        // 부분에서 숫자 추출
+                        String[] tokens = part.split("\\s+");
+                        int value = 0; // 숫자를 저장할 변수 초기화
+
+                        for (String token : tokens) {
+                            if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                // %를 제거하고 숫자만 추출하여 정수로 변환
+                                value = Integer.parseInt(token.replaceAll("%", ""));
+                                System.out.println("value :" + value);
+                            } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                value = Integer.parseInt(token);
+                                System.out.println("value :" + value);
+                            }
+                        }
+
+
+                        // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                        if (part.contains("공격력") || part.contains("마력")) {
+                            UnionOccupiedAtMgPower += value;
+                        } else if (part.contains("STR")&&part.contains("DEX")&&part.contains("LUK")) {
+                            UnionOccupiedStr += value;
+                            UnionOccupiedDex += value;
+                            UnionOccupiedLuk += value;
+                        }else if (part.contains("STR")) {
+                            UnionOccupiedStr += value;
+                        }else if (part.contains("DEX")) {
+                            UnionOccupiedDex += value;
+                        }else if (part.contains("LUK")) {
+                            UnionOccupiedLuk += value;
+                        }else if (part.contains("INT")) {
+                            UnionOccupiedInt += value;
+                        }else if (part.contains("크리티컬 데미지")) {
+                            UnionOccupiedCriticalDamage += value;
+                        }else if (part.contains("보스 몬스터 공격 시 데미지")) {
+                            UnionOccupiedBossDamage += value;
+                        }
+                    }
+
+
+                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower,UnionRaiderCriticalDamage,UnionRaiderBossDamage,UnionOccupiedStr,UnionOccupiedDex,UnionOccupiedInt,UnionOccupiedLuk,UnionOccupiedAtMgPower,UnionOccupiedCriticalDamage,UnionOccupiedBossDamage);
+
+                    System.out.println("UnionRaiderStr :" + UnionRaiderStr);
+                    System.out.println("UnionRaiderDex :" + UnionRaiderDex);
+                    System.out.println("UnionRaiderInt :" + UnionRaiderInt);
+                    System.out.println("UnionRaiderLuk :" + UnionRaiderLuk);
+                    System.out.println("UnionRaiderAtMgPower" + UnionRaiderAtMgPower);
+                    System.out.println("UnionRaiderCriticalDamage" + UnionRaiderCriticalDamage);
+                    System.out.println("UnionRaiderBossDamage" + UnionRaiderBossDamage);
+                    System.out.println("UnionOccupiedStr" + UnionOccupiedStr);
+                    System.out.println("UnionOccupiedDex" + UnionOccupiedDex);
+                    System.out.println("UnionOccupiedInt" + UnionOccupiedInt);
+                    System.out.println("UnionOccupiedLuk" + UnionOccupiedLuk);
+                    System.out.println("UnionOccupiedAtMgPower" + UnionOccupiedAtMgPower);
+                    System.out.println("UnionOccupiedCriticalDamage" + UnionOccupiedCriticalDamage);
+                    System.out.println("UnionOccupiedBossDamage" + UnionOccupiedBossDamage);
+
+                    return Mono.just(charactersUnionInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
                 }
-
-                CharactersBottomInfoDTO charactersBottomInfoDTO = new CharactersBottomInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersBottomInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersCapeInfoDTO> getCharactersCapeInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getCapeInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersCapeInfoDTO charactersCapeInfoDTO = new CharactersCapeInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersCapeInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersShoesInfoDTO> getCharactersShoesInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getShoesInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersShoesInfoDTO charactersShoesInfoDTO = new CharactersShoesInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersShoesInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersGlovesInfoDTO> getCharactersGlovesInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersGlovesInfoDTO charactersGlovesInfoDTO = new CharactersGlovesInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersGlovesInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersShoulderInfoDTO> getCharactersShoulderInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getShoulderInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersShoulderInfoDTO charactersShoulderInfoDTO = new CharactersShoulderInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersShoulderInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersFaceInfoDTO> getCharactersFaceInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getFaceInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersFaceInfoDTO charactersFaceInfoDTO = new CharactersFaceInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersFaceInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersEyeInfoDTO> getCharactersEyeInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getEyeInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersEyeInfoDTO charactersEyeInfoDTO = new CharactersEyeInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersEyeInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersEarInfoDTO> getCharactersEarInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getEarInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersEarInfoDTO charactersEarInfoDTO = new CharactersEarInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersEarInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersPendantOneInfoDTO> getCharactersPendantOneInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantOneInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersPendantOneInfoDTO charactersPendantOneInfoDTO = new CharactersPendantOneInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersPendantOneInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersPendantTwoInfoDTO> getCharactersPendantTwoInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantTwoInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersPendantTwoInfoDTO charactersPendantTwoInfoDTO = new CharactersPendantTwoInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersPendantTwoInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersBeltInfoDTO> getCharactersBeltInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getBeltInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersBeltInfoDTO charactersBeltInfoDTO = new CharactersBeltInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersBeltInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersRingOneInfoDTO> getCharactersRingOneInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getRingOneInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersRingOneInfoDTO charactersRingOneInfoDTO = new CharactersRingOneInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersRingOneInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersRingTwoInfoDTO> getCharactersRingTwoInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getRingTwoInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersRingTwoInfoDTO charactersRingTwoInfoDTO = new CharactersRingTwoInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersRingTwoInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersRingThreeInfoDTO> getCharactersRingThreeInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getRingThreeInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersRingThreeInfoDTO charactersRingThreeInfoDTO = new CharactersRingThreeInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersRingThreeInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersRingFourInfoDTO> getCharactersRingFourInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getRingFourInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersRingFourInfoDTO charactersRingFourInfoDTO = new CharactersRingFourInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersRingFourInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersWeaponInfoDTO> getCharactersWeaponInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersWeaponInfoDTO charactersWeaponInfoDTO = new CharactersWeaponInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_base_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_add_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersWeaponInfoDTO);
-            } else {
-                return null;
-            }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersUnionInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
         } else {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
     }
 
 
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersSubWeaponInfoDTO> getCharactersSubWeaponInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getSubWeaponInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersSubWeaponInfoDTO charactersSubWeaponInfoDTO = new CharactersSubWeaponInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersSubWeaponInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersEmblemInfoDTO> getCharactersEmblemInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getEmblemInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersEmblemInfoDTO charactersEmblemInfoDTO = new CharactersEmblemInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersEmblemInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersBadgeInfoDTO> getCharactersBadgeInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getBadgeInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersBadgeInfoDTO charactersBadgeInfoDTO = new CharactersBadgeInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersBadgeInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersMedalInfoDTO> getCharactersMedalInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getMedalInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersMedalInfoDTO charactersMedalInfoDTO = new CharactersMedalInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersMedalInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersPoketInfoDTO> getCharactersPoketInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getPoketInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersPoketInfoDTO charactersPoketInfoDTO = new CharactersPoketInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
-
-                return CompletableFuture.completedFuture(charactersPoketInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersHeartInfoDTO> getCharactersHeartInfo(GetCharactersInfo request) {
-        if (rateLimiter.tryAcquire()) {
-            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-            if (charactersItemEquipOptional.isPresent()) {
-                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-                JsonNode jsonInfo = null;
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    jsonInfo = objectMapper.readTree(charactersItemEquip.getHeartInfo());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                CharactersHeartInfoDTO charactersHeartInfoDTO = new CharactersHeartInfoDTO(
-                        jsonInfo.get("item_equipment_slot").asText(),
-                        jsonInfo.get("item_name").asText(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("str").asInt(),
-                        jsonInfo.get("item_total_option").get("int").asInt(),
-                        jsonInfo.get("item_total_option").get("luk").asInt(),
-                        jsonInfo.get("item_total_option").get("max_hp").asInt(),
-                        jsonInfo.get("item_total_option").get("attack_power").asInt(),
-                        jsonInfo.get("item_total_option").get("magic_power").asInt(),
-                        jsonInfo.get("item_total_option").get("boss_damage").asDouble(),
-                        jsonInfo.get("item_total_option").get("ignore_monster_armor").asDouble(),
-                        jsonInfo.get("item_total_option").get("all_stat").asInt(),
-                        jsonInfo.get("potential_option_1").asText(),
-                        jsonInfo.get("potential_option_2").asText(),
-                        jsonInfo.get("potential_option_3").asText(),
-                        jsonInfo.get("additional_potential_option_1").asText(),
-                        jsonInfo.get("additional_potential_option_2").asText(),
-                        jsonInfo.get("additional_potential_option_3").asText(),
-                        jsonInfo.get("item_exceptional_option"),
-                        jsonInfo.get("soul_option").asText()
-                );
+    //어빌리티
+    //헥사스탯
+    //5차 스킬
+    //유니온
+    //하이퍼스탯
+    //심볼
 
 
-                return CompletableFuture.completedFuture(charactersHeartInfoDTO);
-            } else {
-                return null;
-            }
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
+////////////////////////////////////////////////////////////////////////////////////////////////
+//아래는 잠시 보류//
 
     @Async("characterThreadPool")
     @Transactional
@@ -2277,32 +1743,6 @@ public class CharacterService {
         return null;
     }
 
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel, int starForce, int itemUpgrade,
-                                                                int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer,
-                                                                int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
-
-        ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
-        HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
-
-        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel, addOptionStat, potentialNewMainStatPer, potentialNewSubStatPer, potentialNewAtMgPowerPer, potentialNewMainStat, potentialNewSubStat, potentialNewAtMgPowerStat);
-
-        System.out.println(hatStatInfoDTO.getMainStat() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getSubStat());
-        System.out.println(hatStatInfoDTO.getAtMgPower());
-        System.out.println(hatStatInfoDTO.getAllStatPer() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalMainStatPer() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalSubStatPer() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalMainStat() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalSubStat() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower() + "dadadadadadad");
-        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPowerPer() + "dadadadadadad");
-
-
-        return CompletableFuture.completedFuture(hatStatInfoDTO);
-    }
 
     @Async("characterThreadPool")
     @Transactional
@@ -2338,13 +1778,35 @@ public class CharacterService {
     }
 
 
-    ///////////////
+    @Async("characterThreadPool")
+    @Transactional   //잠시 보류
+    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel, int starForce, int itemUpgrade, int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer, int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
+
+        ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
+        HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
+
+        itemSimulationDTO.calculateEquipmentStats(hatStatInfoDTO, starForce, itemUpgrade, itemLevel, addOptionStat, potentialNewMainStatPer, potentialNewSubStatPer, potentialNewAtMgPowerPer, potentialNewMainStat, potentialNewSubStat, potentialNewAtMgPowerStat);
+
+        System.out.println(hatStatInfoDTO.getMainStat() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getSubStat());
+        System.out.println(hatStatInfoDTO.getAtMgPower());
+        System.out.println(hatStatInfoDTO.getAllStatPer() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalMainStatPer() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalSubStatPer() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalMainStat() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalSubStat() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPower() + "dadadadadadad");
+        System.out.println(hatStatInfoDTO.getPotentialTotalAtMgPowerPer() + "dadadadadadad");
+
+
+        return CompletableFuture.completedFuture(hatStatInfoDTO);
+    }
 
 
     @Async("characterThreadPool")
     @Transactional
-    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re,
-                                            int itemLevel, int starForce, int itemUpgrade
+    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re, int itemLevel, int starForce, int itemUpgrade
     ) {
 
         int addAllStat = request.getAddAllStat();
@@ -2441,299 +1903,6 @@ public class CharacterService {
         }
         return null;
     }
-
-
-/////////
-
-    @Async("characterThreadPool")
-    @Transactional
-    public CompletableFuture<CharactersSetEffectInfoDTO> getCharactersSetInfo(String charactersName, String ocid) {
-        if (rateLimiter.tryAcquire()) {
-            String Url = "/maplestory/v1/character/set-effect";
-
-            Mono<CharactersSetEffectInfoDTO> MonoResult
-                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
-                try {
-                    int absolSetCount = 0;
-                    int arcaneSetCount = 0;
-                    int bossAcSetCount = 0;
-                    int cvelSetCount = 0; //칠흑
-                    int lucidAcSetCount = 0; //여명
-                    int lomienSetCount = 0; //루타
-                    int eternalSetCount = 0; //에테
-                    int mystarSetCount = 0; //에테
-                    for (JsonNode setEffectNode : jsonNode.get("set_effect")) {
-                        String setName = setEffectNode.get("set_name").asText();
-                        char firstLetter = setName.charAt(0);
-                        switch (firstLetter) {
-                            case '앱':
-                                absolSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '아':
-                                arcaneSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '보':
-                                bossAcSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '칠':
-                                cvelSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '여':
-                                lucidAcSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '에':
-                                eternalSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '루':
-                                lomienSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '마':
-                                mystarSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            default:
-                                break;
-                        }
-
-
-                    }
-                    CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = new CharactersSetEffectInfoDTO(charactersName, ocid, absolSetCount, arcaneSetCount, bossAcSetCount, cvelSetCount, lucidAcSetCount, eternalSetCount, lomienSetCount, mystarSetCount);
-
-                    System.out.println("앱솔세트 :" + absolSetCount);
-                    System.out.println("아케인세트 :" + arcaneSetCount);
-                    System.out.println("보장세트 :" + bossAcSetCount);
-                    System.out.println("칠흙세트 :" + cvelSetCount);
-                    System.out.println("여명?세트 :" + lucidAcSetCount);
-                    System.out.println("에테세트 :" + eternalSetCount);
-                    System.out.println("루타세트 :" + lomienSetCount);
-                    System.out.println("마이세트 :" + mystarSetCount);
-
-                    return Mono.just(charactersSetEffectInfoDTO);
-
-                } catch (Exception exception) {
-                    System.err.println("에러: " + exception.getMessage());
-                    return Mono.error(exception);
-                }
-//                return Mono.empty(); // 반환값이 없는 경우에는 empty로 처리
-            }).onErrorResume(exception -> {
-                System.err.println("에러: " + exception.getMessage());
-                exception.printStackTrace(); // 추가된 부분
-                return Mono.error(exception);
-            });
-            CompletableFuture<CharactersSetEffectInfoDTO> completableFutureResult = new CompletableFuture<>();
-            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
-            return completableFutureResult;
-        } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-        }
-    }
-
-    @Async("characterThreadPool")
-    @Transactional
-    public ItemSetEffectDTO getCharactersSetStatInfo(CharactersSetEffectInfoDTO charactersSetEffectInfoDTO) {
-
-        ItemSetEffectDTO itemSetEffectDTO = new ItemSetEffectDTO();
-        itemSetEffectDTO.setItemSetEffect(charactersSetEffectInfoDTO.getAbsolSetCount(), charactersSetEffectInfoDTO.getArcaneSetCount(), charactersSetEffectInfoDTO.getBossAcSetCount(), charactersSetEffectInfoDTO.getCvelSetCount(), charactersSetEffectInfoDTO.getLucidAcSetCount(), charactersSetEffectInfoDTO.getLomienSetCount(), charactersSetEffectInfoDTO.getEternalSetCount(), charactersSetEffectInfoDTO.getMystarSetCount());
-        System.out.println("세트 allstat : " + itemSetEffectDTO.getAllStat());
-        System.out.println("세트 공격력 : " + itemSetEffectDTO.getAtMgPower());
-        System.out.println("세트 보공 : " + itemSetEffectDTO.getDamage()); //보스데미지
-        System.out.println("세트 크뎀 : " + itemSetEffectDTO.getCriticalDamage());
-
-
-        return itemSetEffectDTO;
-
-    }
-
-
-    //사용 안하는거 같아서 잠시 주석
-//    @Async("characterThreadPool")
-//    @Transactional
-//    public CompletableFuture<CharactersTotalInfoDTO> getCharactersTotalInfo(GetCharactersInfo request) {
-//
-//        if (rateLimiter.tryAcquire()) {
-//
-//            Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
-//            Optional<CharactersStatInfo> charactersStatInfoOptional = charactersStatInfoRepository.findByCharactersName(request.getCharactersName());
-//            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-//
-//            if (charactersInfoOptional.isPresent() && charactersStatInfoOptional.isPresent() && charactersItemEquipOptional.isPresent()) {
-//
-//                CharactersInfo charactersInfo = charactersInfoOptional.get();
-//                CharactersStatInfo charactersStatInfo = charactersStatInfoOptional.get();
-//                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-//
-//                double damageInfo = charactersStatInfo.getDamage();
-//                double bossDamageInfo = charactersStatInfo.getBossDamage();
-//                double finalDamageInfo = charactersStatInfo.getFinalDamage();
-//                double ignoreRateInfo = charactersStatInfo.getIgnoreRate();
-//                double criticalDamageInfo = charactersStatInfo.getCriticalDamage();
-//                int strInfo = charactersStatInfo.getStr();
-//                int dexInfo = charactersStatInfo.getDex();
-//                int intelInfo = charactersStatInfo.getIntel();
-//                int lukInfo = charactersStatInfo.getLuk();
-//                int hpInfo = charactersStatInfo.getHp();
-//                int attackPowerInfo = charactersStatInfo.getAttackPower();
-//                int magicPowerInfo = charactersStatInfo.getMagicPower();
-//                int combatPowerInfo = charactersStatInfo.getCombatPower();
-//
-//                int equipStr;
-//
-//
-////                equipStr = getCharactersHatInfo(request).get().getStr();
-//
-//
-//                CharactersTotalInfoDTO charactersTotalInfoDTO = new CharactersTotalInfoDTO(request.getCharactersName(), charactersInfo.getWorld_name(), charactersInfo.getCharacter_class(), charactersInfo.getCharactersLevel(), damageInfo, bossDamageInfo, finalDamageInfo, ignoreRateInfo, criticalDamageInfo, strInfo, dexInfo, intelInfo, lukInfo, hpInfo, attackPowerInfo, magicPowerInfo, combatPowerInfo);
-//
-//                return CompletableFuture.completedFuture(charactersTotalInfoDTO);
-//
-//
-//            } else {
-//                return null;
-//            }
-//
-//        } else {
-//            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-//        }
-//
-//
-//    }
-
-    ///////  각 아이템 세부 내용을 종합적으로 하나의 코드로 가져오는거  잠시 주석처리
-//    @Async("characterThreadPool")
-//    @Transactional
-//    public CompletableFuture<CharactersItemStatInfoDTO> getCharactersItemInfo(GetCharactersInfo request, String equipmentType) {
-//        if (rateLimiter.tryAcquire()) {
-//            Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-//            if (charactersItemEquipOptional.isPresent()) {
-//
-//                CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-//                JsonNode jsonInfo = null;
-//                try {
-//                    ObjectMapper objectMapper = new ObjectMapper();
-//
-//                    switch (equipmentType) {
-//                        case "hat":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
-//                            break;
-//                        case "top":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getTopInfo());
-//                            break;
-//                        case "bottom":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBottomInfo());
-//                            break;
-//                        case "cape":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getCapeInfo());
-//                            break;
-//                        case "shoes":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getShoesInfo());
-//                            break;
-//                        case "gloves":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getGlovesInfo());
-//                            break;
-//                        case "shoulder":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getShoulderInfo());
-//                            break;
-//                        case "face":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getFaceInfo());
-//                            break;
-//                        case "eye":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEyeInfo());
-//                            break;
-//                        case "ear":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEarInfo());
-//                            break;
-//                        case "pendantOne":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantOneInfo());
-//                            break;
-//                        case "pendantTwo":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPendantTwoInfo());
-//                            break;
-//                        case "belt":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBeltInfo());
-//                            break;
-//                        case "ringOne":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingOneInfo());
-//                            break;
-//                        case "ringTwo":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingTwoInfo());
-//                            break;
-//                        case "ringThree":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingThreeInfo());
-//                            break;
-//                        case "ringFour":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getRingFourInfo());
-//                            break;
-//                        case "weapon":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
-//                            break;
-//                        case "subWeapon":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getSubWeaponInfo());
-//                            break;
-//                        case "emblem":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getEmblemInfo());
-//                            break;
-//                        case "badge":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getBadgeInfo());
-//                            break;
-//                        case "medal":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getMedalInfo());
-//                            break;
-//                        case "poket":
-//                            jsonInfo = objectMapper.readTree(charactersItemEquip.getPoketInfo());
-//                            break;
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
-//                CharactersInfo charactersInfo = charactersInfoOptional.get();
-//                CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
-//
-//                charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
-//                charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
-//                charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
-//                charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
-//                charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
-//                charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
-//                charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
-//                charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
-//                charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
-//                charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
-//                charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
-//                charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
-//                charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
-//                charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
-//                charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
-//                charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
-//                charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
-//                charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
-//                charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
-//                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
-//                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
-//                charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
-//                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
-//                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
-//                charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
-//                charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
-//
-//                charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
-//
-//                CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO();
-//
-//
-//                charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer());
-//
-//                return CompletableFuture.completedFuture(charactersItemStatInfoDTO);
-//            } else {
-//                return null;
-//            }
-//        } else {
-//            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
-//        }
-//    }
-
-
-    ///////
 
 
 }
