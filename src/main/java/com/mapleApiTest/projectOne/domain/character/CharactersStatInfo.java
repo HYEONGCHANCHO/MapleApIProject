@@ -48,6 +48,10 @@ public class CharactersStatInfo {
     private int luk;
 //    @Column(columnDefinition = "json")
     private int hp;
+    private int apStr;
+    private int apDex;
+    private int apInt;
+    private int apLuk;
 
 //    @Column(columnDefinition = "json")
     private int attackPower;
@@ -59,7 +63,7 @@ public class CharactersStatInfo {
 
     protected CharactersStatInfo(){}
 
-    public CharactersStatInfo(String charactersName, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int attackPower, int magicPower, int combatPower) {
+    public CharactersStatInfo(String charactersName, double damage, double bossDamage, double finalDamage, double ignoreRate, double criticalDamage, int str, int dex, int intel, int luk, int hp, int apStr, int apDex, int apInt, int apLuk, int attackPower, int magicPower, int combatPower) {
         this.charactersName = charactersName;
 //        this.date = date;
         this.damage = damage;
@@ -72,6 +76,10 @@ public class CharactersStatInfo {
         this.intel = intel;
         this.luk = luk;
         this.hp = hp;
+        this.apStr = apStr;
+        this.apDex = apDex;
+        this.apInt = apInt;
+        this.apLuk = apLuk;
         this.attackPower = attackPower;
         this.magicPower = magicPower;
         this.combatPower = combatPower;
@@ -84,6 +92,22 @@ public class CharactersStatInfo {
 //    public String getDate() {
 //        return date;
 //    }
+
+    public int getApStr() {
+        return apStr;
+    }
+
+    public int getApDex() {
+        return apDex;
+    }
+
+    public int getApInt() {
+        return apInt;
+    }
+
+    public int getApLuk() {
+        return apLuk;
+    }
 
     public double getDamage() {
         return damage;

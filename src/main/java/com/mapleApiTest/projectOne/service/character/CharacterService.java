@@ -147,7 +147,7 @@ public class CharacterService {
             Optional<CharactersStatInfo> charactersStatInfoOptional = charactersStatInfoRepository.findByCharactersName(request.getCharactersName());
             if (charactersStatInfoOptional.isPresent()) {
                 CharactersStatInfo charactersStatInfo = charactersStatInfoOptional.get();
-                CharactersStatInfoDTO charactersStatInfoDTO = new CharactersStatInfoDTO(request.getCharactersName(), charactersStatInfo.getDamage(), charactersStatInfo.getBossDamage(), charactersStatInfo.getFinalDamage(), charactersStatInfo.getIgnoreRate(), charactersStatInfo.getCriticalDamage(), charactersStatInfo.getStr(), charactersStatInfo.getDex(), charactersStatInfo.getIntel(), charactersStatInfo.getLuk(), charactersStatInfo.getHp(), charactersStatInfo.getAttackPower(), charactersStatInfo.getMagicPower(), charactersStatInfo.getCombatPower());
+                CharactersStatInfoDTO charactersStatInfoDTO = new CharactersStatInfoDTO(request.getCharactersName(), charactersStatInfo.getDamage(), charactersStatInfo.getBossDamage(), charactersStatInfo.getFinalDamage(), charactersStatInfo.getIgnoreRate(), charactersStatInfo.getCriticalDamage(), charactersStatInfo.getStr(), charactersStatInfo.getDex(), charactersStatInfo.getIntel(), charactersStatInfo.getLuk(), charactersStatInfo.getHp(), charactersStatInfo.getApStr(), charactersStatInfo.getApDex(), charactersStatInfo.getApInt(), charactersStatInfo.getApLuk(), charactersStatInfo.getAttackPower(), charactersStatInfo.getMagicPower(), charactersStatInfo.getCombatPower());
 
                 return CompletableFuture.completedFuture(charactersStatInfoDTO);
             } else {
@@ -164,14 +164,18 @@ public class CharacterService {
                         int intel = jsonNode.get("final_stat").get(18).get("stat_value").asInt();
                         int luk = jsonNode.get("final_stat").get(19).get("stat_value").asInt();
                         int hp = jsonNode.get("final_stat").get(20).get("stat_value").asInt();
+                        int apStr = jsonNode.get("final_stat").get(22).get("stat_value").asInt();
+                        int apDex = jsonNode.get("final_stat").get(23).get("stat_value").asInt();
+                        int apInt = jsonNode.get("final_stat").get(24).get("stat_value").asInt();
+                        int apLuk = jsonNode.get("final_stat").get(25).get("stat_value").asInt();
                         int attackPower = jsonNode.get("final_stat").get(40).get("stat_value").asInt();
                         int magicPower = jsonNode.get("final_stat").get(41).get("stat_value").asInt();
                         int combatPower = jsonNode.get("final_stat").get(42).get("stat_value").asInt();
 
 
-                        CharactersStatInfo charactersStatInfo = new CharactersStatInfo(request.getCharactersName(), damage, bossDamage, finalDamage, ignoreRate, criticalDamage, str, dex, intel, luk, hp, attackPower, magicPower, combatPower);
+                        CharactersStatInfo charactersStatInfo = new CharactersStatInfo(request.getCharactersName(), damage, bossDamage, finalDamage, ignoreRate, criticalDamage, str, dex, intel, luk, hp, apStr, apDex, apInt, apLuk, attackPower, magicPower, combatPower);
                         charactersStatInfoRepository.save(charactersStatInfo);
-                        CharactersStatInfoDTO charactersStatInfoDTO = new CharactersStatInfoDTO(request.getCharactersName(), damage, bossDamage, finalDamage, ignoreRate, criticalDamage, str, dex, intel, luk, hp, attackPower, magicPower, combatPower);
+                        CharactersStatInfoDTO charactersStatInfoDTO = new CharactersStatInfoDTO(request.getCharactersName(), damage, bossDamage, finalDamage, ignoreRate, criticalDamage, str, dex, intel, luk, hp, apStr, apDex, apInt, apLuk, attackPower, magicPower, combatPower);
                         return Mono.just(charactersStatInfoDTO);
                     } catch (Exception exception) {
                         System.err.println("에러: " + exception.getMessage());
@@ -879,10 +883,8 @@ public class CharacterService {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //유니온 아티팩트
     @Async("characterThreadPool")
-    @Transactional  //캐릭터 세트효과 적용중인거 불러오기
+    @Transactional   //유니온 아티팩트
     public CompletableFuture<CharactersArtiInfoDTO> getCharactersArtiInfo(String charactersName, String ocid) {
         if (rateLimiter.tryAcquire()) {
             String Url = "/maplestory/v1/user/union-artifact";
@@ -961,7 +963,7 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
-    @Transactional  //캐릭터 세트효과 적용중인거 불러오기
+    @Transactional   //유니온 공격대, 유니온 점령
     public CompletableFuture<CharactersUnionInfoDTO> getCharactersUnionInfo(String charactersName, String ocid) {
         if (rateLimiter.tryAcquire()) {
             String Url = "/maplestory/v1/user/union-raider";
@@ -976,49 +978,68 @@ public class CharacterService {
                     int UnionRaiderAtMgPower = 0;
                     Double UnionRaiderCriticalDamage = 0.0;
                     Double UnionRaiderBossDamage = 0.0;
-                    System.out.println("jsonNode.get(union_raider_stat" + jsonNode.get("union_raider_stat"));
 
                     String unionRaiderStat = jsonNode.get("union_raider_stat").toString();
                     System.out.println("union_raider_stat :" + unionRaiderStat);
 
-                    String[] unionRaiderParts = unionRaiderStat.split(",");
+                    String[] unionRaiderParts = unionRaiderStat.split("\"");
+
 
                     for (String part : unionRaiderParts) {
-                        // 부분에서 숫자 추출
-                        String[] tokens = part.split("\\s+");
-                        int value = 0; // 숫자를 저장할 변수 초기화
+                        if (part.length() > 2) {
+                            // 부분에서 숫자 추출
+                            String[] tokens = part.split("\\s+");
+                            int value = 0; // 숫자를 저장할 변수 초기화
+                            double doubleValue = 0.0;
 
-                        System.out.println("part :" + part);
+                            System.out.println("part :" + part);
 
-                        for (String token : tokens) {
-                            if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
-                                // %를 제거하고 숫자만 추출하여 정수로 변환
-                                value = Integer.parseInt(token.replaceAll("%", ""));
-                                System.out.println("value :" + value);
-                            } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
-                                value = Integer.parseInt(token);
-                                System.out.println("value :" + value);
+                            for (String token : tokens) {
+                                if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                    // %를 제거하고 숫자만 추출하여 정수로 변환
+                                    value = Integer.parseInt(token.replaceAll("%", ""));
+                                    System.out.println("value :" + value);
+                                } else if (token.matches("\\d+\\.\\d+%")) { // 소수점이 포함된 숫자인 경우
+                                    doubleValue = Double.parseDouble(token.replaceAll("%", ""));
+                                    System.out.println("double value: " + doubleValue);
+                                } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                    value = Integer.parseInt(token);
+                                    System.out.println("value :" + value);
+                                }
                             }
-                        }
-                        // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
-                        if (part.contains("공격력") || part.contains("마력")) {
-                            UnionRaiderAtMgPower += value;
-                        } else if (part.contains("STR")&&part.contains("DEX")&&part.contains("LUK")) {
-                            UnionRaiderStr += value;
-                            UnionRaiderDex += value;
-                            UnionRaiderLuk += value;
-                        }else if (part.contains("STR")) {
-                            UnionRaiderStr += value;
-                        }else if (part.contains("DEX")) {
-                            UnionRaiderDex += value;
-                        }else if (part.contains("LUK")) {
-                            UnionRaiderLuk += value;
-                        }else if (part.contains("INT")) {
-                            UnionRaiderInt += value;
-                        }else if (part.contains("크리티컬 데미지")) {
-                            UnionRaiderCriticalDamage += value;
-                        }else if (part.contains("보스 몬스터 공격 시 데미지")) {
-                            UnionRaiderBossDamage += value;
+                            // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                            if (part.contains("공격력") || part.contains("마력")) {
+                                System.out.println("UnionRaiderAtMgPower :" + UnionRaiderAtMgPower);
+                                UnionRaiderAtMgPower += value;
+                                System.out.println("UnionRaiderAtMgPower :" + UnionRaiderAtMgPower);
+
+                            } else if (part.contains("STR") && part.contains("DEX") && part.contains("LUK")) {
+
+                                System.out.println("UnionRaiderStr :" + UnionRaiderStr);
+                                System.out.println("UnionRaiderDex :" + UnionRaiderDex);
+                                System.out.println("UnionRaiderLuk :" + UnionRaiderLuk);
+
+                                UnionRaiderStr += value;
+                                UnionRaiderDex += value;
+                                UnionRaiderLuk += value;
+
+                                System.out.println("UnionRaiderStr :" + UnionRaiderStr);
+                                System.out.println("UnionRaiderDex :" + UnionRaiderDex);
+                                System.out.println("UnionRaiderLuk :" + UnionRaiderLuk);
+
+                            } else if (part.contains("STR")) {
+                                UnionRaiderStr += value;
+                            } else if (part.contains("DEX")) {
+                                UnionRaiderDex += value;
+                            } else if (part.contains("LUK")) {
+                                UnionRaiderLuk += value;
+                            } else if (part.contains("INT")) {
+                                UnionRaiderInt += value;
+                            } else if (part.contains("크리티컬 데미지")) {
+                                UnionRaiderCriticalDamage += value + doubleValue;
+                            } else if (part.contains("보스 몬스터 공격 시 데미지")) {
+                                UnionRaiderBossDamage += value + doubleValue;
+                            }
                         }
                     }
 
@@ -1031,51 +1052,61 @@ public class CharacterService {
                     Double UnionOccupiedCriticalDamage = 0.0;
                     Double UnionOccupiedBossDamage = 0.0;
 
-                    String union_occupied_stat = jsonNode.get("union_occupied_stat").asText();
-                    String[] unionOccupiedParts = unionRaiderStat.split(",");
+                    String union_occupied_stat = jsonNode.get("union_occupied_stat").toString();
+                    String[] unionOccupiedParts = union_occupied_stat.split("\"");
                     System.out.println("union_occupied_stat :" + union_occupied_stat);
-
                     for (String part : unionOccupiedParts) {
-                        // 부분에서 숫자 추출
-                        String[] tokens = part.split("\\s+");
-                        int value = 0; // 숫자를 저장할 변수 초기화
 
-                        for (String token : tokens) {
-                            if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
-                                // %를 제거하고 숫자만 추출하여 정수로 변환
-                                value = Integer.parseInt(token.replaceAll("%", ""));
-                                System.out.println("value :" + value);
-                            } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
-                                value = Integer.parseInt(token);
-                                System.out.println("value :" + value);
+                        if (part.length() > 2) {
+                            // 부분에서 숫자 추출
+                            String[] tokens = part.split("\\s+");
+                            int value = 0; // 숫자를 저장할 변수 초기화
+                            double doubleValue = 0.0;
+
+                            System.out.println("part :" + part);
+
+                            for (String token : tokens) {
+                                if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                    // %를 제거하고 숫자만 추출하여 정수로 변환
+                                    value = Integer.parseInt(token.replaceAll("%", ""));
+                                    System.out.println("value :" + value);
+                                } else if (token.matches("\\d+\\.\\d+%")) { // 소수점이 포함된 숫자인 경우
+                                    doubleValue = Double.parseDouble(token.replaceAll("%", ""));
+                                    System.out.println("double value: " + doubleValue);
+                                } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                    value = Integer.parseInt(token);
+                                    System.out.println("value :" + value);
+                                }
                             }
-                        }
 
+                            // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                            if (part.contains("공격력") || part.contains("마력")) {
+                                System.out.println("UnionOccupiedAtMgPower :" + UnionOccupiedAtMgPower);
+                                UnionOccupiedAtMgPower += value;
+                                System.out.println("UnionOccupiedAtMgPower :" + UnionOccupiedAtMgPower);
+                            } else if (part.contains("STR") && part.contains("DEX") && part.contains("LUK")) {
+                                UnionOccupiedStr += value;
+                                UnionOccupiedDex += value;
+                                UnionOccupiedLuk += value;
+                            } else if (part.contains("STR")) {
+                                UnionOccupiedStr += value;
+                            } else if (part.contains("DEX")) {
+                                UnionOccupiedDex += value;
+                            } else if (part.contains("LUK")) {
+                                UnionOccupiedLuk += value;
+                            } else if (part.contains("INT")) {
+                                UnionOccupiedInt += value;
+                            } else if (part.contains("크리티컬 데미지")) {
+                                UnionOccupiedCriticalDamage += value + doubleValue;
+                            } else if (part.contains("보스 몬스터 공격 시 데미지")) {
+                                UnionOccupiedBossDamage += value + doubleValue;
+                            }
 
-                        // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
-                        if (part.contains("공격력") || part.contains("마력")) {
-                            UnionOccupiedAtMgPower += value;
-                        } else if (part.contains("STR")&&part.contains("DEX")&&part.contains("LUK")) {
-                            UnionOccupiedStr += value;
-                            UnionOccupiedDex += value;
-                            UnionOccupiedLuk += value;
-                        }else if (part.contains("STR")) {
-                            UnionOccupiedStr += value;
-                        }else if (part.contains("DEX")) {
-                            UnionOccupiedDex += value;
-                        }else if (part.contains("LUK")) {
-                            UnionOccupiedLuk += value;
-                        }else if (part.contains("INT")) {
-                            UnionOccupiedInt += value;
-                        }else if (part.contains("크리티컬 데미지")) {
-                            UnionOccupiedCriticalDamage += value;
-                        }else if (part.contains("보스 몬스터 공격 시 데미지")) {
-                            UnionOccupiedBossDamage += value;
                         }
                     }
 
 
-                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower,UnionRaiderCriticalDamage,UnionRaiderBossDamage,UnionOccupiedStr,UnionOccupiedDex,UnionOccupiedInt,UnionOccupiedLuk,UnionOccupiedAtMgPower,UnionOccupiedCriticalDamage,UnionOccupiedBossDamage);
+                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower, UnionRaiderCriticalDamage, UnionRaiderBossDamage, UnionOccupiedStr, UnionOccupiedDex, UnionOccupiedInt, UnionOccupiedLuk, UnionOccupiedAtMgPower, UnionOccupiedCriticalDamage, UnionOccupiedBossDamage);
 
                     System.out.println("UnionRaiderStr :" + UnionRaiderStr);
                     System.out.println("UnionRaiderDex :" + UnionRaiderDex);
@@ -1111,15 +1142,450 @@ public class CharacterService {
         }
     }
 
+    @Async("characterThreadPool")
+    @Transactional       //하이퍼스탯
+    public CompletableFuture<CharactersHyperStatInfoDTO> getCharactersHyperStatInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/hyper-stat";
 
-    //어빌리티
+            Mono<CharactersHyperStatInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int HyperStatStr = 0;
+                    int HyperStatDex = 0;
+                    int HyperStatInt = 0;
+                    int HyperStatLuk = 0;
+                    int HyperStatAtMgPower = 0;
+                    Double HyperStatCriticalDamage = 0.0;
+                    Double HyperStatDamage = 0.0;
+                    Double HyperStatBossDamage = 0.0;
+
+                    JsonNode useHyperStatPreset = null;
+                    if (jsonNode.get("use_preset_no").asInt() == 1) {
+                        useHyperStatPreset = jsonNode.get("hyper_stat_preset_1");
+                        System.out.println("use_preset_no :" + jsonNode.get("use_preset_no"));
+
+                    } else if (jsonNode.get("use_preset_no").asInt() == 2) {
+                        useHyperStatPreset = jsonNode.get("hyper_stat_preset_2");
+                        System.out.println("use_preset_no :" + jsonNode.get("use_preset_no"));
+
+                    } else if (jsonNode.get("use_preset_no").asInt() == 3) {
+                        useHyperStatPreset = jsonNode.get("hyper_stat_preset_3");
+                        System.out.println("use_preset_no :" + jsonNode.get("use_preset_no"));
+
+                    }
+
+                    for (JsonNode hyperStatNode : useHyperStatPreset) {
+                        String stat_increase = hyperStatNode.get("stat_increase").toString();
+                        String[] tokens = stat_increase.split("\\s+");
+                        int value = 0; // 숫자를 저장할 변수 초기화
+                        double doubleValue = 0.0;
+
+                        System.out.println("stat_increase :" + stat_increase);
+
+                        for (String token : tokens) {
+                            if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                // %를 제거하고 숫자만 추출하여 정수로 변환
+                                value = Integer.parseInt(token.replaceAll("%", ""));
+                                System.out.println("value :" + value);
+                            } else if (token.matches("\\d+\\.\\d+%")) { // 소수점이 포함된 숫자인 경우
+                                doubleValue = Double.parseDouble(token.replaceAll("%", ""));
+                                System.out.println("double value: " + doubleValue);
+                            } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                value = Integer.parseInt(token);
+                                System.out.println("value :" + value);
+                            }
+                        }
+
+                        // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                        if (stat_increase.contains("공격력") || stat_increase.contains("마력")) {
+                            System.out.println("HyperStatAtMgPower :" + HyperStatAtMgPower);
+                            HyperStatAtMgPower += value;
+                            System.out.println("HyperStatAtMgPower :" + HyperStatAtMgPower);
+                        } else if (stat_increase.contains("힘")) {
+                            HyperStatStr += value;
+                        } else if (stat_increase.contains("민첩성")) {
+                            HyperStatDex += value;
+                        } else if (stat_increase.contains("운")) {
+                            HyperStatLuk += value;
+                        } else if (stat_increase.contains("지력")) {
+                            HyperStatInt += value;
+                        } else if (stat_increase.contains("크리티컬 데미지")) {
+                            HyperStatCriticalDamage += value + doubleValue;
+                        } else if (stat_increase.contains("보스 몬스터 공격 시 데미지")) {
+                            HyperStatBossDamage += value + doubleValue;
+                        } else if (stat_increase.contains("데미지")) {
+                            HyperStatDamage += value + doubleValue;
+                        }
+
+                    }
+
+                    System.out.println("HyperStatAtMgPower :" + HyperStatAtMgPower);
+                    System.out.println("HyperStatStr :" + HyperStatStr);
+                    System.out.println("HyperStatDex :" + HyperStatDex);
+                    System.out.println("HyperStatLuk :" + HyperStatLuk);
+                    System.out.println("HyperStatInt" + HyperStatInt);
+                    System.out.println("HyperStatCriticalDamage" + HyperStatCriticalDamage);
+                    System.out.println("HyperStatBossDamage" + HyperStatBossDamage);
+                    System.out.println("HyperStatDamage" + HyperStatDamage);
+                    System.out.println("HyperStatInt" + HyperStatInt);
+                    System.out.println("HyperStatInt" + HyperStatInt);
+
+                    CharactersHyperStatInfoDTO charactersHyperStatInfoDTO = new CharactersHyperStatInfoDTO(charactersName, HyperStatStr, HyperStatDex, HyperStatInt, HyperStatLuk, HyperStatAtMgPower, HyperStatCriticalDamage, HyperStatDamage, HyperStatBossDamage);
+
+
+                    return Mono.just(charactersHyperStatInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersHyperStatInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+
+    @Async("characterThreadPool")
+    @Transactional       //어빌리티
+    public CompletableFuture<CharactersAbilityInfoDTO> getCharactersAbilityInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/ability";
+
+            Mono<CharactersAbilityInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int abilityStr = 0;
+                    int abilityDex = 0;
+                    int abilityInt = 0;
+                    int abilityLuk = 0;
+                    int abilityStrPer = 0;
+                    int abilityDexPer = 0;
+                    int abilityIntPer = 0;
+                    int abilityLukPer = 0;
+                    int abilityAtMgPower = 0;
+                    Double abilityBossDamage = 0.0;
+                    int charactersLevel = charactersInfoDTO.getCharacter_level();
+                    int apStr = charactersStatInfoDTO.getApStr();
+                    int apDex = charactersStatInfoDTO.getApDex();
+                    int apInt = charactersStatInfoDTO.getApInt();
+                    int apLuk = charactersStatInfoDTO.getApLuk();
+
+                    for (JsonNode abilityNode : jsonNode.get("ability_info")) {
+                        String stat_increase = abilityNode.get("ability_value").toString();
+                        int value = 0; // 숫자를 저장할 변수 초기화
+                        int levelAtMgValue = 0;
+                        double doubleValue = 0.0;
+
+                        String[] parts = stat_increase.split(",");
+
+                        System.out.println("stat_increase: " + stat_increase);
+
+                        for (String part : parts) {
+                            String[] tokens = part.split("\\s+");
+                            for (String token : tokens) {
+                                if (token.matches("\\d+레벨")) { //
+                                    levelAtMgValue = Integer.parseInt(token.replaceAll("레벨", ""));
+                                } else if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                    // %를 제거하고 숫자만 추출하여 정수로 변환
+                                    value = Integer.parseInt(token.replaceAll("%", ""));
+                                    System.out.println("value :" + value);
+                                } else if (token.matches("\\d+\\.\\d+%")) { // 소수점이 포함된 숫자인 경우
+                                    doubleValue = Double.parseDouble(token.replaceAll("%", ""));
+                                    System.out.println("double value: " + doubleValue);
+                                } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                    value = Integer.parseInt(token);
+                                    System.out.println("value :" + value);
+                                }
+                            }
+
+                            // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                            if (stat_increase.contains("레벨마다 공격력") || stat_increase.contains("레벨마다 마력")) {
+                                System.out.println("abilityAtMgPower :" + abilityAtMgPower);
+                                abilityAtMgPower += charactersLevel / levelAtMgValue;
+                                System.out.println("abilityAtMgPower :" + abilityAtMgPower);
+                            } else if (stat_increase.contains("공격력") || stat_increase.contains("마력")) {
+                                abilityAtMgPower += value;
+                            } else if (stat_increase.contains("STR")) {
+                                abilityStr += value;
+                            } else if (stat_increase.contains("DEX")) {
+                                abilityDex += value;
+                            } else if (stat_increase.contains("LUK")) {
+                                abilityLuk += value;
+                            } else if (stat_increase.contains("INT")) {
+                                abilityInt += value;
+                            } else if (stat_increase.contains("AP를 직접 투자한 STR의")) {
+                                abilityDexPer += value;
+                            } else if (stat_increase.contains("AP를 직접 투자한 DEX의")) {
+                                abilityStrPer += value;
+                            } else if (stat_increase.contains("AP를 직접 투자한 INT의")) {
+                                abilityLukPer += value;
+                            } else if (stat_increase.contains("AP를 직접 투자한 LUK의")) {
+                                abilityIntPer += value;
+                            } else if (stat_increase.contains("모든 능력치")) {
+                                abilityStr += value;
+                                abilityDex += value;
+                                abilityLuk += value;
+                                abilityInt += value;
+                            } else if (stat_increase.contains("보스 몬스터 공격 시 데미지")) {
+                                abilityBossDamage += value + doubleValue;
+                            }
+                        }
+                    }
+                    System.out.println("abilityStr :" + abilityStr);
+                    System.out.println("abilityDex :" + abilityDex);
+                    System.out.println("abilityLuk :" + abilityLuk);
+                    System.out.println("abilityInt" + abilityInt);
+                    System.out.println("abilityStrPer" + abilityStrPer);
+                    System.out.println("abilityDexPer" + abilityDexPer);
+                    System.out.println("abilityIntPer" + abilityIntPer);
+                    System.out.println("abilityLukPer" + abilityLukPer);
+                    System.out.println("abilityAtMgPower" + abilityAtMgPower);
+                    System.out.println("abilityBossDamage" + abilityBossDamage);
+
+                    CharactersAbilityInfoDTO charactersAbilityInfoDTO = new CharactersAbilityInfoDTO(charactersName, abilityStr, abilityDex, abilityInt, abilityLuk, abilityStrPer, abilityDexPer, abilityIntPer, abilityLukPer, abilityAtMgPower, abilityBossDamage);
+
+                    return Mono.just(charactersAbilityInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersAbilityInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+
+    @Async("characterThreadPool")
+    @Transactional       //심볼
+    public CompletableFuture<CharactersSimbolInfoDTO> getCharactersSimbolInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/symbol-equipment";
+
+            Mono<CharactersSimbolInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int simbolStr = 0;
+                    int simbolDex = 0;
+                    int simbolInt = 0;
+                    int simbolLuk = 0;
+
+
+                    for (JsonNode symbolNode : jsonNode.get("symbol")) {
+                        simbolStr += symbolNode.get("symbol_str").asInt();
+                        simbolDex += symbolNode.get("symbol_dex").asInt();
+                        simbolInt += symbolNode.get("symbol_int").asInt();
+                        simbolLuk += symbolNode.get("symbol_luk").asInt();
+                    }
+
+                    System.out.println("simbolStr :" + simbolStr);
+                    System.out.println("simbolDex :" + simbolDex);
+                    System.out.println("simbolInt :" + simbolInt);
+                    System.out.println("simbolLuk :" + simbolLuk);
+
+                    CharactersSimbolInfoDTO charactersSimbolInfoDTO = new CharactersSimbolInfoDTO(charactersName, simbolStr, simbolDex, simbolInt, simbolLuk);
+
+                    return Mono.just(charactersSimbolInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersSimbolInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+    @Async("characterThreadPool")
+    @Transactional       //펫장비
+    public CompletableFuture<CharactersPetEquipInfoDTO> getCharactersPetEquipInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/pet-equipment";
+
+            Mono<CharactersPetEquipInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int petAt = 0;
+                    int petMg = 0;
+
+
+                    for (JsonNode symbolNode : jsonNode.get("pet_1_equipment").get("item_option")) {
+
+                        if (symbolNode.get("option_type").toString().contains("공격력")) {
+                            petAt += symbolNode.get("option_value").asInt();
+                        } else if (symbolNode.get("option_type").toString().contains("마력")) {
+                            petMg += symbolNode.get("option_value").asInt();
+                        }
+                    }
+                    for (JsonNode symbolNode : jsonNode.get("pet_2_equipment").get("item_option")) {
+
+                        if (symbolNode.get("option_type").toString().contains("공격력")) {
+                            petAt += symbolNode.get("option_value").asInt();
+                        } else if (symbolNode.get("option_type").toString().contains("마력")) {
+                            petMg += symbolNode.get("option_value").asInt();
+                        }
+                    }
+                    for (JsonNode symbolNode : jsonNode.get("pet_3_equipment").get("item_option")) {
+
+                        if (symbolNode.get("option_type").toString().contains("공격력")) {
+                            petAt += symbolNode.get("option_value").asInt();
+                        } else if (symbolNode.get("option_type").toString().contains("마력")) {
+                            petMg += symbolNode.get("option_value").asInt();
+                        }
+                    }
+
+                    System.out.println("petAt :" + petAt);
+                    System.out.println("petMg :" + petMg);
+
+                    CharactersPetEquipInfoDTO charactersPetEquipInfoDTO = new CharactersPetEquipInfoDTO(charactersName, petAt, petMg);
+
+                    return Mono.just(charactersPetEquipInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersPetEquipInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
     //헥사스탯
     //5차 스킬
-    //유니온
-    //하이퍼스탯
-    //심볼
+    @Async("characterThreadPool")
+    @Transactional       //어빌리티
+    public CompletableFuture<CharactersSkillStatInfoDTO> getCharactersSkillStatInfo(String charactersName, String ocid, int nthSkill) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/skill";
+            Mono<CharactersSkillStatInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("character_skill_grade", nthSkill).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+
+                    int skillStatAllStat = 0;
+                    int skillStatAtMgPower = 0;
+                    boolean isFree = false;
+                    if (nthSkill == 0) {
+                        int jungBless = 0;
+                        int yujeBless = 0;
+                        for (JsonNode nthSkillNode : jsonNode.get("character_skill")) {
+                            String skillName = nthSkillNode.get("skill_name").toString();
+                            if (skillName.contains("정령의 축복")) {
+                                jungBless = nthSkillNode.get("skill_level").asInt();
+                            }
+                            if (skillName.contains("여제의 축복")) {
+                                yujeBless = nthSkillNode.get("skill_level").asInt();
+                            }
+                            if (jungBless < yujeBless) {
+                                skillStatAtMgPower += yujeBless;
+                            } else {
+                                skillStatAtMgPower += jungBless;
+                            }
+
+                            if (skillName.contains("Lv.1")) {
+                                skillStatAtMgPower += 8;
+                            }
+
+                            if (skillName.contains("Lv.2")) {
+                                skillStatAtMgPower += 10;
+                            }
+                            if (skillName.contains("Lv.3")) {
+                                skillStatAtMgPower += 12;
+                            }
+                            if (skillName.contains("파괴의 얄다바오트")) {
+                                isFree=true;
+                            }
+                        }
+                    }
+
+                    if (nthSkill == 5) {
+                        for (JsonNode nthSkillNode : jsonNode.get("character_skill")) {
+                            String skillName = nthSkillNode.get("skill_name").toString();
+                            if (skillName.contains("로프 커넥트")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAllStat += skillLevel;
+                            } else if (skillName.contains("블링크")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAtMgPower += skillLevel;
+                            } else if (skillName.contains("쓸만한 미스틱 도어")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                            } else if (skillName.contains("쓸만한 샤프 아이즈")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                            } else if (skillName.contains("쓸만한 미스틱 도어")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                            } else if (skillName.contains("쓸만한 윈드 부스터")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                            } else if (skillName.contains("쓸만한 하이퍼 바디")) {
+                                int skillLevel = nthSkillNode.get("skill_level").asInt();
+                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                            }
+                        }
+                    }
+
+                System.out.println("skillStatAllStat :" + skillStatAllStat);
+                System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
+                System.out.println("isFree :" + isFree);
 
 
+                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName,skillStatAllStat,skillStatAtMgPower, isFree);
+
+                return Mono.just(charactersSkillStatInfoDTO);
+
+            } catch(Exception exception){
+                System.err.println("에러: " + exception.getMessage());
+                return Mono.error(exception);
+            }
+        }).onErrorResume(exception -> {
+            System.err.println("에러: " + exception.getMessage());
+            exception.printStackTrace(); // 추가된 부분
+            return Mono.error(exception);
+        });
+        CompletableFuture<CharactersSkillStatInfoDTO> completableFutureResult = new CompletableFuture<>();
+        MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+        return completableFutureResult;
+    } else
+
+    {
+        return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+    }
+
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //아래는 잠시 보류//
 
@@ -1780,7 +2246,9 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional   //잠시 보류
-    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel, int starForce, int itemUpgrade, int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer, int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
+    public CompletableFuture<HatStatInfoDTO> getEquipSimulation(int itemLevel, int starForce, int itemUpgrade,
+                                                                int addOptionStat, int potentialNewMainStatPer, int potentialNewSubStatPer, int potentialNewAtMgPowerPer,
+                                                                int potentialNewMainStat, int potentialNewSubStat, int potentialNewAtMgPowerStat) {
 
         ItemSimulationDTO itemSimulationDTO = new ItemSimulationDTO();
         HatStatInfoDTO hatStatInfoDTO = new HatStatInfoDTO(itemLevel);
@@ -1806,7 +2274,8 @@ public class CharacterService {
 
     @Async("characterThreadPool")
     @Transactional
-    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re, int itemLevel, int starForce, int itemUpgrade
+    public String getCharactersChangeCombat(GetCharactersTotalChangedInfoDTO request, GetCharactersInfo re,
+                                            int itemLevel, int starForce, int itemUpgrade
     ) {
 
         int addAllStat = request.getAddAllStat();

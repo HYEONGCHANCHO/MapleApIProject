@@ -1,14 +1,9 @@
 package com.mapleApiTest.projectOne.controller.character;
 
 import com.mapleApiTest.dropItemChoice.Service.DropItemChoiceService;
-import com.mapleApiTest.projectOne.domain.character.CharactersInfo;
-import com.mapleApiTest.projectOne.domain.character.CharactersItemEquip;
-import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
-import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
 //import com.mapleApiTest.projectOne.dto.character.response.CharacterInfo;
 import com.mapleApiTest.projectOne.dto.item.*;
-import com.mapleApiTest.projectOne.repository.character.CharactersInfoRepository;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -110,7 +102,7 @@ public class CharacterController {
 
     }
 
-    @GetMapping("/CharactersArtiInfo")
+    @GetMapping("/CharactersArtiInfo") //유니온 아티팩트
     public CompletableFuture<CharactersArtiInfoDTO> getCharactersArtiInfo(@RequestParam String charactersName) {
 
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
@@ -120,17 +112,82 @@ public class CharacterController {
         return characterService.getCharactersArtiInfo(charactersName, ocid);
 
     }
+
+    @GetMapping("/CharactersUnionInfo")  //유니온 공격대, 유니온 점령
+    public CompletableFuture<CharactersUnionInfoDTO> getCharactersUnionInfo(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+
+        return characterService.getCharactersUnionInfo(charactersName, ocid);
+
+    }
+
+
+    @GetMapping("/CharactersHyperStatInfo")  //하이퍼 스탯
+    public CompletableFuture<CharactersHyperStatInfoDTO> getCharactersHyperStatInfo(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+
+        return characterService.getCharactersHyperStatInfo(charactersName, ocid);
+
+    }
+    @GetMapping("/CharactersAbilityStatInfo")  //어빌리티
+    public CompletableFuture<CharactersAbilityInfoDTO> getCharactersAbilityInfo(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        CharactersInfoDTO charactersInfoDTO = characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid).join();
+        CharactersStatInfoDTO charactersStatInfoDTO =
+                characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
+
+
+
+        return characterService.getCharactersAbilityInfo(charactersName, ocid,charactersInfoDTO,charactersStatInfoDTO);
+
+    }
+
 //////////////////////////////////////////////////////////////////////////////
-@GetMapping("/CharactersUnionInfo")
-public CompletableFuture<CharactersUnionInfoDTO> getCharactersUnionInfo(@RequestParam String charactersName) {
 
-    GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
-    CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
-    String ocid = CompletableFutureOcid.join();
+    @GetMapping("/CharactersSimbolInfo")  //심볼
+    public CompletableFuture<CharactersSimbolInfoDTO> getCharactersSimbolInfo(@RequestParam String charactersName) {
 
-    return characterService.getCharactersUnionInfo(charactersName, ocid);
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
 
-}
+        return characterService.getCharactersSimbolInfo(charactersName, ocid);
+
+    }
+    @GetMapping("/CharactersPetEquipInfo")  //심볼
+    public CompletableFuture<CharactersPetEquipInfoDTO> getCharactersPetEquipInfo(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+
+        return characterService.getCharactersPetEquipInfo(charactersName, ocid);
+
+    }
+
+    @GetMapping("/CharactersSkillStatInfo")  //SkillStat
+    public CompletableFuture<CharactersSkillStatInfoDTO> getCharactersNthSkillStatInfo(@RequestParam String charactersName,@RequestParam int nthSkill) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        return characterService.getCharactersSkillStatInfo(charactersName, ocid,nthSkill);
+
+    }
+
+
+
+
+
 
     //////////////////////////////////////////////////////////////////////////////
 //아래는 잠시 보류//

@@ -1,4 +1,4 @@
-package com.mapleApiTest.projectOne.dto.item;
+package com.mapleApiTest.projectOne.dto.character.request;
 
 
 public class CharactersUnionInfoDTO {
