@@ -184,6 +184,16 @@ public class CharacterController {
 
     }
 
+    @GetMapping("/CharactersHexaStatInfo")  //HexaStat
+    public CompletableFuture<CharactersHexaStatInfoDTO> getCharactersHexaStatInfo(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+        return characterService.getCharactersHexaStatInfo(charactersName, ocid);
+
+    }
+
 
 
 

@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CharacterService {
@@ -1483,10 +1485,8 @@ public class CharacterService {
         }
     }
 
-    //헥사스탯
-    //5차 스킬
     @Async("characterThreadPool")
-    @Transactional       //어빌리티
+    @Transactional      //5차 스킬
     public CompletableFuture<CharactersSkillStatInfoDTO> getCharactersSkillStatInfo(String charactersName, String ocid, int nthSkill) {
         if (rateLimiter.tryAcquire()) {
             String Url = "/maplestory/v1/character/skill";
@@ -1497,6 +1497,7 @@ public class CharacterService {
                     int skillStatAllStat = 0;
                     int skillStatAtMgPower = 0;
                     boolean isFree = false;
+                    int value = 0;
                     if (nthSkill == 0) {
                         int jungBless = 0;
                         int yujeBless = 0;
@@ -1504,30 +1505,33 @@ public class CharacterService {
                             String skillName = nthSkillNode.get("skill_name").toString();
                             if (skillName.contains("정령의 축복")) {
                                 jungBless = nthSkillNode.get("skill_level").asInt();
-                            }
-                            if (skillName.contains("여제의 축복")) {
+                            } else if (skillName.contains("여제의 축복")) {
                                 yujeBless = nthSkillNode.get("skill_level").asInt();
-                            }
-                            if (jungBless < yujeBless) {
-                                skillStatAtMgPower += yujeBless;
-                            } else {
-                                skillStatAtMgPower += jungBless;
-                            }
-
-                            if (skillName.contains("Lv.1")) {
-                                skillStatAtMgPower += 8;
-                            }
-
-                            if (skillName.contains("Lv.2")) {
-                                skillStatAtMgPower += 10;
-                            }
-                            if (skillName.contains("Lv.3")) {
-                                skillStatAtMgPower += 12;
-                            }
-                            if (skillName.contains("파괴의 얄다바오트")) {
-                                isFree=true;
+                            } else if (skillName.contains("연합의 의지")) {
+                                skillStatAllStat += 5;
+                                skillStatAtMgPower += 5;
+                            } else if (skillName.contains("Lv.1") || skillName.contains("Lv.2") || skillName.contains("Lv.3")) {
+                                String skillEffect = nthSkillNode.get("skill_effect").toString();
+                                if (skillEffect.contains("공격력") || skillEffect.contains("마력")) {
+                                    Pattern pattern = Pattern.compile("(\\d+)"); // 숫자를 추출하는 패턴
+                                    Matcher matcher = pattern.matcher(skillEffect);
+                                    while (matcher.find()) {
+                                        int extractedValue = Integer.parseInt(matcher.group());
+                                        value = extractedValue; // 추출한 숫자를 누적하여 저장
+                                    }
+                                }
+                                skillStatAtMgPower += value;
+                            } else if (skillName.contains("파괴의 얄다바오트")) {
+                                isFree = true;
                             }
                         }
+
+                        if (jungBless < yujeBless) {
+                            skillStatAtMgPower += yujeBless;
+                        } else {
+                            skillStatAtMgPower += jungBless;
+                        }
+
                     }
 
                     if (nthSkill == 5) {
@@ -1541,51 +1545,152 @@ public class CharacterService {
                                 skillStatAtMgPower += skillLevel;
                             } else if (skillName.contains("쓸만한 미스틱 도어")) {
                                 int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                                skillStatAllStat += (skillLevel - 1) / 5 + 1;
                             } else if (skillName.contains("쓸만한 샤프 아이즈")) {
                                 int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
-                            } else if (skillName.contains("쓸만한 미스틱 도어")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                                skillStatAllStat += ((skillLevel - 1) / 5) + 1;
                             } else if (skillName.contains("쓸만한 윈드 부스터")) {
                                 int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                                skillStatAllStat += (skillLevel - 1) / 5 + 1;
                             } else if (skillName.contains("쓸만한 하이퍼 바디")) {
                                 int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) % 5 + 1;
+                                skillStatAllStat += (skillLevel - 1) / 5 + 1;
                             }
                         }
                     }
 
-                System.out.println("skillStatAllStat :" + skillStatAllStat);
-                System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
-                System.out.println("isFree :" + isFree);
+                    System.out.println("skillStatAllStat :" + skillStatAllStat);
+                    System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
+                    System.out.println("isFree :" + isFree);
+                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName, skillStatAllStat, skillStatAtMgPower, isFree);
 
+                    return Mono.just(charactersSkillStatInfoDTO);
 
-                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName,skillStatAllStat,skillStatAtMgPower, isFree);
-
-                return Mono.just(charactersSkillStatInfoDTO);
-
-            } catch(Exception exception){
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
                 System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
                 return Mono.error(exception);
-            }
-        }).onErrorResume(exception -> {
-            System.err.println("에러: " + exception.getMessage());
-            exception.printStackTrace(); // 추가된 부분
-            return Mono.error(exception);
-        });
-        CompletableFuture<CharactersSkillStatInfoDTO> completableFutureResult = new CompletableFuture<>();
-        MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
-        return completableFutureResult;
-    } else
+            });
+            CompletableFuture<CharactersSkillStatInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
 
-    {
-        return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
     }
 
-}
+    //헥사스탯
+////////////////////////////////////////////////////////////////////////////////////////////////
+    @Async("characterThreadPool")
+    @Transactional        //헥사스탯
+    public CompletableFuture<CharactersHexaStatInfoDTO> getCharactersHexaStatInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/hexamatrix-stat";
+
+            Mono<CharactersHexaStatInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+
+                    int hexaStatMainStat = 0;
+                    int hexaStatAtMgPower = 0;
+                    Double hexaStatCriticalDamage = 0.0;
+                    Double hexaStatDamage = 0.0;
+                    Double hexaStatBossDamage = 0.0;
+
+
+                    for (JsonNode hexaNode : jsonNode.get("character_hexa_stat_core")) {
+                        int mainStatLevel = hexaNode.get("main_stat_level").asInt();
+                        int SubStatOneLevel = hexaNode.get("sub_stat_level_1").asInt();
+                        int SubStatTwoLevel = hexaNode.get("sub_stat_level_2").asInt();
+                        String mainStatName = hexaNode.get("main_stat_name").toString();
+                        String sub_stat_name_1 = hexaNode.get("sub_stat_name_1").toString();
+                        String sub_stat_name_2 = hexaNode.get("sub_stat_name_2").toString();
+
+
+                        Double mainCriticalDamage[] = {0.35, 0.7, 1.05, 1.4, 2.10, 2.8, 3.5, 4.55, 5.6, 7.0};
+                        Double mainBossDamage[] = {1.0, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 13.0, 16.0, 20.0};
+                        Double mainDamage[] = {0.75, 1.5, 2.25, 3.0, 4.5, 6.0, 7.5, 9.75, 12.0, 15.0};
+                        int mainAtMgPower[] = {5, 10, 15, 20, 30, 40, 50, 65, 80, 100};
+                        int mainMainStat[] = {100, 200, 300, 400, 600, 800, 1000, 1300, 1600, 2000};
+
+                        Double subCriticalDamage[] = {0.35, 0.7, 1.05, 1.4, 1.75, 2.1, 2.45, 2.8, 3.15, 3.5};
+                        Double subBossDamage[] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
+                        Double subDamage[] = {0.75, 1.5, 2.25, 3.0, 3.75, 4.5, 5.25, 6.0, 6.75, 7.5};
+                        int subAtMgPower[] = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
+                        int subMainStat[] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+
+                        if (mainStatName.contains("보스 데미지 증가")) {
+                            hexaStatBossDamage += mainBossDamage[mainStatLevel - 1];
+                        } else if (mainStatName.contains("주력 스탯 증가")) {
+                            hexaStatMainStat += mainMainStat[mainStatLevel - 1];
+                        } else if (mainStatName.contains("데미지 증가")) {
+                            hexaStatDamage += mainDamage[mainStatLevel - 1];
+                        } else if (mainStatName.contains("크리티컬 데미지 증가")) {
+                            hexaStatCriticalDamage += mainCriticalDamage[mainStatLevel - 1];
+                        } else if (mainStatName.contains("공격력 증가")) {
+                            hexaStatAtMgPower += mainAtMgPower[mainStatLevel - 1];
+                        }
+
+                        if (sub_stat_name_1.contains("보스 데미지 증가")) {
+                            hexaStatBossDamage += subBossDamage[SubStatOneLevel - 1];
+                        } else if (sub_stat_name_1.contains("주력 스탯 증가")) {
+                            hexaStatMainStat += subMainStat[SubStatOneLevel - 1];
+                        } else if (sub_stat_name_1.contains("데미지 증가")) {
+                            hexaStatDamage += subDamage[SubStatOneLevel - 1];
+                        } else if (sub_stat_name_1.contains("크리티컬 데미지 증가")) {
+                            hexaStatCriticalDamage += subCriticalDamage[SubStatOneLevel - 1];
+                        } else if (sub_stat_name_1.contains("공격력 증가")) {
+                            hexaStatAtMgPower += subAtMgPower[SubStatOneLevel - 1];
+                        }
+
+                        if (sub_stat_name_2.contains("보스 데미지 증가")) {
+                            hexaStatBossDamage += subBossDamage[SubStatTwoLevel - 1];
+                        } else if (sub_stat_name_2.contains("주력 스탯 증가")) {
+                            hexaStatMainStat += subMainStat[SubStatTwoLevel - 1];
+                        } else if (sub_stat_name_2.contains("데미지 증가")) {
+                            hexaStatDamage += subDamage[SubStatTwoLevel - 1];
+                        } else if (sub_stat_name_2.contains("크리티컬 데미지 증가")) {
+                            hexaStatCriticalDamage += subCriticalDamage[SubStatTwoLevel - 1];
+                        } else if (sub_stat_name_2.contains("공격력 증가")) {
+                            hexaStatAtMgPower += subAtMgPower[SubStatTwoLevel - 1];
+                        }
+
+                    }
+
+                    System.out.println("hexaStatBossDamage :" + hexaStatBossDamage);
+                    System.out.println("hexaStatMainStat :" + hexaStatMainStat);
+                    System.out.println("hexaStatDamage :" + hexaStatDamage);
+                    System.out.println("hexaStatCriticalDamage :" + hexaStatCriticalDamage);
+                    System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower);
+
+                    CharactersHexaStatInfoDTO charactersHexaStatInfoDTO = new CharactersHexaStatInfoDTO(charactersName, hexaStatMainStat, hexaStatAtMgPower, hexaStatCriticalDamage, hexaStatDamage, hexaStatBossDamage);
+
+                    return Mono.just(charactersHexaStatInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersHexaStatInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+
+    }
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //아래는 잠시 보류//
 

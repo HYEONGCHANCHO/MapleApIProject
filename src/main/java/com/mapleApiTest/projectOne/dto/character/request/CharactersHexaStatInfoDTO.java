@@ -4,10 +4,7 @@ package com.mapleApiTest.projectOne.dto.character.request;
 public class CharactersHexaStatInfoDTO {
 
     String charactersName;
-    int hexaStatStr ;
-    int hexaStatDex ;
-    int hexaStatInt ;
-    int hexaStatLuk ;
+    int hexaStatMainStat ;
     int hexaStatAtMgPower ;
     Double hexaStatCriticalDamage ;
     Double hexaStatDamage ;
@@ -16,12 +13,9 @@ public class CharactersHexaStatInfoDTO {
     public CharactersHexaStatInfoDTO() {
     }
 
-    public CharactersHexaStatInfoDTO(String charactersName, int hexaStatStr, int hexaStatDex, int hexaStatInt, int hexaStatLuk, int hexaStatAtMgPower, Double hexaStatCriticalDamage, Double hexaStatDamage, Double hexaStatBossDamage) {
+    public CharactersHexaStatInfoDTO(String charactersName, int hexaStatMainStat,int hexaStatAtMgPower, Double hexaStatCriticalDamage, Double hexaStatDamage, Double hexaStatBossDamage) {
         this.charactersName = charactersName;
-        this.hexaStatStr = hexaStatStr;
-        this.hexaStatDex = hexaStatDex;
-        this.hexaStatInt = hexaStatInt;
-        this.hexaStatLuk = hexaStatLuk;
+        this.hexaStatMainStat = hexaStatMainStat;
         this.hexaStatAtMgPower = hexaStatAtMgPower;
         this.hexaStatCriticalDamage = hexaStatCriticalDamage;
         this.hexaStatDamage = hexaStatDamage;
@@ -36,36 +30,8 @@ public class CharactersHexaStatInfoDTO {
         this.charactersName = charactersName;
     }
 
-    public int getHexaStatStr() {
-        return hexaStatStr;
-    }
-
-    public void setHexaStatStr(int hexaStatStr) {
-        this.hexaStatStr = hexaStatStr;
-    }
-
-    public int getHexaStatDex() {
-        return hexaStatDex;
-    }
-
-    public void setHexaStatDex(int hexaStatDex) {
-        this.hexaStatDex = hexaStatDex;
-    }
-
-    public int getHexaStatInt() {
-        return hexaStatInt;
-    }
-
-    public void setHexaStatInt(int hexaStatInt) {
-        this.hexaStatInt = hexaStatInt;
-    }
-
-    public int getHexaStatLuk() {
-        return hexaStatLuk;
-    }
-
-    public void setHexaStatLuk(int hexaStatLuk) {
-        this.hexaStatLuk = hexaStatLuk;
+    public int getHexaStatMainStat() {
+        return hexaStatMainStat;
     }
 
     public int getHexaStatAtMgPower() {
