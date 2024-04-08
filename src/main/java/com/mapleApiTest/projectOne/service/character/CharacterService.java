@@ -39,7 +39,7 @@ public class CharacterService {
 
     private final WebClient webClient;
 
-    private final RateLimiter rateLimiter = RateLimiter.create(300.0 / 60.0); //분당 300회
+    private final RateLimiter rateLimiter = RateLimiter.create(3000.0 / 60.0); //분당 300회
     @Value("${external.api.key}")
     private String apiKey;
     @Value("${external.api.url}")
@@ -97,10 +97,7 @@ public class CharacterService {
     @Async("characterThreadPool")
     @Transactional //캐릭터 기본정보 불러오기
     public CompletableFuture<CharactersInfoDTO> getCharactersInfo(GetCharactersInfo request, String apiKey, String ocid) {
-
         String Url = "/maplestory/v1/character/basic";
-
-
         if (rateLimiter.tryAcquire()) {
             Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
             if (charactersInfoOptional.isPresent()) {
@@ -361,8 +358,6 @@ public class CharacterService {
                     titleAtMgStat = charactersItemInfoDTO.getAtMgStat();
                     titleBossDamage = charactersItemInfoDTO.getBossDamageTitlePer();
                     titleDamage = charactersItemInfoDTO.getDamageTitlePer();
-
-
                 }
 
                 int mainStat = titleMainStat;
@@ -532,7 +527,6 @@ public class CharacterService {
                     charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
                     charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
 
-
                     charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
 
                     CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer(), charactersItemInfoDTO.getCriticalDamagePotential());
@@ -557,17 +551,584 @@ public class CharacterService {
                     System.out.println("Potential Damage Percentage: " + charactersItemStatInfoDTO.getPotentialDamagePer());
                     System.out.println("Potential Critical Damage: " + charactersItemStatInfoDTO.getPotentialCriticalDamage());
 
+                    //////////////////////////////////////////////
+                    int weaponAtMgStat=0;
+
+                    if(jsonInfo.get("item_equipment_slot").asText()== "무기") {
+                        int weaponAtMgStatBase = 0;
+                        int weaponAddStat = 0;
+                        int weaponAtMgStatStarForce = 0;
+                        int weaponAtMgStatEtc = 0;
+
+
+                        int weaponStarforce = jsonInfo.get("starforce").asInt();
+
+                        int weaponAtPowerBase = jsonInfo.get("item_base_option").get("attack_power").asInt();
+                        int weaponMgPowerBase = jsonInfo.get("item_base_option").get("magic_power").asInt();
+
+                        int weaponAtPowerAdd = jsonInfo.get("item_add_option").get("attack_power").asInt();
+                        int weaponMgPowerAdd = jsonInfo.get("item_add_option").get("magic_power").asInt();
+
+                        int weaponAtPowerStarForce = jsonInfo.get("item_starforce_option").get("attack_power").asInt();
+                        int weaponMgPowerStarForce = jsonInfo.get("item_starforce_option").get("magic_power").asInt();
+
+                        int weaponAtPowerEtc = jsonInfo.get("item_etc_option").get("attack_power").asInt();
+                        int weaponMgPowerEtc = jsonInfo.get("item_etc_option").get("magic_power").asInt();
+
+                        int weaponAtPower = jsonInfo.get("item_total_option").get("attack_power").asInt();
+                        int weaponMgPower = jsonInfo.get("item_total_option").get("magic_power").asInt();
+                        String weaponName = jsonInfo.get("item_name").asText();
+                        String weaponSort = jsonInfo.get("item_equipment_part").asText();
+                        int changedWeaponAtMgStat = 0;
+
+                        if (weaponAtPowerBase != 0) {
+                            weaponAtMgStatBase = weaponAtPowerBase;
+                            weaponAddStat = weaponAtPowerAdd;
+                            weaponAtMgStatStarForce = weaponAtPowerStarForce;
+                            weaponAtMgStatEtc = weaponAtPowerEtc;
+                            //초기 무기스탯
+                            weaponAtMgStat = weaponAtPower;
+
+                        } else if (weaponMgPowerBase != 0) {
+                            weaponAtMgStatBase = weaponMgPowerBase;
+                            weaponAddStat = weaponMgPowerAdd;
+                            weaponAtMgStatStarForce = weaponMgPowerStarForce;
+                            weaponAtMgStatEtc = weaponMgPowerEtc;
+                            weaponAtMgStat = weaponMgPower;
+                        }
+
+                        //기본+스타포스
+                        int papnirBowAtPower[] = {241, 246, 251, 257, 263, 269, 275, 281, 287, 293, 299, 305, 312, 319, 326, 333, 341, 350, 359, 369, 380, 392, 405};
+                        int absolBowAtPower[] = {273, 279, 285, 291, 297, 303, 310, 317, 324, 331, 338, 345, 352, 360, 368, 376, 385, 394, 404, 415, 427, 440, 454};
+                        int arcaneBowAtPower[] = {357, 365, 373, 381, 389, 397, 405, 414, 423, 432, 441, 450, 460, 470, 480, 490, 503, 516, 530, 544, 559, 575, 592};
+                        int papnirBowAddAtPower[] = {66, 52, 39, 29, 20};
+                        int absolBowAddAtPower[] = {99, 77, 59, 43, 29};
+                        int arcaneBowAddAtPower[] = {170, 133, 101, 73, 50};
+                        int jenesisBowAddAtPower[] = {170, 133, 101, 73, 50};
+                        int weaponAddGrade = 0;
+                        //기본+스타포스
+                        int jenesisBowAtPower = 318;
+
+
+                        if (weaponName.charAt(0) == '제') {
+
+                            if (weaponSort.equals("아대")) {
+                                if (weaponAddStat == 106) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 83) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 63) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 46) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 31) {
+                                    weaponAddGrade = 4;
+                                }
+
+                            } else if (weaponSort.equals("건")) {
+                                if (weaponAtPower == 154) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 120) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 91) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 66) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 45) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+                                if (weaponAddStat == 157) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 123) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 93) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 68) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 46) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("폴암")) {
+                                if (weaponAddStat == 187) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 146) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 111) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 81) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 55) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+                                if (weaponAddStat == 196) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 153) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 116) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 84) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 58) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+                                if (weaponAtPower == 201) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 157) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 119) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 87) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 59) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+                                if (weaponAddStat == 210) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 163) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 124) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 90) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 62) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("핸드캐논")) {
+                                if (weaponAddStat == 215) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 167) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 127) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 92) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 63) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+                                if (weaponAddStat == 246) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 192) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 146) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 106) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 72) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("스태프")) {
+                                if (weaponAddStat == 250) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 195) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 148) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 108) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 74) {
+                                    weaponAddGrade = 4;
+                                }
+                            }
+
+                            changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+
+                        } else if (weaponName.charAt(0) == '아') {
+
+                            if (weaponSort.equals("아대")) {
+                                if (weaponAddStat == 92) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 72) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 55) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 40) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 27) {
+                                    weaponAddGrade = 4;
+                                }
+
+                            } else if (weaponSort.equals("건")) {
+                                if (weaponAtPower == 133) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 104) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 79) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 58) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 39) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+                                if (weaponAddStat == 136) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 106) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 81) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 59) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 40) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("폴암")) {
+                                if (weaponAddStat == 163) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 127) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 96) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 70) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 48) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+                                if (weaponAddStat == 170) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 133) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 101) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 73) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 50) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+                                if (weaponAtPower == 175) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 136) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 103) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 75) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 51) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+                                if (weaponAddStat == 182) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 142) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 108) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 78) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 54) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("핸드캐논")) {
+                                if (weaponAddStat == 186) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 142) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 108) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 78) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 54) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+                                if (weaponAddStat == 214) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 167) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 126) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 92) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 63) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("스태프")) {
+                                if (weaponAddStat == 218) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 170) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 129) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 94) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 64) {
+                                    weaponAddGrade = 4;
+                                }
+                            }
+                            changedWeaponAtMgStat = arcaneBowAtPower[weaponStarforce] + arcaneBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+                        } else if (weaponName.charAt(0) == '파') {
+                            if (weaponSort.equals("아대")) {
+                                if (weaponAddStat == 36) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 28) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 21) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 16) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 11) {
+                                    weaponAddGrade = 4;
+                                }
+
+                            } else if (weaponSort.equals("건")) {
+                                if (weaponAtPower == 52) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 40) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 31) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 22) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 15) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+                                if (weaponAddStat == 53) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 41) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 31) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 23) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 16) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("폴암")) {
+                                if (weaponAddStat == 63) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 49) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 38) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 27) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 19) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+                                if (weaponAddStat == 66) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 52) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 39) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 29) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 20) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+                                if (weaponAtPower == 68) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 53) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 40) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 29) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 20) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+                                if (weaponAddStat == 71) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 55) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 42) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 31) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 21) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("핸드캐논")) {
+                                if (weaponAddStat == 72) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 56) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 43) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 31) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 21) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+                                if (weaponAddStat == 83) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 65) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 49) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 36) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 25) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("스태프")) {
+                                if (weaponAddStat == 84) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 66) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 50) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 36) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 25) {
+                                    weaponAddGrade = 4;
+                                }
+                            }
+                            changedWeaponAtMgStat = papnirBowAtPower[weaponStarforce] + papnirBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+                        } else if (weaponName.charAt(0) == '앱') {
+
+                            if (weaponSort.equals("아대")) {
+                                if (weaponAddStat == 53) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 42) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 32) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 23) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 16) {
+                                    weaponAddGrade = 4;
+                                }
+
+                            } else if (weaponSort.equals("건")) {
+                                if (weaponAtPower == 77) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 60) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 46) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 33) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 23) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+                                if (weaponAddStat == 79) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 62) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 47) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 34) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 24) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("폴암")) {
+                                if (weaponAddStat == 95) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 74) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 56) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 41) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 28) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+                                if (weaponAddStat == 99) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 77) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 59) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 43) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 29) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+                                if (weaponAtPower == 101) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 79) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 60) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 44) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 30) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+                                if (weaponAddStat == 106) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 82) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 63) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 46) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 31) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("핸드캐논")) {
+                                if (weaponAddStat == 108) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 84) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 64) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 47) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 32) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+                                if (weaponAddStat == 124) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 97) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 73) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 54) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 37) {
+                                    weaponAddGrade = 4;
+                                }
+                            } else if (weaponSort.equals("스태프")) {
+                                if (weaponAddStat == 126) {
+                                    weaponAddGrade = 0;
+                                } else if (weaponAddStat == 98) {
+                                    weaponAddGrade = 1;
+                                } else if (weaponAddStat == 75) {
+                                    weaponAddGrade = 2;
+                                } else if (weaponAddStat == 54) {
+                                    weaponAddGrade = 3;
+                                } else if (weaponAddStat == 37) {
+                                    weaponAddGrade = 4;
+                                }
+                                changedWeaponAtMgStat = absolBowAtPower[weaponStarforce] + absolBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+                            }
+                            weaponAtMgStat = changedWeaponAtMgStat;
+                        }
+                    }
+                    //////////////////////////////////////////////
 
                     mainStat += charactersItemStatInfoDTO.getMainStat() + charactersItemStatInfoDTO.getPotentialMainStat();
                     subStat += charactersItemStatInfoDTO.getSubStat() + charactersItemStatInfoDTO.getPotentialSubStat();
                     mainStatPer += charactersItemStatInfoDTO.getMainStatPer() + charactersItemStatInfoDTO.getPotentialMainStatPer();
                     subStatPer += charactersItemStatInfoDTO.getSubStatPer() + charactersItemStatInfoDTO.getPotentialSubStatPer();
-                    atMgStat += charactersItemStatInfoDTO.getAtMgStat() + charactersItemStatInfoDTO.getPotentialAtMgStat();
+                    if(weaponAtMgStat==0){
+                    atMgStat += charactersItemStatInfoDTO.getAtMgStat() + charactersItemStatInfoDTO.getPotentialAtMgStat();}
+                    else if(weaponAtMgStat!=0){
+                        atMgStat+=weaponAtMgStat;
+                    }
                     atMgStatPer += charactersItemStatInfoDTO.getPotentialAtMgPer();
                     bossDamage += charactersItemStatInfoDTO.getBossDamage() + charactersItemStatInfoDTO.getPotentialBossDamagePer();
                     damage += charactersItemStatInfoDTO.getDamage() + charactersItemStatInfoDTO.getPotentialDamagePer();
                     criticalDamage += charactersItemStatInfoDTO.getCriticalDamage() + charactersItemStatInfoDTO.getPotentialCriticalDamage();
-
 
                     System.out.println("mainStat : " + mainStat);
                     System.out.println("subStat : " + subStat);
@@ -579,14 +1140,10 @@ public class CharacterService {
                     System.out.println("damage : " + damage);
                     System.out.println("criticalDamage : " + criticalDamage);
 
-
                     charactersItemTotalStatInfoDTO = new CharactersItemTotalStatInfoDTO(mainStat, subStat, mainStatPer, subStatPer, atMgStat, atMgStatPer, bossDamage, damage, criticalDamage);
 
                 }
-
-
                 return CompletableFuture.completedFuture(charactersItemTotalStatInfoDTO);
-
 
             } else {
                 return null;
@@ -594,7 +1151,6 @@ public class CharacterService {
         } else {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
-
     }
 
     @Async("characterThreadPool")
@@ -1255,7 +1811,6 @@ public class CharacterService {
         }
     }
 
-
     @Async("characterThreadPool")
     @Transactional       //어빌리티
     public CompletableFuture<CharactersAbilityInfoDTO> getCharactersAbilityInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO) {
@@ -1374,7 +1929,6 @@ public class CharacterService {
         }
     }
 
-
     @Async("characterThreadPool")
     @Transactional       //심볼
     public CompletableFuture<CharactersSimbolInfoDTO> getCharactersSimbolInfo(String charactersName, String ocid) {
@@ -1486,77 +2040,46 @@ public class CharacterService {
     }
 
     @Async("characterThreadPool")
-    @Transactional      //5차 스킬
-    public CompletableFuture<CharactersSkillStatInfoDTO> getCharactersSkillStatInfo(String charactersName, String ocid, int nthSkill) {
+    @Transactional      //0차 스킬
+    public CompletableFuture<CharactersSkillStatInfoDTO> getCharactersSkillStatInfo(String charactersName, String ocid) {
         if (rateLimiter.tryAcquire()) {
             String Url = "/maplestory/v1/character/skill";
             Mono<CharactersSkillStatInfoDTO> MonoResult
-                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("character_skill_grade", nthSkill).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).queryParam("character_skill_grade", 0).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                 try {
 
                     int skillStatAllStat = 0;
                     int skillStatAtMgPower = 0;
                     boolean isFree = false;
                     int value = 0;
-                    if (nthSkill == 0) {
-                        int jungBless = 0;
-                        int yujeBless = 0;
-                        for (JsonNode nthSkillNode : jsonNode.get("character_skill")) {
-                            String skillName = nthSkillNode.get("skill_name").toString();
-                            if (skillName.contains("정령의 축복")) {
-                                jungBless = nthSkillNode.get("skill_level").asInt();
-                            } else if (skillName.contains("여제의 축복")) {
-                                yujeBless = nthSkillNode.get("skill_level").asInt();
-                            } else if (skillName.contains("연합의 의지")) {
-                                skillStatAllStat += 5;
-                                skillStatAtMgPower += 5;
-                            } else if (skillName.contains("Lv.1") || skillName.contains("Lv.2") || skillName.contains("Lv.3")) {
-                                String skillEffect = nthSkillNode.get("skill_effect").toString();
-                                if (skillEffect.contains("공격력") || skillEffect.contains("마력")) {
-                                    Pattern pattern = Pattern.compile("(\\d+)"); // 숫자를 추출하는 패턴
-                                    Matcher matcher = pattern.matcher(skillEffect);
-                                    while (matcher.find()) {
-                                        int extractedValue = Integer.parseInt(matcher.group());
-                                        value = extractedValue; // 추출한 숫자를 누적하여 저장
-                                    }
+                    int jungBless = 0;
+                    int yujeBless = 0;
+                    for (JsonNode nthSkillNode : jsonNode.get("character_skill")) {
+                        String skillName = nthSkillNode.get("skill_name").toString();
+                        if (skillName.contains("정령의 축복")) {
+                            jungBless = nthSkillNode.get("skill_level").asInt();
+                        } else if (skillName.contains("여제의 축복")) {
+                            yujeBless = nthSkillNode.get("skill_level").asInt();
+                        } else if (skillName.contains("Lv.1") || skillName.contains("Lv.2") || skillName.contains("Lv.3")) {
+                            String skillEffect = nthSkillNode.get("skill_effect").toString();
+                            if (skillEffect.contains("공격력") || skillEffect.contains("마력")) {
+                                Pattern pattern = Pattern.compile("(\\d+)"); // 숫자를 추출하는 패턴
+                                Matcher matcher = pattern.matcher(skillEffect);
+                                while (matcher.find()) {
+                                    int extractedValue = Integer.parseInt(matcher.group());
+                                    value = extractedValue; // 추출한 숫자를 누적하여 저장
                                 }
-                                skillStatAtMgPower += value;
-                            } else if (skillName.contains("파괴의 얄다바오트")) {
-                                isFree = true;
                             }
+                            skillStatAtMgPower += value;
+                        } else if (skillName.contains("파괴의 얄다바오트")) {
+                            isFree = true;
                         }
-
-                        if (jungBless < yujeBless) {
-                            skillStatAtMgPower += yujeBless;
-                        } else {
-                            skillStatAtMgPower += jungBless;
-                        }
-
                     }
 
-                    if (nthSkill == 5) {
-                        for (JsonNode nthSkillNode : jsonNode.get("character_skill")) {
-                            String skillName = nthSkillNode.get("skill_name").toString();
-                            if (skillName.contains("로프 커넥트")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += skillLevel;
-                            } else if (skillName.contains("블링크")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAtMgPower += skillLevel;
-                            } else if (skillName.contains("쓸만한 미스틱 도어")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) / 5 + 1;
-                            } else if (skillName.contains("쓸만한 샤프 아이즈")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += ((skillLevel - 1) / 5) + 1;
-                            } else if (skillName.contains("쓸만한 윈드 부스터")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) / 5 + 1;
-                            } else if (skillName.contains("쓸만한 하이퍼 바디")) {
-                                int skillLevel = nthSkillNode.get("skill_level").asInt();
-                                skillStatAllStat += (skillLevel - 1) / 5 + 1;
-                            }
-                        }
+                    if (jungBless < yujeBless) {
+                        skillStatAtMgPower += yujeBless;
+                    } else {
+                        skillStatAtMgPower += jungBless;
                     }
 
                     System.out.println("skillStatAllStat :" + skillStatAllStat);
@@ -1690,629 +2213,823 @@ public class CharacterService {
 
     }
 
+    ///////////
+    @Async("characterThreadPool")
+    @Transactional       //캐릭터 전체 스탯 종합
+    public CharactersTotalStatInfoDTO getCharactersTotalStatInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO, CharactersItemEquipDTO charactersItemEquipDTO, CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO, CharactersSetEffectInfoDTO charactersSetEffectInfoDTO, ItemSetEffectDTO itemSetEffectDTO, CharactersArtiInfoDTO charactersArtiInfoDTO, CharactersUnionInfoDTO charactersUnionInfoDTO, CharactersHyperStatInfoDTO charactersHyperStatInfoDTO, CharactersAbilityInfoDTO charactersAbilityInfoDTO, CharactersSimbolInfoDTO charactersSimbolInfoDTO, CharactersPetEquipInfoDTO charactersPetEquipInfoDTO, CharactersSkillStatInfoDTO charactersSkillStatInfoDTO) {
+        if (rateLimiter.tryAcquire()) {
+
+            //스탯 초기값
+            int mainStat = 0;
+            int mainStatPer = 0;
+            int mainNonStat = 0;
+            int subStat = 0;
+            int subStatPer = 0;
+            int subNonStat = 0;
+            int str = 0;
+            int dex = 0;
+            int intel = 0;
+            int luk = 0;
+            int strPer = 0;
+            int dexPer = 0;
+            int intPer = 0;
+            int lukPer = 0;
+            int atMgPower = 0;
+            int atMgPowerPer = 0;
+            Double damage = 0.0;
+            Double bossDamage = 0.0;
+            Double criticalDamage = 0.0;
+            //기본정보
+            int charactersLevel = charactersInfoDTO.getCharacter_level();
+            String charactersClass = charactersInfoDTO.getCharacter_class();
+            int charactersApiCombat = charactersStatInfoDTO.getCombatPower();
+            //장비 아이템
+            int itemMainStat = charactersItemTotalStatInfoDTO.getMainStat();
+            int itemMainStatPer = charactersItemTotalStatInfoDTO.getMainStatPer();
+            int itemSubStat = charactersItemTotalStatInfoDTO.getSubStat();
+            int itemSubStatPer = charactersItemTotalStatInfoDTO.getSubStatPer();
+            int itemAtMgPower = charactersItemTotalStatInfoDTO.getAtMgStat();
+            int itemAtMgPowerPer = charactersItemTotalStatInfoDTO.getAtMgStatPer();
+            Double itemDamage = (double) charactersItemTotalStatInfoDTO.getDamage();
+            Double itemBossDamage = (double) charactersItemTotalStatInfoDTO.getBossDamage();
+            Double itemCriticalDamage = (double) charactersItemTotalStatInfoDTO.getCriticalDamage();
+            //아이템 세트효과
+            int itemSetAllStat = 0;
+            itemSetAllStat = itemSetEffectDTO.getAllStat();
+            int itemSetAtMgPower = itemSetEffectDTO.getAtMgPower();
+            int itemSetDamage = itemSetEffectDTO.getDamage();
+            int itemSetCriticalDamage = itemSetEffectDTO.getCriticalDamage();
+            //유니온 아티팩트
+            int artiAllStat = charactersArtiInfoDTO.getArtiAllStat();
+            int artiAtMgPower = charactersArtiInfoDTO.getArtiAtMgPower();
+            Double artiDamage = charactersArtiInfoDTO.getArtiDamage();
+            Double artiBossDamage = charactersArtiInfoDTO.getArtiBossDamage();
+            Double artiCriticalDamage = charactersArtiInfoDTO.getArtiCriticalDamage();
+            //유니온 점령
+            int unionOccupiedMainStat = 0;
+            int unionOccupiedSubStat = 0;
+            int unionOccupiedAtMgPower = charactersUnionInfoDTO.getUnionOccupiedAtMgPower();
+            Double unionOccupiedBossDamage = charactersUnionInfoDTO.getUnionOccupiedBossDamage();
+            Double unionOccupiedCriticalDamage = charactersUnionInfoDTO.getUnionOccupiedCriticalDamage();
+            int unionOccupiedStr = charactersUnionInfoDTO.getUnionOccupiedStr();
+            int unionOccupiedDex = charactersUnionInfoDTO.getUnionOccupiedDex();
+            int unionOccupiedInt = charactersUnionInfoDTO.getUnionOccupiedInt();
+            int unionOccupiedLuk = charactersUnionInfoDTO.getUnionOccupiedLuk();
+            //유니온 공격대
+            int unionRaiderMainStat = 0;
+            int unionRaiderSubStat = 0;
+            int unionRaiderStr = charactersUnionInfoDTO.getUnionRaiderStr();
+            int unionRaiderDex = charactersUnionInfoDTO.getUnionRaiderDex();
+            int unionRaiderInt = charactersUnionInfoDTO.getUnionRaiderInt();
+            int unionRaiderLuk = charactersUnionInfoDTO.getUnionRaiderLuk();
+            int unionRaiderAtMgPower = charactersUnionInfoDTO.getUnionRaiderAtMgPower();
+            Double unionRaiderBossDamage = charactersUnionInfoDTO.getUnionRaiderBossDamage();
+            Double unionRaiderCriticalDamage = charactersUnionInfoDTO.getUnionRaiderCriticalDamage();
+            //하이퍼스탯
+            int hyperStatMainStat = 0;
+            int hyperStatSubStat = 0;
+            int hyperStatStr = charactersHyperStatInfoDTO.getHyperStatStr();
+            int hyperStatDex = charactersHyperStatInfoDTO.getHyperStatDex();
+            int hyperStatInt = charactersHyperStatInfoDTO.getHyperStatInt();
+            int hyperStatLuk = charactersHyperStatInfoDTO.getHyperStatLuk();
+            int hyperStatAtMgPower = charactersHyperStatInfoDTO.getHyperStatAtMgPower();
+            Double hyperStatDamage = charactersHyperStatInfoDTO.getHyperStatDamage();
+            Double hyperStatBossDamage = charactersHyperStatInfoDTO.getHyperStatBossDamage();
+            Double hyperStatCriticalDamage = charactersHyperStatInfoDTO.getHyperStatCriticalDamage();
+            //어빌리티
+            int abilityStatMainStat = 0;
+            int abilityStatSubStat = 0;
+            int abilityStatMainStatPer = 0;
+            int abilityStatSubStatPer = 0;
+            int abilityStatStr = charactersAbilityInfoDTO.getAbilityStr();
+            int abilityStatDex = charactersAbilityInfoDTO.getAbilityDex();
+            int abilityStatInt = charactersAbilityInfoDTO.getAbilityInt();
+            int abilityStatLuk = charactersAbilityInfoDTO.getAbilityLuk();
+            int abilityStatStrPer = charactersAbilityInfoDTO.getAbilityStrPer();
+            int abilityStatDexPer = charactersAbilityInfoDTO.getAbilityDexPer();
+            int abilityStatIntPer = charactersAbilityInfoDTO.getAbilityIntPer();
+            int abilityStatLukPer = charactersAbilityInfoDTO.getAbilityLukPer();
+            int abilityStatAtMgPower = charactersAbilityInfoDTO.getAbilityAtMgPower();
+            Double abilityStatBossDamage = charactersAbilityInfoDTO.getAbilityBossDamage();
+            //심볼
+            int simbolStatMainStat = 0;
+            int simbolStatStr = charactersSimbolInfoDTO.getSimbolStr();
+            int simbolStatDex = charactersSimbolInfoDTO.getSimbolDex();
+            int simbolStatInt = charactersSimbolInfoDTO.getSimbolInt();
+            int simbolStatLuk = charactersSimbolInfoDTO.getSimbolLuk();
+            //펫장비
+            int petAtMgPower = 0;
+            int petMgPower = charactersPetEquipInfoDTO.getPetMg();
+            int petAtPower = charactersPetEquipInfoDTO.getPetAt();
+            //0차 스킬
+            int skillStatAtMgPower = charactersSkillStatInfoDTO.getSkillStatAtMgPower();
+            boolean isFree =charactersSkillStatInfoDTO.isFree();
+
+            if (Arrays.asList("바이퍼", "히어로").contains(charactersClass)) {
+                //주스탯 힘 부스탯 덱스 직업
+                unionOccupiedMainStat = unionOccupiedStr;
+                unionOccupiedSubStat = unionOccupiedDex;
+                unionRaiderMainStat = unionRaiderStr;
+                unionRaiderSubStat = unionRaiderDex;
+                hyperStatMainStat = hyperStatStr;
+                hyperStatSubStat = hyperStatDex;
+                abilityStatMainStat = abilityStatStr;
+                abilityStatSubStat = abilityStatDex;
+                abilityStatMainStatPer = abilityStatStrPer;
+                abilityStatSubStatPer = abilityStatDexPer;
+                simbolStatMainStat = simbolStatStr;
+                petAtMgPower = petAtPower;
+            } else if(Arrays.asList("듀얼블레이더", "나이트로드").contains(charactersClass)){
+
+            }
+            mainStat=itemMainStat+itemSetAllStat+artiAllStat+unionOccupiedMainStat;
+            mainStatPer= itemMainStatPer+abilityStatMainStatPer;
+            mainNonStat=unionRaiderMainStat+hyperStatMainStat+abilityStatMainStat+simbolStatMainStat;
+            subStat = itemSubStat+itemSetAllStat+artiAllStat+unionOccupiedSubStat;
+            subStatPer = itemSubStatPer+abilityStatSubStatPer;
+            subNonStat =unionRaiderSubStat+hyperStatSubStat+abilityStatSubStat;
+            atMgPower= itemAtMgPower+itemSetAtMgPower+artiAtMgPower+abilityStatAtMgPower+petAtMgPower+skillStatAtMgPower;
+            atMgPowerPer = itemAtMgPowerPer;
+            damage = itemDamage+itemSetDamage+artiDamage;
+            bossDamage = itemBossDamage+artiBossDamage+unionOccupiedBossDamage+abilityStatBossDamage;
+            criticalDamage = itemCriticalDamage+itemSetCriticalDamage+artiCriticalDamage+unionOccupiedCriticalDamage;
+
+            CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = new CharactersTotalStatInfoDTO(charactersName,mainStat,mainStatPer,mainNonStat,subStat,subStatPer,subNonStat,atMgPower,atMgPowerPer,damage,bossDamage,criticalDamage,isFree,charactersApiCombat);
+
+            return charactersTotalStatInfoDTO;
+        }
+        else {
+             throw new RuntimeException("요청 속도가 너무 빠릅니다. 나중에 다시 시도하세요.");
+        }
+    }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+@Async("characterThreadPool")
+@Transactional
+public String getCharactersCombat(CharactersTotalStatInfoDTO charactersTotalStatInfoDTO
+) {
+
+int mainStat = charactersTotalStatInfoDTO.getMainStat();
+int mainStatPer = charactersTotalStatInfoDTO.getMainStatPer();
+int mainNonStat = charactersTotalStatInfoDTO.getMainNonStat();
+int subStat = charactersTotalStatInfoDTO.getSubStat();
+int subStatPer = charactersTotalStatInfoDTO.getSubStatPer();
+int subNonStat = charactersTotalStatInfoDTO.getSubNonStat();
+int atMgPower = charactersTotalStatInfoDTO.getAtMgPower();
+int atMgPowerPer = charactersTotalStatInfoDTO.getAtMgPowerPer();
+double damage = charactersTotalStatInfoDTO.getDamage();
+double bossDamage = charactersTotalStatInfoDTO.getBossDamage();
+double criticalDamage = charactersTotalStatInfoDTO.getCriticalDamage();
+boolean isFree = charactersTotalStatInfoDTO.isFree();
+int apiCombat = charactersTotalStatInfoDTO.getApiCombat();
+double finalDamage=1.0;
+
+    if (isFree) {
+        finalDamage = 1.1;
+    } else {
+        finalDamage = 1.0;
+    }
+
+    double finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
+    double finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
+    double finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+    double finalAtMgPower = Math.floor(atMgPower * ((100 + atMgPowerPer) / 100.0));
+    double finalCriticalDamage = (135 + criticalDamage) / 100.0;
+    double finalBossDamage = (100 + damage + bossDamage ) / 100.0;
+
+    double finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+    BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
+    String finalCombat = finalCombatBD.toPlainString();
+
+    System.out.println(apiCombat + "<=api전투력");
+    System.out.println(finalCombat + "<=계산한 전투력");
+
+    return finalCombat;
+}
+
+    /////////////////
 //아래는 잠시 보류//
 
-    @Async("characterThreadPool")
-    @Transactional
-    public String getCharactersCombat(CharactersBaseTotalInfoDTO request
-    ) {
-
-        int addAllStat = request.getAddAllStat();
-        Double addBossDamage = request.getAddBossDamage();
-        int addAtMgPower = request.getAddAtMgPower();
-        int petAtMgPower = request.getPetAtMgPower();
-        int mainStatNonPer = request.getMainStatNonPer();
-        int subStatNonPer = request.getSubStatNonPer();
-        int mainStatBase = request.getMainStatBase() - request.getMainStatSkill() + addAllStat;
-        int mainStatPerBase = request.getMainStatPerBase() - request.getMainStatPerSkill();
-        int subStatBase = request.getSubStatBase() - request.getSubStatSkill() + addAllStat;
-        int subStatPerBase = request.getSubStatPerBase() - request.getSubStatPerSkill();
-        int atMgPowerBase = request.getAtMgPowerBase() - request.getAtMgPowerSkill() + addAtMgPower + petAtMgPower + 30;
-        int atMgPowerPerBase = request.getAtMgPowerPerBase() - request.getAtMgPowerPerSkill();
-        Double criticalDamageBase = request.getCriticalDamageBase() - request.getCriticalDamageSkill();
-        Double DamageBase = request.getDamageBase() - request.getDamageSkill();
-        Double BossDamageBase = request.getBossDamageBase() - request.getBossDamageSkill();
-        ////전투력 실험용
-
-        mainStatBase = 2813 + 40 + 150 + 10 + 39;
-        mainStatNonPer = 25010;
-        mainStatPerBase = 370;
-        subStatBase = 1898 + 25 + 150 + 10 + 39;
-        subStatNonPer = 560;
-        subStatPerBase = 144;
-        atMgPowerBase = 45 + 1808 + 35 + 21 + 30 + 5 + 129;
-        atMgPowerPerBase = 99;
-        criticalDamageBase = 16.0 + 25 + 13 + 4;
-        DamageBase = 4.0 + 39 + 15;
-        BossDamageBase = 3.0 + 158 + 5 + 15;
-
-
-        /////
-
-        BigDecimal criticalDamageBaseBD = BigDecimal.valueOf(criticalDamageBase);
-
-        criticalDamageBaseBD = criticalDamageBaseBD.setScale(2, RoundingMode.HALF_UP);
-
-
-        Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
-        if (charactersItemEquipOptional.isPresent()) {
-            CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
-            JsonNode jsonInfo = null;
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-            int weaponAddStat = 0;
-            int weaponAtMgStat = 0;
-            int weaponAtPowerAdd = jsonInfo.get("item_add_option").get("attack_power").asInt();
-            int weaponMgPowerAdd = jsonInfo.get("item_add_option").get("magic_power").asInt();
-            int weaponStarforce = jsonInfo.get("starforce").asInt();
-            int weaponAtPower = jsonInfo.get("item_total_option").get("attack_power").asInt();
-            int weaponMgPower = jsonInfo.get("item_total_option").get("magic_power").asInt();
-            String weaponName = jsonInfo.get("item_name").asText();
-            String weaponSort = jsonInfo.get("item_equipment_part").asText();
-            if (weaponAtPowerAdd != 0) {
-                weaponAddStat = weaponAtPowerAdd;
-            } else if (weaponMgPowerAdd != 0) {
-                weaponAddStat = weaponMgPowerAdd;
-            }
-            if (weaponAtPower != 0) {
-                weaponAtMgStat = weaponAtPower;
-            } else if (weaponMgPower != 0) {
-                weaponAtMgStat = weaponMgPower;
-            }
-
-            int papnirBowAtPower[] = {241, 246, 251, 257, 263, 269, 275, 281, 287, 293, 299, 305, 312, 319, 326, 333, 341, 350, 359, 369, 380, 392, 405};
-            int absolBowAtPower[] = {273, 279, 285, 291, 297, 303, 310, 317, 324, 331, 338, 345, 352, 360, 368, 376, 385, 394, 404, 415, 427, 440, 454};
-            int arcaneBowAtPower[] = {357, 365, 373, 381, 389, 397, 405, 414, 423, 432, 441, 450, 460, 470, 480, 490, 503, 516, 530, 544, 559, 575, 592};
-            int papnirBowAddAtPower[] = {66, 52, 39, 29, 20};
-            int absolBowAddAtPower[] = {99, 77, 59, 43, 29};
-            int arcaneBowAddAtPower[] = {170, 133, 101, 73, 50};
-            int jenesisBowAddAtPower[] = {170, 133, 101, 73, 50};
-            int weaponAddGrade = 0;
-            int jenesisBowAtPower = 318;
-
-            if (weaponName.charAt(0) == '제') {
-
-                if (weaponSort.equals("아대")) {
-                    if (weaponAddStat == 106) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 83) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 63) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 46) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 31) {
-                        weaponAddGrade = 4;
-                    }
-
-                } else if (weaponSort.equals("건")) {
-                    if (weaponAtPower == 154) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 120) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 91) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 66) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 45) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
-                    if (weaponAddStat == 157) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 123) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 93) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 68) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 46) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("폴암")) {
-                    if (weaponAddStat == 187) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 146) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 111) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 81) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 55) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
-                    if (weaponAddStat == 196) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 153) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 116) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 84) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 58) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
-                    if (weaponAtPower == 201) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 157) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 119) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 87) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 59) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
-                    if (weaponAddStat == 210) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 163) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 124) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 90) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 62) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("핸드캐논")) {
-                    if (weaponAddStat == 215) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 167) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 127) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 92) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 63) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
-                    if (weaponAddStat == 246) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 192) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 146) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 106) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 72) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("스태프")) {
-                    if (weaponAddStat == 250) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 195) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 148) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 108) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 74) {
-                        weaponAddGrade = 4;
-                    }
-                }
-                atMgPowerBase = atMgPowerBase - weaponAtMgStat + jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade];
-
-            } else if (weaponName.charAt(0) == '아') {
-
-                if (weaponSort.equals("아대")) {
-                    if (weaponAddStat == 92) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 72) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 55) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 40) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 27) {
-                        weaponAddGrade = 4;
-                    }
-
-                } else if (weaponSort.equals("건")) {
-                    if (weaponAtPower == 133) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 104) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 79) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 58) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 39) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
-                    if (weaponAddStat == 136) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 106) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 81) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 59) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 40) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("폴암")) {
-                    if (weaponAddStat == 163) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 127) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 96) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 70) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 48) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
-                    if (weaponAddStat == 170) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 133) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 101) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 73) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 50) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
-                    if (weaponAtPower == 175) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 136) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 103) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 75) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 51) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
-                    if (weaponAddStat == 182) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 142) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 108) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 78) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 54) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("핸드캐논")) {
-                    if (weaponAddStat == 186) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 142) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 108) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 78) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 54) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
-                    if (weaponAddStat == 214) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 167) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 126) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 92) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 63) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("스태프")) {
-                    if (weaponAddStat == 218) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 170) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 129) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 94) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 64) {
-                        weaponAddGrade = 4;
-                    }
-                }
-                atMgPowerBase = atMgPowerBase - weaponAtPower - weaponMgPower + arcaneBowAtPower[weaponStarforce] + arcaneBowAddAtPower[weaponAddGrade];
-
-            } else if (weaponName.charAt(0) == '파') {
-                if (weaponSort.equals("아대")) {
-                    if (weaponAddStat == 36) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 28) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 21) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 16) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 11) {
-                        weaponAddGrade = 4;
-                    }
-
-                } else if (weaponSort.equals("건")) {
-                    if (weaponAtPower == 52) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 40) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 31) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 22) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 15) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
-                    if (weaponAddStat == 53) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 41) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 31) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 23) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 16) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("폴암")) {
-                    if (weaponAddStat == 63) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 49) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 38) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 27) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 19) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
-                    if (weaponAddStat == 66) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 52) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 39) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 29) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 20) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
-                    if (weaponAtPower == 68) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 53) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 40) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 29) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 20) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
-                    if (weaponAddStat == 71) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 55) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 42) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 31) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 21) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("핸드캐논")) {
-                    if (weaponAddStat == 72) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 56) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 43) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 31) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 21) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
-                    if (weaponAddStat == 83) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 65) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 49) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 36) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 25) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("스태프")) {
-                    if (weaponAddStat == 84) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 66) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 50) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 36) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 25) {
-                        weaponAddGrade = 4;
-                    }
-                }
-                atMgPowerBase = atMgPowerBase - weaponAtPower - weaponMgPower + papnirBowAtPower[weaponStarforce] + papnirBowAddAtPower[weaponAddGrade];
-            } else if (weaponName.charAt(0) == '앱') {
-
-                if (weaponSort.equals("아대")) {
-                    if (weaponAddStat == 53) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 42) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 32) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 23) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 16) {
-                        weaponAddGrade = 4;
-                    }
-
-                } else if (weaponSort.equals("건")) {
-                    if (weaponAtPower == 77) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 60) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 46) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 33) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 23) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
-                    if (weaponAddStat == 79) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 62) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 47) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 34) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 24) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("폴암")) {
-                    if (weaponAddStat == 95) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 74) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 56) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 41) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 28) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
-                    if (weaponAddStat == 99) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 77) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 59) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 43) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 29) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
-                    if (weaponAtPower == 101) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 79) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 60) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 44) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 30) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
-                    if (weaponAddStat == 106) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 82) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 63) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 46) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 31) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("핸드캐논")) {
-                    if (weaponAddStat == 108) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 84) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 64) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 47) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 32) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
-                    if (weaponAddStat == 124) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 97) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 73) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 54) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 37) {
-                        weaponAddGrade = 4;
-                    }
-                } else if (weaponSort.equals("스태프")) {
-                    if (weaponAddStat == 126) {
-                        weaponAddGrade = 0;
-                    } else if (weaponAddStat == 98) {
-                        weaponAddGrade = 1;
-                    } else if (weaponAddStat == 75) {
-                        weaponAddGrade = 2;
-                    } else if (weaponAddStat == 54) {
-                        weaponAddGrade = 3;
-                    } else if (weaponAddStat == 37) {
-                        weaponAddGrade = 4;
-                    }
-
-                    atMgPowerBase = atMgPowerBase - weaponAtPower - weaponMgPower + absolBowAtPower[weaponStarforce] + absolBowAddAtPower[weaponAddGrade];
-                }
-            }
-
-
-            Double finalMainStat = null;
-            Double finalSubStat = null;
-            Double finalStat = null;
-            Double finalAtMgPower = null;
-            Double finalCriticalDamage = null;
-            Double finalDamage = null;
-            Double finalBossDamage = null;
-            Double finalCombatE = null;
-
-            if (request.isFree()) {
-                finalDamage = 1.1;
-            } else {
-                finalDamage = 1.0;
-            }
-
-            finalMainStat = Math.floor((mainStatBase) * ((100 + mainStatPerBase) / 100.0) + mainStatNonPer);
-            finalSubStat = Math.floor((subStatBase) * ((100 + subStatPerBase) / 100.0) + subStatNonPer);
-            finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
-            finalAtMgPower = Math.floor(atMgPowerBase * ((100 + atMgPowerPerBase) / 100.0));
-            finalCriticalDamage = (135 + criticalDamageBase) / 100.0;
-            finalBossDamage = (100 + DamageBase + BossDamageBase + addBossDamage) / 100.0;
-
-            finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
-            BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
-            String finalCombat = finalCombatBD.toPlainString();
-            System.out.println(finalCombat + "<=전투력");
-
-            return finalCombat;
-        }
-        return null;
-    }
+//    @Async("characterThreadPool")
+//    @Transactional
+//    public String getCharactersCombat(CharactersBaseTotalInfoDTO request
+//    ) {
+//
+//        int addAllStat = request.getAddAllStat();
+//        Double addBossDamage = request.getAddBossDamage();
+//        int addAtMgPower = request.getAddAtMgPower();
+//        int petAtMgPower = request.getPetAtMgPower();
+//        int mainStatNonPer = request.getMainStatNonPer();
+//        int subStatNonPer = request.getSubStatNonPer();
+//        int mainStatBase = request.getMainStatBase() - request.getMainStatSkill() + addAllStat;
+//        int mainStatPerBase = request.getMainStatPerBase() - request.getMainStatPerSkill();
+//        int subStatBase = request.getSubStatBase() - request.getSubStatSkill() + addAllStat;
+//        int subStatPerBase = request.getSubStatPerBase() - request.getSubStatPerSkill();
+//        int atMgPowerBase = request.getAtMgPowerBase() - request.getAtMgPowerSkill() + addAtMgPower + petAtMgPower + 30;
+//        int atMgPowerPerBase = request.getAtMgPowerPerBase() - request.getAtMgPowerPerSkill();
+//        Double criticalDamageBase = request.getCriticalDamageBase() - request.getCriticalDamageSkill();
+//        Double DamageBase = request.getDamageBase() - request.getDamageSkill();
+//        Double BossDamageBase = request.getBossDamageBase() - request.getBossDamageSkill();
+//        ////전투력 실험용
+//
+//        mainStatBase = 2813 + 40 + 150 + 10 + 39;
+//        mainStatNonPer = 25010;
+//        mainStatPerBase = 370;
+//        subStatBase = 1898 + 25 + 150 + 10 + 39;
+//        subStatNonPer = 560;
+//        subStatPerBase = 144;
+//        atMgPowerBase = 45 + 1808 + 35 + 21 + 30 + 5 + 129;
+//        atMgPowerPerBase = 99;
+//        criticalDamageBase = 16.0 + 25 + 13 + 4;
+//        DamageBase = 4.0 + 39 + 15;
+//        BossDamageBase = 3.0 + 158 + 5 + 15;
+//
+//
+//        /////
+//
+//        BigDecimal criticalDamageBaseBD = BigDecimal.valueOf(criticalDamageBase);
+//
+//        criticalDamageBaseBD = criticalDamageBaseBD.setScale(2, RoundingMode.HALF_UP);
+//
+//
+//        Optional<CharactersItemEquip> charactersItemEquipOptional = charactersItemEquipRepository.findByCharactersName(request.getCharactersName());
+//        if (charactersItemEquipOptional.isPresent()) {
+//            CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
+//            JsonNode jsonInfo = null;
+//            try {
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                jsonInfo = objectMapper.readTree(charactersItemEquip.getWeaponInfo());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//
+//            }
+//            int weaponAddStat = 0;
+//            int weaponAtMgStat = 0;
+//            int weaponAtPowerAdd = jsonInfo.get("item_add_option").get("attack_power").asInt();
+//            int weaponMgPowerAdd = jsonInfo.get("item_add_option").get("magic_power").asInt();
+//            int weaponStarforce = jsonInfo.get("starforce").asInt();
+//            int weaponAtPower = jsonInfo.get("item_total_option").get("attack_power").asInt();
+//            int weaponMgPower = jsonInfo.get("item_total_option").get("magic_power").asInt();
+//            String weaponName = jsonInfo.get("item_name").asText();
+//            String weaponSort = jsonInfo.get("item_equipment_part").asText();
+//            if (weaponAtPowerAdd != 0) {
+//                weaponAddStat = weaponAtPowerAdd;
+//            } else if (weaponMgPowerAdd != 0) {
+//                weaponAddStat = weaponMgPowerAdd;
+//            }
+//            if (weaponAtPower != 0) {
+//                weaponAtMgStat = weaponAtPower;
+//            } else if (weaponMgPower != 0) {
+//                weaponAtMgStat = weaponMgPower;
+//            }
+//
+//            int papnirBowAtPower[] = {241, 246, 251, 257, 263, 269, 275, 281, 287, 293, 299, 305, 312, 319, 326, 333, 341, 350, 359, 369, 380, 392, 405};
+//            int absolBowAtPower[] = {273, 279, 285, 291, 297, 303, 310, 317, 324, 331, 338, 345, 352, 360, 368, 376, 385, 394, 404, 415, 427, 440, 454};
+//            int arcaneBowAtPower[] = {357, 365, 373, 381, 389, 397, 405, 414, 423, 432, 441, 450, 460, 470, 480, 490, 503, 516, 530, 544, 559, 575, 592};
+//            int papnirBowAddAtPower[] = {66, 52, 39, 29, 20};
+//            int absolBowAddAtPower[] = {99, 77, 59, 43, 29};
+//            int arcaneBowAddAtPower[] = {170, 133, 101, 73, 50};
+//            int jenesisBowAddAtPower[] = {170, 133, 101, 73, 50};
+//            int weaponAddGrade = 0;
+//            int jenesisBowAtPower = 318;
+//
+//            if (weaponName.charAt(0) == '제') {
+//
+//                if (weaponSort.equals("아대")) {
+//                    if (weaponAddStat == 106) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 83) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 63) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 46) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 31) {
+//                        weaponAddGrade = 4;
+//                    }
+//
+//                } else if (weaponSort.equals("건")) {
+//                    if (weaponAtPower == 154) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 120) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 91) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 66) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 45) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+//                    if (weaponAddStat == 157) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 123) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 93) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 68) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 46) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("폴암")) {
+//                    if (weaponAddStat == 187) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 146) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 111) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 81) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 55) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+//                    if (weaponAddStat == 196) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 153) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 116) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 84) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 58) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+//                    if (weaponAtPower == 201) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 157) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 119) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 87) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 59) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+//                    if (weaponAddStat == 210) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 163) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 124) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 90) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 62) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("핸드캐논")) {
+//                    if (weaponAddStat == 215) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 167) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 127) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 92) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 63) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+//                    if (weaponAddStat == 246) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 192) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 146) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 106) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 72) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("스태프")) {
+//                    if (weaponAddStat == 250) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 195) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 148) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 108) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 74) {
+//                        weaponAddGrade = 4;
+//                    }
+//                }
+//                atMgPowerBase = atMgPowerBase - weaponAtMgStat + jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade];
+//
+//            } else if (weaponName.charAt(0) == '아') {
+//
+//                if (weaponSort.equals("아대")) {
+//                    if (weaponAddStat == 92) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 72) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 55) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 40) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 27) {
+//                        weaponAddGrade = 4;
+//                    }
+//
+//                } else if (weaponSort.equals("건")) {
+//                    if (weaponAtPower == 133) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 104) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 79) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 58) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 39) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+//                    if (weaponAddStat == 136) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 106) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 81) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 59) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 40) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("폴암")) {
+//                    if (weaponAddStat == 163) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 127) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 96) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 70) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 48) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+//                    if (weaponAddStat == 170) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 133) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 101) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 73) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 50) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+//                    if (weaponAtPower == 175) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 136) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 103) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 75) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 51) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+//                    if (weaponAddStat == 182) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 142) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 108) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 78) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 54) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("핸드캐논")) {
+//                    if (weaponAddStat == 186) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 142) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 108) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 78) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 54) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+//                    if (weaponAddStat == 214) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 167) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 126) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 92) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 63) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("스태프")) {
+//                    if (weaponAddStat == 218) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 170) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 129) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 94) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 64) {
+//                        weaponAddGrade = 4;
+//                    }
+//                }
+//                atMgPowerBase = atMgPowerBase - weaponAtPower - weaponMgPower + arcaneBowAtPower[weaponStarforce] + arcaneBowAddAtPower[weaponAddGrade];
+//
+//            } else if (weaponName.charAt(0) == '파') {
+//                if (weaponSort.equals("아대")) {
+//                    if (weaponAddStat == 36) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 28) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 21) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 16) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 11) {
+//                        weaponAddGrade = 4;
+//                    }
+//
+//                } else if (weaponSort.equals("건")) {
+//                    if (weaponAtPower == 52) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 40) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 31) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 22) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 15) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+//                    if (weaponAddStat == 53) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 41) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 31) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 23) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 16) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("폴암")) {
+//                    if (weaponAddStat == 63) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 49) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 38) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 27) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 19) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+//                    if (weaponAddStat == 66) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 52) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 39) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 29) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 20) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+//                    if (weaponAtPower == 68) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 53) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 40) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 29) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 20) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+//                    if (weaponAddStat == 71) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 55) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 42) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 31) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 21) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("핸드캐논")) {
+//                    if (weaponAddStat == 72) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 56) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 43) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 31) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 21) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+//                    if (weaponAddStat == 83) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 65) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 49) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 36) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 25) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("스태프")) {
+//                    if (weaponAddStat == 84) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 66) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 50) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 36) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 25) {
+//                        weaponAddGrade = 4;
+//                    }
+//                }
+//                atMgPowerBase = atMgPowerBase - weaponAtPower - weaponMgPower + papnirBowAtPower[weaponStarforce] + papnirBowAddAtPower[weaponAddGrade];
+//            } else if (weaponName.charAt(0) == '앱') {
+//
+//                if (weaponSort.equals("아대")) {
+//                    if (weaponAddStat == 53) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 42) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 32) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 23) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 16) {
+//                        weaponAddGrade = 4;
+//                    }
+//
+//                } else if (weaponSort.equals("건")) {
+//                    if (weaponAtPower == 77) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 60) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 46) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 33) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 23) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("너클") || weaponSort.equals("소울슈터") || weaponSort.equals("에너지소드") || weaponSort.equals("건틀렛 리볼버")) {
+//                    if (weaponAddStat == 79) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 62) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 47) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 34) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 24) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("폴암")) {
+//                    if (weaponAddStat == 95) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 74) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 56) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 41) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 28) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("활") || weaponSort.equals("듀얼보우건") || weaponSort.equals("에인션트 보우") || weaponSort.equals("체인") || weaponSort.equals("단검") || weaponSort.equals("부채") || weaponSort.equals("차크람")) {
+//                    if (weaponAddStat == 99) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 77) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 59) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 43) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 29) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("한손검") || weaponSort.equals("한손도끼") || weaponSort.equals("한손둔기") || weaponSort.equals("석궁") || weaponSort.equals("케인")) {
+//                    if (weaponAtPower == 101) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 79) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 60) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 44) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 30) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("두손검") || weaponSort.equals("데스페라도") || weaponSort.equals("튜너") || weaponSort.equals("두손도끼") || weaponSort.equals("두손둔기") || weaponSort.equals("창")) {
+//                    if (weaponAddStat == 106) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 82) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 63) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 46) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 31) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("핸드캐논")) {
+//                    if (weaponAddStat == 108) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 84) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 64) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 47) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 32) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("완드") || weaponSort.equals("샤아닝로드") || weaponSort.equals("ESP리미터") || weaponSort.equals("매직 건틀렛")) {
+//                    if (weaponAddStat == 124) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 97) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 73) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 54) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 37) {
+//                        weaponAddGrade = 4;
+//                    }
+//                } else if (weaponSort.equals("스태프")) {
+//                    if (weaponAddStat == 126) {
+//                        weaponAddGrade = 0;
+//                    } else if (weaponAddStat == 98) {
+//                        weaponAddGrade = 1;
+//                    } else if (weaponAddStat == 75) {
+//                        weaponAddGrade = 2;
+//                    } else if (weaponAddStat == 54) {
+//                        weaponAddGrade = 3;
+//                    } else if (weaponAddStat == 37) {
+//                        weaponAddGrade = 4;
+//                    }
+//
+//                    atMgPowerBase = atMgPowerBase - weaponAtPower - weaponMgPower + absolBowAtPower[weaponStarforce] + absolBowAddAtPower[weaponAddGrade];
+//                }
+//            }
+//
+//
+//            Double finalMainStat = null;
+//            Double finalSubStat = null;
+//            Double finalStat = null;
+//            Double finalAtMgPower = null;
+//            Double finalCriticalDamage = null;
+//            Double finalDamage = null;
+//            Double finalBossDamage = null;
+//            Double finalCombatE = null;
+//
+//            if (request.isFree()) {
+//                finalDamage = 1.1;
+//            } else {
+//                finalDamage = 1.0;
+//            }
+//
+//            finalMainStat = Math.floor((mainStatBase) * ((100 + mainStatPerBase) / 100.0) + mainStatNonPer);
+//            finalSubStat = Math.floor((subStatBase) * ((100 + subStatPerBase) / 100.0) + subStatNonPer);
+//            finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+//            finalAtMgPower = Math.floor(atMgPowerBase * ((100 + atMgPowerPerBase) / 100.0));
+//            finalCriticalDamage = (135 + criticalDamageBase) / 100.0;
+//            finalBossDamage = (100 + DamageBase + BossDamageBase + addBossDamage) / 100.0;
+//
+//            finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+//            BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
+//            String finalCombat = finalCombatBD.toPlainString();
+//            System.out.println(finalCombat + "<=전투력");
+//
+//            return finalCombat;
+//        }
+//        return null;
+//    }
 
 
     @Async("characterThreadPool")
