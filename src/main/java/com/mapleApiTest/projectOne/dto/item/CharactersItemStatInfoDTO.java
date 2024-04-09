@@ -24,6 +24,9 @@ public class CharactersItemStatInfoDTO {
     int potentialDamagePer;
     int potentialCriticalDamage;
 
+    public CharactersItemStatInfoDTO() {
+    }
+
     public CharactersItemStatInfoDTO(String item_equipment_slot, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int bossDamage, int damage) {
         this.item_equipment_slot = item_equipment_slot;
         this.mainStat = mainStat;
