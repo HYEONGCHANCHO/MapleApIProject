@@ -520,34 +520,34 @@ public class CharacterService {
 
                     if (jsonInfo != null) {
 
-                    charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
-                    charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
-                    charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
-                    charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
-                    charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
-                    charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
-                    charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
-                    charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
-                    charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
-                    charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
-                    charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
-                    charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
-                    charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
-                    charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
-                    charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
-                    charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
-                    charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
-                    charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
-                    charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
-                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
-                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
-                    charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
-                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
-                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
-                    charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
-                    charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
+                        charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
+                        charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
+                        charactersItemInfoDTO.setItemLevel(jsonInfo.get("item_base_option").get("base_equipment_level").asInt());
+                        charactersItemInfoDTO.setStarForce(jsonInfo.get("starforce").asInt());
+                        charactersItemInfoDTO.setBossDamage(jsonInfo.get("item_total_option").get("boss_damage").asInt());
+                        charactersItemInfoDTO.setDamage(jsonInfo.get("item_total_option").get("damage").asInt());
+                        charactersItemInfoDTO.setExcepStr(jsonInfo.get("item_exceptional_option").get("str").asInt());
+                        charactersItemInfoDTO.setExcepDex(jsonInfo.get("item_exceptional_option").get("dex").asInt());
+                        charactersItemInfoDTO.setExcepInt(jsonInfo.get("item_exceptional_option").get("int").asInt());
+                        charactersItemInfoDTO.setExcepLuk(jsonInfo.get("item_exceptional_option").get("luk").asInt());
+                        charactersItemInfoDTO.setExcepAtPower(jsonInfo.get("item_exceptional_option").get("attack_power").asInt());
+                        charactersItemInfoDTO.setExcepMgPower(jsonInfo.get("item_exceptional_option").get("magic_power").asInt());
+                        charactersItemInfoDTO.setStr(jsonInfo.get("item_total_option").get("str").asInt());
+                        charactersItemInfoDTO.setDex(jsonInfo.get("item_total_option").get("dex").asInt());
+                        charactersItemInfoDTO.setIntel(jsonInfo.get("item_total_option").get("int").asInt());
+                        charactersItemInfoDTO.setLuk(jsonInfo.get("item_total_option").get("luk").asInt());
+                        charactersItemInfoDTO.setAttactPower(jsonInfo.get("item_total_option").get("attack_power").asInt());
+                        charactersItemInfoDTO.setMagicPower(jsonInfo.get("item_total_option").get("magic_power").asInt());
+                        charactersItemInfoDTO.setAllStat(jsonInfo.get("item_total_option").get("all_stat").asInt());
+                        charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                        charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                        charactersItemInfoDTO.processPotential(jsonInfo.get("potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                        charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_1").asText(), charactersInfo.getCharactersLevel());
+                        charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_2").asText(), charactersInfo.getCharactersLevel());
+                        charactersItemInfoDTO.processPotential(jsonInfo.get("additional_potential_option_3").asText(), charactersInfo.getCharactersLevel());
+                        charactersItemInfoDTO.processSoul(jsonInfo.get("soul_option").asText());
 
-                    charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
+                        charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
 
                         charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), charactersItemInfoDTO.getMainStat(), charactersItemInfoDTO.getSubStat(), charactersItemInfoDTO.getMainStatPer(), charactersItemInfoDTO.getSubStatPer(), charactersItemInfoDTO.getAtMgStat(), charactersItemInfoDTO.getPotentialMainStat(), charactersItemInfoDTO.getPotentialSubStat(), charactersItemInfoDTO.getPotentialMainStatPer(), charactersItemInfoDTO.getPotentialSubStatPer(), charactersItemInfoDTO.getPotentialAtMgStat(), charactersItemInfoDTO.getPotentialAtMgPer(), charactersItemInfoDTO.getBossDamage(), charactersItemInfoDTO.getDamage(), charactersItemInfoDTO.getCriticalDamage(), charactersItemInfoDTO.getPotentialBossDamagePer(), charactersItemInfoDTO.getPotentialDamagePer(), charactersItemInfoDTO.getCriticalDamagePotential());
 
@@ -572,7 +572,7 @@ public class CharacterService {
                         System.out.println("Potential Critical Damage: " + charactersItemStatInfoDTO.getPotentialCriticalDamage());
 
                         //////////////////////////////////////////////
-                        if (jsonInfo.get("item_equipment_slot").asText().contains("무기") ) {
+                        if (jsonInfo.get("item_equipment_slot").asText().contains("무기")) {
                             int weaponAtMgStatBase = 0;
                             int weaponAddStat = 0;
                             int weaponAtMgStatStarForce = 0;
@@ -615,10 +615,192 @@ public class CharacterService {
                                 weaponAtMgStat = weaponMgPower;
                             }
 
-                            //기본+스타포스
-                            int papnirBowAtPower[] = {241, 246, 251, 257, 263, 269, 275, 281, 287, 293, 299, 305, 312, 319, 326, 333, 341, 350, 359, 369, 380, 392, 405};
-                            int absolBowAtPower[] = {273, 279, 285, 291, 297, 303, 310, 317, 324, 331, 338, 345, 352, 360, 368, 376, 385, 394, 404, 415, 427, 440, 454};
-                            int arcaneBowAtPower[] = {357, 365, 373, 381, 389, 397, 405, 414, 423, 432, 441, 450, 460, 470, 480, 490, 503, 516, 530, 544, 559, 575, 592};
+
+                            int papnirBowBasePower = 160;
+
+                            int papnirBowStarForce = 0;
+
+                            if (weaponStarforce < 16) {
+                                for (int i = 0; i < weaponStarforce; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                            } else if (weaponStarforce == 16) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8;
+                            } else if (weaponStarforce == 17) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9;
+                            } else if (weaponStarforce == 18) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9;
+                            } else if (weaponStarforce == 19) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10;
+                            } else if (weaponStarforce == 20) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10 + 11;
+                            } else if (weaponStarforce == 21) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10 + 11 + 12;
+                            } else if (weaponStarforce == 22) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10 + 11 + 12 + 13;
+                            } else if (weaponStarforce == 23) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10 + 11 + 12 + 13 + 31;
+                            } else if (weaponStarforce == 24) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10 + 11 + 12 + 13 + 31 + 32;
+                            } else if (weaponStarforce == 25) {
+                                for (int i = 0; i < 15; i++) {
+                                    papnirBowStarForce += ((papnirBowBasePower + weaponAtMgStatEtc + papnirBowStarForce) / 50 + 1);
+                                }
+                                papnirBowStarForce += 8 + 9 + 9 + 10 + 11 + 12 + 13 + 31 + 32 + 33;
+                            }
+
+
+                            int absolBowBasePower = 192;
+                            int absolBowStarForce = 0;
+
+                            if (weaponStarforce < 16) {
+                                for (int i = 0; i < weaponStarforce; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                            } else if (weaponStarforce == 16) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9;
+                            } else if (weaponStarforce == 17) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9;
+                            } else if (weaponStarforce == 18) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10;
+                            } else if (weaponStarforce == 19) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11;
+                            } else if (weaponStarforce == 20) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11 + 12;
+                            } else if (weaponStarforce == 21) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11 + 12 + 13;
+                            } else if (weaponStarforce == 22) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11 + 12 + 13 + 14;
+                            } else if (weaponStarforce == 23) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11 + 12 + 13 + 14 + 32;
+                            } else if (weaponStarforce == 24) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11 + 12 + 13 + 14 + 32 + 33;
+                            } else if (weaponStarforce == 25) {
+                                for (int i = 0; i < 15; i++) {
+                                    absolBowStarForce += ((absolBowBasePower + weaponAtMgStatEtc + absolBowStarForce) / 50 + 1);
+                                }
+                                absolBowStarForce += 9 + 9 + 10 + 11 + 12 + 13 + 14 + 32 + 33 + 34;
+                            }
+
+                            int arcaneBowBasePower = 276;
+                            int arcaneBowStarForce = 0;
+
+                            if (weaponStarforce < 16) {
+                                for (int i = 0; i < weaponStarforce; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                            } else if (weaponStarforce == 16) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13;
+                            } else if (weaponStarforce == 17) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13;
+                            } else if (weaponStarforce == 18) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14;
+                            } else if (weaponStarforce == 19) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14;
+                            } else if (weaponStarforce == 20) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14 + 15;
+                            } else if (weaponStarforce == 21) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14 + 15 + 16;
+                            } else if (weaponStarforce == 22) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14 + 15 + 16 + 17;
+                            } else if (weaponStarforce == 23) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14 + 15 + 16 + 17 + 34;
+                            } else if (weaponStarforce == 24) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14 + 15 + 16 + 17 + 34 + 35;
+                            } else if (weaponStarforce == 25) {
+                                for (int i = 0; i < 15; i++) {
+                                    arcaneBowStarForce += ((arcaneBowBasePower + weaponAtMgStatEtc + arcaneBowStarForce) / 50 + 1);
+                                }
+                                arcaneBowStarForce += 13 + 13 + 14 + 14 + 15 + 16 + 17 + 34 + 35 + 36;
+                            }
+
+
+//                            //기본+스타포스
+//                            int papnirBowAtPower[] = {241, 246, 251, 257, 263, 269, 275, 281, 287, 293, 299, 305, 312, 319, 326, 333, 341, 350, 359, 369, 380, 392, 405};
+//                            int absolBowAtPower[] = {273, 279, 285, 291, 297, 303, 310, 317, 324, 331, 338, 345, 352, 360, 368, 376, 385, 394, 404, 415, 427, 440, 454};
+//                            int arcaneBowAtPower[] = {357, 365, 373, 381, 389, 397, 405, 414, 423, 432, 441, 450, 460, 470, 480, 490, 503, 516, 530, 544, 559, 575, 592};
+
                             int papnirBowAddAtPower[] = {66, 52, 39, 29, 20};
                             int absolBowAddAtPower[] = {99, 77, 59, 43, 29};
                             int arcaneBowAddAtPower[] = {170, 133, 101, 73, 50};
@@ -879,13 +1061,8 @@ public class CharacterService {
                                         weaponAddGrade = 4;
                                     }
                                 }
-                                changedWeaponAtMgStat = arcaneBowAtPower[weaponStarforce] + arcaneBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
-                                System.out.println("adaadad");
+                                changedWeaponAtMgStat = arcaneBowBasePower + arcaneBowStarForce + arcaneBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
 
-                                System.out.println(arcaneBowAtPower[weaponStarforce]);
-                                System.out.println(arcaneBowAddAtPower[weaponAddGrade]);
-                                System.out.println(weaponAtMgStatEtc);
-                                System.out.println("adaadad");
                             } else if (weaponName.charAt(0) == '파') {
                                 if (weaponSort.equals("아대")) {
                                     if (weaponAddStat == 36) {
@@ -1009,7 +1186,8 @@ public class CharacterService {
                                         weaponAddGrade = 4;
                                     }
                                 }
-                                changedWeaponAtMgStat = papnirBowAtPower[weaponStarforce] + papnirBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+                                changedWeaponAtMgStat = papnirBowBasePower + papnirBowStarForce + papnirBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+
                             } else if (weaponName.charAt(0) == '앱') {
 
                                 if (weaponSort.equals("아대")) {
@@ -1133,18 +1311,18 @@ public class CharacterService {
                                     } else if (weaponAddStat == 37) {
                                         weaponAddGrade = 4;
                                     }
-                                    changedWeaponAtMgStat = absolBowAtPower[weaponStarforce] + absolBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+                                    changedWeaponAtMgStat = absolBowBasePower + absolBowStarForce + absolBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
                                 }
 
                             }
                             weaponAtMgStat = changedWeaponAtMgStat;
-                            System.out.println("weaponAtMgStat11111"+weaponAtMgStat);
+                            System.out.println("weaponAtMgStat11111" + weaponAtMgStat);
 
                         }
                         //////////////////////////////////////////////
                     }
 
-                    System.out.println("weaponAtMgStat2222"+weaponAtMgStat);
+                    System.out.println("weaponAtMgStat2222" + weaponAtMgStat);
 
                     mainStat += charactersItemStatInfoDTO.getMainStat() + charactersItemStatInfoDTO.getPotentialMainStat();
                     subStat += charactersItemStatInfoDTO.getSubStat() + charactersItemStatInfoDTO.getPotentialSubStat();
@@ -1393,51 +1571,62 @@ public class CharacterService {
                     int lucidAcSetCount = 0; //여명
                     int lomienSetCount = 0; //루타
                     int eternalSetCount = 0; //에테
-                    int mystarSetCount = 0; //에테
+                    int mystarSetCount = 0; //마이
+                    int sevenSetCount = 0; //칠요
+                    int cashSetCount = 0; //캐시장비
                     for (JsonNode setEffectNode : jsonNode.get("set_effect")) {
                         String setName = setEffectNode.get("set_name").asText();
-                        char firstLetter = setName.charAt(0);
-                        switch (firstLetter) {
-                            case '앱':
-                                absolSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '아':
-                                arcaneSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '보':
-                                bossAcSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '칠':
-                                cvelSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '여':
-                                lucidAcSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '에':
-                                eternalSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '루':
-                                lomienSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            case '마':
-                                mystarSetCount = setEffectNode.get("total_set_count").asInt();
-                                break;
-                            default:
-                                break;
+
+                        if (setName.contains("앱솔")) {
+                            absolSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("아케인")) {
+                            arcaneSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("보스 장신구 세트")) {
+                            bossAcSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("칠흑")) {
+                            cvelSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("여명의 보스 세트")) {
+                            lucidAcSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("에테")) {
+                            eternalSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("루타")) {
+                            lomienSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("마이")) {
+                            mystarSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("칠요")) {
+                            sevenSetCount = setEffectNode.get("total_set_count").asInt();
+                        } else if (setName.contains("세트")) {
+                            if (setEffectNode.get("total_set_count").asInt() > 2) {
+
+                                for(JsonNode cashSetNode : setEffectNode.get("set_effect_info")) {
+                                    if (cashSetNode.get("set_count").asInt() == 3) {
+                                        //마라벨 세트
+                                        cashSetCount = setEffectNode.get("total_set_count").asInt();
+                                    } else if (cashSetNode.get("set_count").asInt() == 5) { //스라벨 세트
+                                        if (setEffectNode.get("total_set_count").asInt() == 5) {
+                                            cashSetCount = 3;
+                                        }
+                                    }
+
+
+                                }
+
+
+                            }
                         }
-
-
                     }
-                    CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = new CharactersSetEffectInfoDTO(charactersName, ocid, absolSetCount, arcaneSetCount, bossAcSetCount, cvelSetCount, lucidAcSetCount, eternalSetCount, lomienSetCount, mystarSetCount);
+                    CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = new CharactersSetEffectInfoDTO(charactersName, ocid, absolSetCount, arcaneSetCount, bossAcSetCount, cvelSetCount, lucidAcSetCount, eternalSetCount, lomienSetCount, mystarSetCount, sevenSetCount, cashSetCount);
 
                     System.out.println("앱솔세트 :" + absolSetCount);
                     System.out.println("아케인세트 :" + arcaneSetCount);
                     System.out.println("보장세트 :" + bossAcSetCount);
-                    System.out.println("칠흙세트 :" + cvelSetCount);
+                    System.out.println("칠흑세트 :" + cvelSetCount);
                     System.out.println("여명세트 :" + lucidAcSetCount);
                     System.out.println("에테세트 :" + eternalSetCount);
                     System.out.println("루타세트 :" + lomienSetCount);
                     System.out.println("마이세트 :" + mystarSetCount);
+                    System.out.println("칠요세트 :" + sevenSetCount);
+                    System.out.println("캐시세트 :" + cashSetCount);
 
                     return Mono.just(charactersSetEffectInfoDTO);
 
@@ -1457,6 +1646,7 @@ public class CharacterService {
         } else {
             return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
         }
+
     }
 
 //    @Async("characterThreadPool")
@@ -1488,7 +1678,9 @@ public class CharacterService {
                     charactersSetEffectInfoDTO.getLucidAcSetCount(),
                     charactersSetEffectInfoDTO.getLomienSetCount(),
                     charactersSetEffectInfoDTO.getEternalSetCount(),
-                    charactersSetEffectInfoDTO.getMystarSetCount()
+                    charactersSetEffectInfoDTO.getMystarSetCount(),
+                    charactersSetEffectInfoDTO.getSevenSetCount(),
+                    charactersSetEffectInfoDTO.getCashSetCount()
             );
             System.out.println("세트 allstat : " + itemSetEffectDTO.getAllStat());
             System.out.println("세트 공격력 : " + itemSetEffectDTO.getAtMgPower());
@@ -2271,10 +2463,78 @@ public class CharacterService {
 
     }
 
+    @Async("characterThreadPool")
+    @Transactional       //캐시장비 스탯
+    public CompletableFuture<CharactersCashItemInfoDTO> getCharactersCashItemInfo(String charactersName, String ocid) {
+        if (rateLimiter.tryAcquire()) {
+            String Url = "/maplestory/v1/character/cashitem-equipment";
+
+            Mono<CharactersCashItemInfoDTO> MonoResult
+                    = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
+                try {
+                    int cashItemStr = 0;
+                    int cashItemtDex = 0;
+                    int cashItemInt = 0;
+                    int cashItemLuk = 0;
+                    int cashItemAtPower = 0;
+                    int cashItemMgPower = 0;
+
+                    for (JsonNode cashItemNode : jsonNode.get("cash_item_equipment_base")) {
+
+                        for(JsonNode cashItemOptionNode : cashItemNode.get("cash_item_option")) {
+                            String cashItemOption = cashItemOptionNode.get("option_type").toString() ;
+                                int cashItemStat =  cashItemOptionNode.get("option_value").asInt();
+
+                                // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                                if (cashItemOption.contains("공격력")) {
+                                    cashItemAtPower += cashItemStat;
+                                } else if (cashItemOption.contains("마력")) {
+                                    cashItemMgPower += cashItemStat;
+                                } else if (cashItemOption.contains("STR")) {
+                                    cashItemStr += cashItemStat;
+                                } else if (cashItemOption.contains("DEX")) {
+                                    cashItemtDex += cashItemStat;
+                                } else if (cashItemOption.contains("LUK")) {
+                                    cashItemLuk += cashItemStat;
+                                } else if (cashItemOption.contains("INT")) {
+                                    cashItemInt += cashItemStat;
+                                }
+                            }
+                        }
+
+                    System.out.println("cashItemAtPower :" + cashItemAtPower);
+                    System.out.println("cashItemMgPower :" + cashItemMgPower);
+                    System.out.println("cashItemStr :" + cashItemStr);
+                    System.out.println("cashItemtDex :" + cashItemtDex);
+                    System.out.println("cashItemLuk :" + cashItemLuk);
+                    System.out.println("cashItemInt" + cashItemInt);
+
+                    CharactersCashItemInfoDTO charactersCashItemInfoDTO = new CharactersCashItemInfoDTO(charactersName, cashItemStr, cashItemtDex, cashItemInt, cashItemLuk, cashItemAtPower, cashItemMgPower);
+
+                    return Mono.just(charactersCashItemInfoDTO);
+
+                } catch (Exception exception) {
+                    System.err.println("에러: " + exception.getMessage());
+                    return Mono.error(exception);
+                }
+            }).onErrorResume(exception -> {
+                System.err.println("에러: " + exception.getMessage());
+                exception.printStackTrace(); // 추가된 부분
+                return Mono.error(exception);
+            });
+            CompletableFuture<CharactersCashItemInfoDTO> completableFutureResult = new CompletableFuture<>();
+            MonoResult.subscribe(completableFutureResult::complete, completableFutureResult::completeExceptionally);
+            return completableFutureResult;
+        } else {
+            return CompletableFuture.failedFuture(new RuntimeException("Rate limit exceeded"));
+        }
+    }
+
+
     ///////////
     @Async("characterThreadPool")
     @Transactional       //캐릭터 전체 스탯 종합
-    public CompletableFuture<CharactersTotalStatInfoDTO> getCharactersTotalStatInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO, CharactersItemEquipDTO charactersItemEquipDTO, CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO, CharactersSetEffectInfoDTO charactersSetEffectInfoDTO, ItemSetEffectDTO itemSetEffectDTO, CharactersArtiInfoDTO charactersArtiInfoDTO, CharactersUnionInfoDTO charactersUnionInfoDTO, CharactersHyperStatInfoDTO charactersHyperStatInfoDTO, CharactersAbilityInfoDTO charactersAbilityInfoDTO, CharactersSimbolInfoDTO charactersSimbolInfoDTO, CharactersPetEquipInfoDTO charactersPetEquipInfoDTO, CharactersSkillStatInfoDTO charactersSkillStatInfoDTO) {
+    public CompletableFuture<CharactersTotalStatInfoDTO> getCharactersTotalStatInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO, CharactersItemEquipDTO charactersItemEquipDTO, CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO, CharactersSetEffectInfoDTO charactersSetEffectInfoDTO, ItemSetEffectDTO itemSetEffectDTO, CharactersArtiInfoDTO charactersArtiInfoDTO, CharactersUnionInfoDTO charactersUnionInfoDTO, CharactersHyperStatInfoDTO charactersHyperStatInfoDTO, CharactersAbilityInfoDTO charactersAbilityInfoDTO, CharactersSimbolInfoDTO charactersSimbolInfoDTO, CharactersPetEquipInfoDTO charactersPetEquipInfoDTO, CharactersSkillStatInfoDTO charactersSkillStatInfoDTO,CharactersCashItemInfoDTO charactersCashItemInfoDTO,CharactersHexaStatInfoDTO charactersHexaStatInfoDTO) {
         return CompletableFuture.supplyAsync(() -> {
             if (rateLimiter.tryAcquire()) {
 
@@ -2382,6 +2642,25 @@ public class CharacterService {
                 //0차 스킬
                 int skillStatAtMgPower = charactersSkillStatInfoDTO.getSkillStatAtMgPower();
                 boolean isFree = charactersSkillStatInfoDTO.isFree();
+                //캐시 아이템 스탯
+                int cashItemMainStat = 0;
+                int cashItemSubStat = 0;
+                int cashItemAtMgPower = 0;
+                int cashItemStr = charactersCashItemInfoDTO.getCashItemStr();
+                int cashItemDex = charactersCashItemInfoDTO.getCashItemDex();
+                int cashItemInt = charactersCashItemInfoDTO.getCashItemInt();
+                int cashItemLuk = charactersCashItemInfoDTO.getCashItemLuk();
+                int cashItemAtPower = charactersCashItemInfoDTO.getCashItemAtPower();
+                int cashItemMgPower = charactersCashItemInfoDTO.getCashItemMgPower();
+                //헥사 스텟
+                int hexaStatMainStat = charactersHexaStatInfoDTO.getHexaStatMainStat();
+                int hexaStatAtMgPower = charactersHexaStatInfoDTO.getHexaStatAtMgPower();
+                Double hexaStatCriticalDamage = charactersHexaStatInfoDTO.getHexaStatCriticalDamage();
+                Double hexaStatDamage = charactersHexaStatInfoDTO.getHexaStatDamage();
+                Double hexaStatBossDamage = charactersHexaStatInfoDTO.getHexaStatBossDamage();
+
+
+
 
                 if (Arrays.asList("바이퍼", "히어로").contains(charactersClass)) {
                     //주스탯 힘 부스탯 덱스 직업
@@ -2397,44 +2676,71 @@ public class CharacterService {
                     abilityStatSubStatPer = abilityStatDexPer;
                     simbolStatMainStat = simbolStatStr;
                     petAtMgPower = petAtPower;
+                    cashItemMainStat=cashItemStr;
+                    cashItemSubStat=cashItemDex;
+                    cashItemAtMgPower=cashItemAtPower;
                 } else if (Arrays.asList("듀얼블레이더", "나이트로드").contains(charactersClass)) {
 
                 }
-                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat;
+                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat+cashItemMainStat +1438;
+//기본 임의로 넣어줌
                 mainStatPer = itemMainStatPer + abilityStatMainStatPer;
-                mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat;
-                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat;
-                subStatPer = itemSubStatPer + abilityStatSubStatPer;
-                subNonStat = unionRaiderSubStat + hyperStatSubStat + abilityStatSubStat;
-                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower;
-                atMgPowerPer = itemAtMgPowerPer;
-                damage = itemDamage + itemSetDamage + artiDamage;
-                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage;
-                criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage;
 
-                System.out.println("mainStat :" + mainStat);
+                mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat+hexaStatMainStat;
+
+                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat+cashItemSubStat+4;
+//기본 임의로 넣어줌
+
+                subStatPer = itemSubStatPer + abilityStatSubStatPer;
+
+                subNonStat = unionRaiderSubStat + hyperStatSubStat + abilityStatSubStat;
+
+                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower+cashItemAtMgPower+hexaStatAtMgPower;
+
+                atMgPowerPer = itemAtMgPowerPer;
+
+                damage = itemDamage + artiDamage+hexaStatDamage+hyperStatDamage;
+
+                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage+hexaStatBossDamage+itemSetDamage+hyperStatBossDamage;
+                //아이템 세트데미지는 보공이라 여기가 맞음
+
+                criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage+hexaStatCriticalDamage+hyperStatCriticalDamage;
+
+                System.out.println("\n\n\n\n"+"mainStat :" + mainStat);
                 System.out.println("itemMainStat :" + itemMainStat);
                 System.out.println("artiAllStat :" + artiAllStat);
+                System.out.println("itemSetAllStat :" + itemSetAllStat);
                 System.out.println("unionOccupiedMainStat :" + unionOccupiedMainStat);
+                System.out.println("cashItemMainStat :" + cashItemMainStat+"\n");
+
                 System.out.println("mainStatPer :" + mainStatPer);
                 System.out.println("itemMainStatPer :" + itemMainStatPer);
-                System.out.println("abilityStatMainStatPer :" + abilityStatMainStatPer);
+                System.out.println("abilityStatMainStatPer :" + abilityStatMainStatPer+"\n");
+
                 System.out.println("mainNonStat :" + mainNonStat);
                 System.out.println("unionRaiderMainStat :" + unionRaiderMainStat);
                 System.out.println("hyperStatMainStat :" + hyperStatMainStat);
                 System.out.println("abilityStatMainStat :" + abilityStatMainStat);
-                System.out.println("simbolStatMainStat :" + simbolStatMainStat);
+                System.out.println("hexaStatMainStat :" + hexaStatMainStat);
+                System.out.println("simbolStatMainStat :" + simbolStatMainStat+"\n");
+
+                System.out.println("subStat :" + subStat);
                 System.out.println("itemSubStat :" + itemSubStat);
                 System.out.println("itemSetAllStat :" + itemSetAllStat);
                 System.out.println("artiAllStat :" + artiAllStat);
                 System.out.println("unionOccupiedSubStat :" + unionOccupiedSubStat);
+                System.out.println("cashItemSubStat :" + cashItemSubStat+"\n");
+//칭호부분 안더해짐 메인 서브 둘다
+
                 System.out.println("subStatPer :" + subStatPer);
                 System.out.println("itemSubStatPer :" + itemSubStatPer);
-                System.out.println("abilityStatSubStatPer :" + abilityStatSubStatPer);
+                System.out.println("abilityStatSubStatPer :" + abilityStatSubStatPer+"\n");
+
                 System.out.println("subNonStat :" + subNonStat);
                 System.out.println("unionRaiderSubStat :" + unionRaiderSubStat);
                 System.out.println("hyperStatSubStat :" + hyperStatSubStat);
-                System.out.println("abilityStatSubStat :" + abilityStatSubStat);
+                System.out.println("abilityStatSubStat :" + abilityStatSubStat+"\n");
+
                 System.out.println("atMgPower :" + atMgPower);
                 System.out.println("itemAtMgPower :" + itemAtMgPower);
                 System.out.println("itemSetAtMgPower :" + itemSetAtMgPower);
@@ -2442,20 +2748,39 @@ public class CharacterService {
                 System.out.println("abilityStatAtMgPower :" + abilityStatAtMgPower);
                 System.out.println("petAtMgPower :" + petAtMgPower);
                 System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
+                System.out.println("cashItemAtMgPower :" + cashItemAtMgPower);
+                System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower+"\n");
+//공격력 세트효과 이상함 여기도 칭호 손봐야할듯
+
                 System.out.println("atMgPowerPer :" + atMgPowerPer);
-                System.out.println("itemAtMgPowerPer :" + itemAtMgPowerPer);
+                System.out.println("itemAtMgPowerPer :" + itemAtMgPowerPer+"\n");
+
                 System.out.println("damage :" + damage);
+                System.out.println("itemDamage :" + itemDamage);
+                System.out.println("artiDamage :" + artiDamage);
+                System.out.println("hyperStatDamage :" + hyperStatDamage);
+                System.out.println("hexaStatDamage :" + hexaStatDamage+"\n");
+
                 System.out.println("bossDamage :" + bossDamage);
                 System.out.println("itemBossDamage :" + itemBossDamage);
                 System.out.println("artiBossDamage :" + artiBossDamage);
                 System.out.println("unionOccupiedBossDamage :" + unionOccupiedBossDamage);
                 System.out.println("abilityStatBossDamage :" + abilityStatBossDamage);
-                System.out.println("unionOccupiedBossDamage :" + unionOccupiedBossDamage);
+                System.out.println("hexaStatBossDamage :" + hexaStatBossDamage);
+                System.out.println("hyperStatBossDamage :" + hyperStatBossDamage);
+                System.out.println("itemSetDamage :" + itemSetDamage+"\n");
+//유니온 보스데미지 이상하게 나옴 5가 부족했음
+
                 System.out.println("criticalDamage :" + criticalDamage);
                 System.out.println("itemCriticalDamage :" + itemCriticalDamage);
                 System.out.println("itemSetCriticalDamage :" + itemSetCriticalDamage);
                 System.out.println("artiCriticalDamage :" + artiCriticalDamage);
+                System.out.println("hyperStatCriticalDamage :" + hyperStatCriticalDamage);
                 System.out.println("unionOccupiedCriticalDamage :" + unionOccupiedCriticalDamage);
+                System.out.println("hexaStatCriticalDamage :" + hexaStatCriticalDamage+"\n");
+//유니온 크리데미지 이상하게 나옴 5가 부족했음
+
+
 
                 CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = new CharactersTotalStatInfoDTO(charactersName, mainStat, mainStatPer, mainNonStat, subStat, subStatPer, subNonStat, atMgPower, atMgPowerPer, damage, bossDamage, criticalDamage, isFree, charactersApiCombat);
 

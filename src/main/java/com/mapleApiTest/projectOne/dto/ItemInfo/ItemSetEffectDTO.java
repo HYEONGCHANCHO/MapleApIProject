@@ -10,7 +10,7 @@ public class ItemSetEffectDTO {
     int atMgPower=0;
     int criticalDamage=0;
 
-    public void setItemSetEffect(int absolSetCount, int arcaneSetCount, int bossAcSetCount, int cvelSetCount, int lucidAcSetCount, int lomienSetCount, int eternalSetCount, int mystarSetCount) {
+    public void setItemSetEffect(int absolSetCount, int arcaneSetCount, int bossAcSetCount, int cvelSetCount, int lucidAcSetCount,int eternalSetCount, int lomienSetCount,  int mystarSetCount,  int sevenSetCount,  int cashSetCount) {
 
         if (absolSetCount >1) {
             damage += 10;
@@ -176,7 +176,18 @@ public class ItemSetEffectDTO {
                     }
                 }
 
+
+        if (cashSetCount >2) {
+            allStat += 5;
+            atMgPower += 3;
+            if (cashSetCount >4) {
+                allStat += 10;
+                atMgPower += 7;
             }
+        }
+
+
+    }
 
     public int getAllStat() {
         return allStat;

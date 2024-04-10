@@ -104,7 +104,7 @@ public class CharacterController {
 
         CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = characterService.getCharactersSetInfo(charactersName, ocid).join();
 
-       return characterService.getCharactersSetStatInfo(charactersSetEffectInfoDTO);
+        return characterService.getCharactersSetStatInfo(charactersSetEffectInfoDTO);
 
     }
 
@@ -156,6 +156,18 @@ public class CharacterController {
         return characterService.getCharactersAbilityInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO);
 
     }
+
+    @GetMapping("/CharactersCashItemInfo")
+    public CompletableFuture<CharactersCashItemInfoDTO> getCharactersCashItem(@RequestParam String charactersName) {
+
+        GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
+        CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
+        String ocid = CompletableFutureOcid.join();
+
+        return characterService.getCharactersCashItemInfo(charactersName, ocid);
+
+    }
+
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -235,7 +247,13 @@ public class CharacterController {
 
         CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = characterService.getCharactersSkillStatInfo(charactersName, ocid).join();
 
-        return characterService.getCharactersTotalStatInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO, charactersItemEquipDTO, charactersItemTotalStatInfoDTO, charactersSetEffectInfoDTO, itemSetEffectDTO, charactersArtiInfoDTO, charactersUnionInfoDTO, charactersHyperStatInfoDTO, charactersAbilityInfoDTO, charactersSimbolInfoDTO, charactersPetEquipInfoDTO, charactersSkillStatInfoDTO);
+        CharactersCashItemInfoDTO charactersCashItemInfoDTO = characterService.getCharactersCashItemInfo(charactersName, ocid).join();
+
+        CharactersHexaStatInfoDTO charactersHexaStatInfoDTO = characterService.getCharactersHexaStatInfo(charactersName, ocid).join();
+
+
+
+        return characterService.getCharactersTotalStatInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO, charactersItemEquipDTO, charactersItemTotalStatInfoDTO, charactersSetEffectInfoDTO, itemSetEffectDTO, charactersArtiInfoDTO, charactersUnionInfoDTO, charactersHyperStatInfoDTO, charactersAbilityInfoDTO, charactersSimbolInfoDTO, charactersPetEquipInfoDTO, charactersSkillStatInfoDTO, charactersCashItemInfoDTO,charactersHexaStatInfoDTO);
     }
 
     ////////////////////////////////////////////////////////
@@ -244,43 +262,27 @@ public class CharacterController {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
-        System.out.println("1111111");
         CharactersInfoDTO charactersInfoDTO = characterService.getCharactersInfo(getCharactersInfo, apiKey, ocid).join();
-        System.out.println("11111112");
 
         CharactersStatInfoDTO charactersStatInfoDTO = characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
-        System.out.println("11111113");
         CharactersItemEquipDTO charactersItemEquipDTO = characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid).join();
-        System.out.println("11111114");
         CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO = characterService.getCharactersItemTotalInfo(getCharactersInfo).join();
-        System.out.println("11111115");
         CharactersSetEffectInfoDTO charactersSetEffectInfoDTO = characterService.getCharactersSetInfo(charactersName, ocid).join();
-        System.out.println("11111116");
         ItemSetEffectDTO itemSetEffectDTO = characterService.getCharactersSetStatInfo(charactersSetEffectInfoDTO).join();
-
-        System.out.println("    itemSetEffectDTO.getAllStat()\n" + itemSetEffectDTO.getAllStat()
-        );
-        System.out.println("11111117");
-
         CharactersArtiInfoDTO charactersArtiInfoDTO = characterService.getCharactersArtiInfo(charactersName, ocid).join();
-        System.out.println("11111118");
         CharactersUnionInfoDTO charactersUnionInfoDTO = characterService.getCharactersUnionInfo(charactersName, ocid).join();
-        System.out.println("11111119");
         CharactersHyperStatInfoDTO charactersHyperStatInfoDTO = characterService.getCharactersHyperStatInfo(charactersName, ocid).join();
-        System.out.println("111111122");
         CharactersAbilityInfoDTO charactersAbilityInfoDTO = characterService.getCharactersAbilityInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO).join();
-        System.out.println("111111133");
         CharactersSimbolInfoDTO charactersSimbolInfoDTO = characterService.getCharactersSimbolInfo(charactersName, ocid).join();
-        System.out.println("111111144");
         CharactersPetEquipInfoDTO charactersPetEquipInfoDTO = characterService.getCharactersPetEquipInfo(charactersName, ocid).join();
-        System.out.println("111111155");
         CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = characterService.getCharactersSkillStatInfo(charactersName, ocid).join();
-        System.out.println("111111166");
+        CharactersCashItemInfoDTO charactersCashItemInfoDTO = characterService.getCharactersCashItemInfo(charactersName, ocid).join();
 
-//    System.out.println(   "    itemSetEffectDTO.getAllStat()\n"+ itemSetEffectDTO.getAllStat()
-//    );
-        System.out.println("11111117");
-        CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = characterService.getCharactersTotalStatInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO, charactersItemEquipDTO, charactersItemTotalStatInfoDTO, charactersSetEffectInfoDTO, itemSetEffectDTO, charactersArtiInfoDTO, charactersUnionInfoDTO, charactersHyperStatInfoDTO, charactersAbilityInfoDTO, charactersSimbolInfoDTO, charactersPetEquipInfoDTO, charactersSkillStatInfoDTO).join();
+        CharactersHexaStatInfoDTO charactersHexaStatInfoDTO = characterService.getCharactersHexaStatInfo(charactersName, ocid).join();
+
+
+
+        CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = characterService.getCharactersTotalStatInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO, charactersItemEquipDTO, charactersItemTotalStatInfoDTO, charactersSetEffectInfoDTO, itemSetEffectDTO, charactersArtiInfoDTO, charactersUnionInfoDTO, charactersHyperStatInfoDTO, charactersAbilityInfoDTO, charactersSimbolInfoDTO, charactersPetEquipInfoDTO, charactersSkillStatInfoDTO, charactersCashItemInfoDTO,charactersHexaStatInfoDTO).join();
         System.out.println("111111177");
         return characterService.getCharactersCombat(charactersTotalStatInfoDTO);
 

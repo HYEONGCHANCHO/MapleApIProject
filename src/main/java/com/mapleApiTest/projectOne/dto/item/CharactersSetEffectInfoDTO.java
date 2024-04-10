@@ -11,8 +11,10 @@ public class CharactersSetEffectInfoDTO {
     int lomienSetCount;
     int eternalSetCount;
     int mystarSetCount;
+    int sevenSetCount;
+    int cashSetCount;
 
-    public CharactersSetEffectInfoDTO(String charactersName, String ocid, int absolSetCount, int arcaneSetCount, int bossAcSetCount, int cvelSetCount, int lucidAcSetCount, int lomienSetCount, int eternalSetCount, int mystarSetCount) {
+    public CharactersSetEffectInfoDTO(String charactersName, String ocid, int absolSetCount, int arcaneSetCount, int bossAcSetCount, int cvelSetCount, int lucidAcSetCount, int lomienSetCount, int eternalSetCount, int mystarSetCount, int sevenSetCount, int cashSetCount) {
         this.charactersName = charactersName;
         this.ocid = ocid;
         this.absolSetCount = absolSetCount;
@@ -23,6 +25,8 @@ public class CharactersSetEffectInfoDTO {
         this.lomienSetCount = lomienSetCount;
         this.eternalSetCount = eternalSetCount;
         this.mystarSetCount = mystarSetCount;
+        this.sevenSetCount = sevenSetCount;
+        this.cashSetCount = cashSetCount;
     }
 
     public String getCharactersName() {
@@ -103,5 +107,21 @@ public class CharactersSetEffectInfoDTO {
 
     public void setMystarSetCount(int mystarSetCount) {
         this.mystarSetCount = mystarSetCount;
+    }
+
+    public int getSevenSetCount() {
+        return sevenSetCount;
+    }
+
+    public void setSevenSetCount(int sevenSetCount) {
+        this.sevenSetCount = sevenSetCount;
+    }
+
+    public int getCashSetCount() {
+        return cashSetCount;
+    }
+
+    public void setCashSetCount(int cashSetCount) {
+        this.cashSetCount = cashSetCount;
     }
 }
