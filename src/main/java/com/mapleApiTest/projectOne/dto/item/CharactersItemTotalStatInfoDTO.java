@@ -9,15 +9,15 @@ public class CharactersItemTotalStatInfoDTO {
     int subStatPer;
     int atMgStat;
     int atMgStatPer;
-    int bossDamage;
-    int damage;
-    int criticalDamage;
+    double bossDamage;
+    double damage;
+    double criticalDamage;
 
 
     public CharactersItemTotalStatInfoDTO() {
     }
 
-    public CharactersItemTotalStatInfoDTO(int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int atMgStatPer, int bossDamage, int damage, int criticalDamage) {
+    public CharactersItemTotalStatInfoDTO(int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int atMgStatPer, double bossDamage, double damage, double criticalDamage) {
         this.mainStat = mainStat;
         this.subStat = subStat;
         this.mainStatPer = mainStatPer;
@@ -29,7 +29,7 @@ public class CharactersItemTotalStatInfoDTO {
         this.criticalDamage = criticalDamage;
     }
 
-    public int getDamage() {
+    public double getDamage() {
         return damage;
     }
 
@@ -85,7 +85,7 @@ public class CharactersItemTotalStatInfoDTO {
         this.atMgStatPer = atMgStatPer;
     }
 
-    public int getBossDamage() {
+    public double getBossDamage() {
         return bossDamage;
     }
 
@@ -93,7 +93,7 @@ public class CharactersItemTotalStatInfoDTO {
         this.bossDamage = bossDamage;
     }
 
-    public int getCriticalDamage() {
+    public double getCriticalDamage() {
         return criticalDamage;
     }
 

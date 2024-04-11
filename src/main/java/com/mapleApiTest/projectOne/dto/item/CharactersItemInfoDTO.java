@@ -52,9 +52,9 @@ public class CharactersItemInfoDTO {
     int intel;
     int luk;
     int hp;
-    int attactPower;
-    int magicPower;
-    int allStat;
+    int attactPower=0;
+    int magicPower=0;
+    int allStat=0;
 
 
     int strPotentialPer = 0;
@@ -79,9 +79,9 @@ public class CharactersItemInfoDTO {
 
     int allStatTitlePer = 0;
     int allStatTitle = 0;
-    int atMgTitleStat = 0;
+    int atTitleStat = 0;
+    int mgTitleStat = 0;
     //    int criticalDamageTitle = 0;
-    int atMgTitleStatPer = 0;
     int bossDamageTitlePer = 0;
     int damageTitlePer = 0;
 
@@ -101,8 +101,9 @@ public class CharactersItemInfoDTO {
 //            System.out.println(charactersLevel + "level");
             if (potential.startsWith(String.valueOf(type))) {
                 String[] parts = potential.split("\\+");
-                String lastPart = parts[1];
-
+                String lastPart=null;
+                if (parts.length > 1 && parts[1] != null) {
+                    lastPart = parts[1];
                 if (lastPart.contains("%")) {
                     lastPart = lastPart.replace("%", "");
                     int number = Integer.parseInt(lastPart);
@@ -187,6 +188,7 @@ public class CharactersItemInfoDTO {
                         default:
                             break;
                     }
+                }
                 }
             }
 
@@ -274,87 +276,130 @@ public class CharactersItemInfoDTO {
 
         if (title != null) {
             String[] titleParts = title.split("\\\\n");
-            for (String part : titleParts) {
-                if (!part.isEmpty()) { // 빈 문자열은 무시합니다.
-                    char firstWord ='a';
-                    if (Character.isLetter(part.charAt(0))) {
-                        firstWord = part.charAt(0);
-                    } else if (Character.isLetter(part.charAt(1))) {
-                        firstWord = part.charAt(1);
-                    } else if (Character.isLetter(part.charAt(2))) {
-                        firstWord = part.charAt(2);
-                    }
-                    if (part.contains("+")) {
-                        String[] parts = part.split("\\+");
-                        String lastPart = parts[1];
-                        if (lastPart.contains("%")) {
-                            lastPart = lastPart.replace("%", "").trim();
-                            int number = Integer.parseInt(lastPart);
-                            switch (firstWord) {
-                                case 'S':
-                                    strTitlePer += number;
-                                    break;
-                                case 'D':
-                                    dexTitlePer += number;
-                                    break;
-                                case 'I':
-                                    intTitlePer += number;
-                                    break;
-                                case 'L':
-                                    lukTitlePer += number;
-                                    break;
-                                case '올':
-                                    allStatTitlePer += number;
-                                    break;
-                                case '공':
-                                    atMgTitleStatPer += number;
-                                    break;
-                                case '마':
-                                    atMgTitleStatPer += number;
-                                    break;
-                                case '보':
-                                    bossDamageTitlePer += number;
-                                    break;
-                                case '데':
-                                    damageTitlePer += number;
-                                    break;
-                                default:
-                                    break;
+            for (String titlepart : titleParts) {
+                String[] parts = titlepart.split(",");
+                    int value = 0; // 숫자를 저장할 변수 초기화
+                    int levelAtMgValue = 0;
+                    double doubleValue = 0.0;
+                    for (String part : parts) {
+                        String[] tokens = part.split("\\s+");
+                        for (String token : tokens) {
+                          if (token.matches("\\d+%")) { // 숫자 뒤에 %가 있는 경우
+                                // %를 제거하고 숫자만 추출하여 정수로 변환
+                                value = Integer.parseInt(token.replaceAll("%", ""));
+                                System.out.println("value :" + value);
+                            } else if (token.matches("\\d+\\.\\d+%")) { // 소수점이 포함된 숫자인 경우
+                                doubleValue = Double.parseDouble(token.replaceAll("%", ""));
+                                System.out.println("double value: " + doubleValue);
+                            } else if (token.matches("\\d+")) { // 그냥 숫자인 경우
+                                value = Integer.parseInt(token);
+                                System.out.println("value :" + value);
                             }
-                        } else {
+                        }
 
-                            int number = Integer.parseInt(lastPart);
-
-                            switch (firstWord) {
-                                case 'S':
-                                    strTitleStat += number;
-                                    break;
-                                case 'D':
-                                    dexTitleStat += number;
-                                    break;
-                                case 'I':
-                                    intTitleStat += number;
-                                    break;
-                                case 'L':
-                                    lukTitleStat += number;
-                                    break;
-                                case '공':
-                                    atMgTitleStat += number;
-                                    break;
-                                case '올':
-                                    allStatTitle += number;
-                                    break;
-                                case '마':
-                                    atMgTitleStat += number;
-                                    break;
-                                default:
-                                    break;
-                            }
+                        // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                      if (part.contains("공격력") || part.contains("마력")) {
+                          atTitleStat += value;
+                          mgTitleStat += value;
+                        } else if (part.contains("STR")) {
+                            strTitleStat += value;
+                        } else if (part.contains("DEX")) {
+                            dexTitleStat += value;
+                        } else if (part.contains("LUK")) {
+                            lukTitleStat += value;
+                        } else if (part.contains("INT")) {
+                            intTitleStat += value;
+                       } else if (part.contains("올스탯")) {
+                          strTitleStat += value;
+                          dexTitleStat += value;
+                          intTitleStat += value;
+                          lukTitleStat += value;
+                        } else if (part.contains("보스 몬스터 공격 시 데미지")) {
+                            bossDamageTitlePer += value + doubleValue;
                         }
                     }
                 }
-            }
-        }
+
+
+                ////////////////////////////////////////////////////////////////////////////////
+//                if (!part.isEmpty()) { // 빈 문자열은 무시합니다.
+//                    char firstWord ='a';
+//                    if (Character.isLetter(part.charAt(0))) {
+//                        firstWord = part.charAt(0);
+//                    } else if (Character.isLetter(part.charAt(1))) {
+//                        firstWord = part.charAt(1);
+//                    } else if (Character.isLetter(part.charAt(2))) {
+//                        firstWord = part.charAt(2);
+//                    }
+//                    if (part.contains("+")) {
+//                        String[] parts = part.split("\\+");
+//                        String lastPart = parts[1];
+//                        if (lastPart.contains("%")) {
+//                            lastPart = lastPart.replace("%", "").trim();
+//                            int number = Integer.parseInt(lastPart);
+//                            switch (firstWord) {
+//                                case 'S':
+//                                    strTitlePer += number;
+//                                    break;
+//                                case 'D':
+//                                    dexTitlePer += number;
+//                                    break;
+//                                case 'I':
+//                                    intTitlePer += number;
+//                                    break;
+//                                case 'L':
+//                                    lukTitlePer += number;
+//                                    break;
+//                                case '올':
+//                                    allStatTitlePer += number;
+//                                    break;
+//                                case '보':
+//                                    bossDamageTitlePer += number;
+//                                    break;
+//                                case '데':
+//                                    damageTitlePer += number;
+//                                    break;
+//                                default:
+//                                    break;
+//                            }
+//                        } else {
+//
+//                            int number = Integer.parseInt(lastPart);
+//
+//                            switch (firstWord) {
+//                                case 'S':
+//                                    strTitleStat += number;
+//                                    break;
+//                                case 'D':
+//                                    dexTitleStat += number;
+//                                    break;
+//                                case 'I':
+//                                    intTitleStat += number;
+//                                    break;
+//                                case 'L':
+//                                    lukTitleStat += number;
+//                                    break;
+//                                case '공':
+//                                    System.out.println("아ㅏㅏㅏㅏㅏㅏㅏㅏatTitleStat"+atTitleStat);
+//                                    atTitleStat += number;
+//                                    System.out.println("아ㅏㅏㅏㅏㅏㅏㅏㅏatTitleStat"+atTitleStat);
+//                                    break;
+//                                case '올':
+//                                    allStatTitle += number;
+//                                    break;
+//                                case '마':
+//                                    System.out.println("아ㅏㅏㅏㅏㅏㅏㅏㅏmgTitleStat"+mgTitleStat);
+//                                    mgTitleStat += number;
+//                                    System.out.println("아ㅏㅏㅏㅏㅏㅏㅏㅏmgTitleStat"+mgTitleStat);
+//                                    break;
+//                                default:
+//                                    break;
+//                            }
+//                        }
+//                    }
+                }
+//            }
+//        }
     }
 
     public void setCharactersMainSubStat(String charactersClass) {
@@ -366,8 +411,12 @@ public class CharactersItemInfoDTO {
             subStat = dex + excepDex + dexTitleStat + allStatTitle;
             mainStatPer = allStat + strTitlePer + allStatTitlePer;
             subStatPer = allStat + dexTitlePer + allStatTitlePer;
-            atMgStat = attactPower + excepAtPower + atMgTitleStat;
-
+            atMgStat = attactPower + excepAtPower + atTitleStat;
+System.out.println("    아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ어어어어");
+System.out.println("atMgStat"+atMgStat);
+System.out.println("attactPower"+attactPower);
+System.out.println("excepAtPower"+excepAtPower);
+System.out.println("atTitleStat"+atTitleStat);
             potentialMainStat = strPotentialStat + allStatPotential;
             potentialSubStat = dexPotentialStat + allStatPotential;
             potentialMainStatPer = strPotentialPer + allStatPotentialPer;
@@ -387,13 +436,6 @@ public class CharactersItemInfoDTO {
         return allStatTitle;
     }
 
-    public int getAtMgTitleStat() {
-        return atMgTitleStat;
-    }
-
-    public int getAtMgTitleStatPer() {
-        return atMgTitleStatPer;
-    }
 
     public int getBossDamageTitlePer() {
         return bossDamageTitlePer;
@@ -841,5 +883,21 @@ public class CharactersItemInfoDTO {
 
     public void setPotentialDamagePer(int potentialDamagePer) {
         this.potentialDamagePer = potentialDamagePer;
+    }
+
+    public int getAtTitleStat() {
+        return atTitleStat;
+    }
+
+    public void setAtTitleStat(int atTitleStat) {
+        this.atTitleStat = atTitleStat;
+    }
+
+    public int getMgTitleStat() {
+        return mgTitleStat;
+    }
+
+    public void setMgTitleStat(int mgTitleStat) {
+        this.mgTitleStat = mgTitleStat;
     }
 }

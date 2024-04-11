@@ -342,15 +342,15 @@ public class CharacterService {
                     CharactersInfo charactersInfo = charactersInfoOptional.get();
 
                     charactersItemInfoDTO.processTitle(InfoTitle);
-                    charactersItemInfoDTO.setBossDamage(charactersItemInfoDTO.getBossDamageTitlePer());
-                    charactersItemInfoDTO.setDamage(charactersItemInfoDTO.getDamageTitlePer());
-                    charactersItemInfoDTO.setStr(charactersItemInfoDTO.getStrTitleStat());
-                    charactersItemInfoDTO.setDex(charactersItemInfoDTO.getDexTitleStat());
-                    charactersItemInfoDTO.setIntel(charactersItemInfoDTO.getIntTitleStat());
-                    charactersItemInfoDTO.setLuk(charactersItemInfoDTO.getLukTitleStat());
-                    charactersItemInfoDTO.setAttactPower(charactersItemInfoDTO.getAtMgTitleStat());
-                    charactersItemInfoDTO.setMagicPower(charactersItemInfoDTO.getAtMgTitleStat());
-                    charactersItemInfoDTO.setAllStat(charactersItemInfoDTO.getAllStatTitle());
+//                    charactersItemInfoDTO.setBossDamage(charactersItemInfoDTO.getBossDamageTitlePer());
+//                    charactersItemInfoDTO.setDamage(charactersItemInfoDTO.getDamageTitlePer());
+//                    charactersItemInfoDTO.setStr(charactersItemInfoDTO.getStrTitleStat());
+//                    charactersItemInfoDTO.setDex(charactersItemInfoDTO.getDexTitleStat());
+//                    charactersItemInfoDTO.setIntel(charactersItemInfoDTO.getIntTitleStat());
+//                    charactersItemInfoDTO.setLuk(charactersItemInfoDTO.getLukTitleStat());
+//                    charactersItemInfoDTO.setAttactPower(charactersItemInfoDTO.getAtTitleStat());
+//                    charactersItemInfoDTO.setMagicPower(charactersItemInfoDTO.getMgTitleStat());
+//                    charactersItemInfoDTO.setAllStat(charactersItemInfoDTO.getAllStatTitle());
                     charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
 
                     titleMainStat = charactersItemInfoDTO.getMainStat();
@@ -358,17 +358,41 @@ public class CharacterService {
                     titleAtMgStat = charactersItemInfoDTO.getAtMgStat();
                     titleBossDamage = charactersItemInfoDTO.getBossDamageTitlePer();
                     titleDamage = charactersItemInfoDTO.getDamageTitlePer();
+
+                    System.out.println("titleMainStat"+titleMainStat);
+                    System.out.println("titleSubStat"+titleSubStat);
+                    System.out.println("titleAtMgStat"+titleAtMgStat);
+                    System.out.println("titleBossDamage"+titleBossDamage);
+                    System.out.println("titleDamage"+titleDamage);
                 }
 
-                int mainStat = titleMainStat;
-                int subStat = titleSubStat;
+                int mainStat = 0;
+                int subStat = 0;
                 int mainStatPer = 0;
                 int subStatPer = 0;
-                int atMgStat = titleAtMgStat;
+                int atMgStat = 0;
                 int atMgStatPer = 0;
-                int bossDamage = titleBossDamage;
-                int damage = titleDamage;
-                int criticalDamage = 0;
+                double bossDamage = 0.0;
+                double damage = 0;
+                double criticalDamage = 0;
+                System.out.println("mainStat"+mainStat);
+                System.out.println("subStat"+subStat);
+                System.out.println("atMgStat"+atMgStat);
+                System.out.println("bossDamage"+bossDamage);
+                System.out.println("damage"+damage);
+
+                mainStat =mainStat+ titleMainStat;
+                subStat = subStat+ titleSubStat;
+                atMgStat =atMgStat+ titleAtMgStat;
+                bossDamage =bossDamage+titleBossDamage;
+                damage =damage+ titleDamage;
+
+                System.out.println("mainStat"+mainStat);
+                System.out.println("subStat"+subStat);
+                System.out.println("atMgStat"+atMgStat);
+                System.out.println("bossDamage"+bossDamage);
+                System.out.println("damage"+damage);
+
                 for (String equipmentType : equipmentTypes) {
                     try {
                         objectMapper = new ObjectMapper();
@@ -795,11 +819,6 @@ public class CharacterService {
                                 arcaneBowStarForce += 13 + 13 + 14 + 14 + 15 + 16 + 17 + 34 + 35 + 36;
                             }
 
-
-//                            //기본+스타포스
-//                            int papnirBowAtPower[] = {241, 246, 251, 257, 263, 269, 275, 281, 287, 293, 299, 305, 312, 319, 326, 333, 341, 350, 359, 369, 380, 392, 405};
-//                            int absolBowAtPower[] = {273, 279, 285, 291, 297, 303, 310, 317, 324, 331, 338, 345, 352, 360, 368, 376, 385, 394, 404, 415, 427, 440, 454};
-//                            int arcaneBowAtPower[] = {357, 365, 373, 381, 389, 397, 405, 414, 423, 432, 441, 450, 460, 470, 480, 490, 503, 516, 530, 544, 559, 575, 592};
 
                             int papnirBowAddAtPower[] = {66, 52, 39, 29, 20};
                             int absolBowAddAtPower[] = {99, 77, 59, 43, 29};
@@ -1494,6 +1513,8 @@ public class CharacterService {
                         case "title":
                             if (charactersItemEquip.getTitleInfo() != null) {
                                 InfoTitle = charactersItemEquip.getTitleInfo();
+                                System.out.println("InfoTitle"+InfoTitle);
+                                System.out.println("InfoTitle"+InfoTitle.toString());
                             }
                             break;
                     }
@@ -1599,16 +1620,14 @@ public class CharacterService {
                             if (setEffectNode.get("total_set_count").asInt() > 2) {
 
                                 for(JsonNode cashSetNode : setEffectNode.get("set_effect_info")) {
-                                    if (cashSetNode.get("set_count").asInt() == 3) {
-                                        //마라벨 세트
-                                        cashSetCount = setEffectNode.get("total_set_count").asInt();
-                                    } else if (cashSetNode.get("set_count").asInt() == 5) { //스라벨 세트
-                                        if (setEffectNode.get("total_set_count").asInt() == 5) {
-                                            cashSetCount = 3;
-                                        }
+
+                                    if(cashSetNode.get("set_option").toString().contains("올스탯 : +10")){
+                                        //마라벨 효과
+                                         cashSetCount = setEffectNode.get("total_set_count").asInt();
+                                    } else if(setEffectNode.get("total_set_count").asInt()==5){
+                                        //스라벨 풀셋일때
+                                        cashSetCount = 3;
                                     }
-
-
                                 }
 
 
@@ -2562,6 +2581,13 @@ public class CharacterService {
                 int charactersLevel = charactersInfoDTO.getCharacter_level();
                 String charactersClass = charactersInfoDTO.getCharacter_class();
                 int charactersApiCombat = charactersStatInfoDTO.getCombatPower();
+                //AP배분 스텟
+                int apStr = charactersStatInfoDTO.getApStr();
+                int apDex = charactersStatInfoDTO.getApDex();
+                int apInt = charactersStatInfoDTO.getApInt();
+                int apLuk = charactersStatInfoDTO.getApLuk();
+                int mainStatAP =0;
+                int subStatAP=0;
                 //장비 아이템
                 int itemMainStat = charactersItemTotalStatInfoDTO.getMainStat();
                 int itemMainStatPer = charactersItemTotalStatInfoDTO.getMainStatPer();
@@ -2679,38 +2705,40 @@ public class CharacterService {
                     cashItemMainStat=cashItemStr;
                     cashItemSubStat=cashItemDex;
                     cashItemAtMgPower=cashItemAtPower;
+                    mainStatAP = apStr;
+                    subStatAP = apDex;
                 } else if (Arrays.asList("듀얼블레이더", "나이트로드").contains(charactersClass)) {
 
                 }
-                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat+cashItemMainStat +1438;
-//기본 임의로 넣어줌
+                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat+cashItemMainStat +mainStatAP;
                 mainStatPer = itemMainStatPer + abilityStatMainStatPer;
 
                 mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat+hexaStatMainStat;
 
-                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat+cashItemSubStat+4;
-//기본 임의로 넣어줌
+                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat+cashItemSubStat+subStatAP;
 
                 subStatPer = itemSubStatPer + abilityStatSubStatPer;
 
                 subNonStat = unionRaiderSubStat + hyperStatSubStat + abilityStatSubStat;
 
-                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower+cashItemAtMgPower+hexaStatAtMgPower;
+                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower+cashItemAtMgPower+hexaStatAtMgPower+unionOccupiedAtMgPower+unionRaiderAtMgPower+hyperStatAtMgPower;
+
 
                 atMgPowerPer = itemAtMgPowerPer;
 
                 damage = itemDamage + artiDamage+hexaStatDamage+hyperStatDamage;
 
-                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage+hexaStatBossDamage+itemSetDamage+hyperStatBossDamage;
+                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage+hexaStatBossDamage+itemSetDamage+hyperStatBossDamage+unionRaiderBossDamage;
                 //아이템 세트데미지는 보공이라 여기가 맞음
 
-                criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage+hexaStatCriticalDamage+hyperStatCriticalDamage;
+                criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage+hexaStatCriticalDamage+hyperStatCriticalDamage+unionRaiderCriticalDamage;
 
                 System.out.println("\n\n\n\n"+"mainStat :" + mainStat);
                 System.out.println("itemMainStat :" + itemMainStat);
                 System.out.println("artiAllStat :" + artiAllStat);
                 System.out.println("itemSetAllStat :" + itemSetAllStat);
                 System.out.println("unionOccupiedMainStat :" + unionOccupiedMainStat);
+                System.out.println("mainStatAP :" + mainStatAP);
                 System.out.println("cashItemMainStat :" + cashItemMainStat+"\n");
 
                 System.out.println("mainStatPer :" + mainStatPer);
@@ -2728,6 +2756,7 @@ public class CharacterService {
                 System.out.println("itemSubStat :" + itemSubStat);
                 System.out.println("itemSetAllStat :" + itemSetAllStat);
                 System.out.println("artiAllStat :" + artiAllStat);
+                System.out.println("subStatAP :" + subStatAP);
                 System.out.println("unionOccupiedSubStat :" + unionOccupiedSubStat);
                 System.out.println("cashItemSubStat :" + cashItemSubStat+"\n");
 //칭호부분 안더해짐 메인 서브 둘다
@@ -2749,6 +2778,9 @@ public class CharacterService {
                 System.out.println("petAtMgPower :" + petAtMgPower);
                 System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
                 System.out.println("cashItemAtMgPower :" + cashItemAtMgPower);
+                System.out.println("unionOccupiedAtMgPower :" + unionOccupiedAtMgPower);
+                System.out.println("unionRaiderAtMgPower :" + unionRaiderAtMgPower);
+                System.out.println("hyperStatAtMgPower :" + hyperStatAtMgPower);
                 System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower+"\n");
 //공격력 세트효과 이상함 여기도 칭호 손봐야할듯
 
@@ -2768,19 +2800,17 @@ public class CharacterService {
                 System.out.println("abilityStatBossDamage :" + abilityStatBossDamage);
                 System.out.println("hexaStatBossDamage :" + hexaStatBossDamage);
                 System.out.println("hyperStatBossDamage :" + hyperStatBossDamage);
+                System.out.println("unionRaiderBossDamage :" + unionRaiderBossDamage);
                 System.out.println("itemSetDamage :" + itemSetDamage+"\n");
-//유니온 보스데미지 이상하게 나옴 5가 부족했음
 
                 System.out.println("criticalDamage :" + criticalDamage);
                 System.out.println("itemCriticalDamage :" + itemCriticalDamage);
                 System.out.println("itemSetCriticalDamage :" + itemSetCriticalDamage);
                 System.out.println("artiCriticalDamage :" + artiCriticalDamage);
                 System.out.println("hyperStatCriticalDamage :" + hyperStatCriticalDamage);
+                System.out.println("unionRaiderCriticalDamage :" + unionRaiderCriticalDamage);
                 System.out.println("unionOccupiedCriticalDamage :" + unionOccupiedCriticalDamage);
                 System.out.println("hexaStatCriticalDamage :" + hexaStatCriticalDamage+"\n");
-//유니온 크리데미지 이상하게 나옴 5가 부족했음
-
-
 
                 CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = new CharactersTotalStatInfoDTO(charactersName, mainStat, mainStatPer, mainNonStat, subStat, subStatPer, subNonStat, atMgPower, atMgPowerPer, damage, bossDamage, criticalDamage, isFree, charactersApiCombat);
 

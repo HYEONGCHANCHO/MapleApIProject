@@ -182,7 +182,7 @@ public class CharacterController {
 
     }
 
-    @GetMapping("/CharactersPetEquipInfo")  //심볼
+    @GetMapping("/CharactersPetEquipInfo")  //펫장비
     public CompletableFuture<CharactersPetEquipInfoDTO> getCharactersPetEquipInfo(@RequestParam String charactersName) {
 
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
