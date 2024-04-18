@@ -105,6 +105,11 @@ public class ItemSetEffectDTO {
                                             allStat += 15;
                                             criticalDamage+=5;
                                             atMgPower += 15;
+                                            if (cvelSetCount >9) {
+                                                allStat += 20;
+                                                damage+=10;
+                                                atMgPower += 20;
+                                            }
 
                                         }
                                     }

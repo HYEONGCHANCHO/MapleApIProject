@@ -1,5 +1,7 @@
 package com.mapleApiTest.projectOne.domain.character;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import javax.persistence.*;
 
 @Entity

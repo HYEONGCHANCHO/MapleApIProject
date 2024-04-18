@@ -1,6 +1,7 @@
 package com.mapleApiTest.projectOne.service.character;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.RateLimiter;
@@ -213,18 +214,29 @@ public class CharacterService {
                         = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                     try {
 
-                        String[] equipmentTypes = {"모자", "상의", "하의", "망토", "신발", "장갑", "어깨장식", "얼굴장식", "눈장식", "귀고리", "펜던트", "펜던트2", "벨트", "반지1", "반지2", "반지3", "반지4", "무기", "보조무기", "엠블렘", "뱃지", "훈장", "포켓 아이템", "기계 심장", "드래곤 모자", "드래곤 펜던트", "드래곤 날개장식", "드래곤 꼬리장식", "메카닉 엔진", "메카닉 암", "메카닉 레그", "메카닉 트랜지스터"};
+                        String[] equipmentTypes = {"모자", "상의", "하의", "망토", "신발", "장갑", "어깨장식", "얼굴장식", "눈장식", "귀고리", "펜던트", "펜던트2", "벨트", "반지1", "반지2", "반지3", "반지4", "무기", "보조무기", "엠블렘", "뱃지", "훈장", "포켓 아이템", "기계 심장", "드래곤 모자", "드래곤 펜던트", "드래곤 날개장식", "드래곤 꼬리장식", "메카닉 엔진", "메카닉 암", "메카닉 레그", "메카닉 트랜지스터","칭호"};
 
                         String[] equipmentInfo = new String[equipmentTypes.length];
 
                         JsonNode itemEquipmentNode = jsonNode.get("item_equipment");
                         JsonNode itemEquipmentNodeDragon = jsonNode.get("dragon_equipment");
                         JsonNode itemEquipmentNodeMechanic = jsonNode.get("mechanic_equipment");
+                        JsonNode itemEquipmentNodeTitle = jsonNode.get("title");
 
                         for (JsonNode equipmentNode : itemEquipmentNode) {
                             // "item_equipment_part" 값 가져오기
                             String equipmentPart = equipmentNode.get("item_equipment_slot").asText();
 
+                            // "equipmentTypes" 배열에서 일치하는 값의 인덱스 찾기
+                            int index = Arrays.asList(equipmentTypes).indexOf(equipmentPart);
+
+                            // "equipmentTypes" 배열에 있는 값과 일치하는 경우에만 데이터 할당
+                            if (index >= 0) {
+                                equipmentInfo[index] = equipmentNode.toString();
+                            }
+                        }   for (JsonNode equipmentNode : itemEquipmentNodeTitle) {
+                            // "item_equipment_part" 값 가져오기
+                            String equipmentPart = "칭호";
                             // "equipmentTypes" 배열에서 일치하는 값의 인덱스 찾기
                             int index = Arrays.asList(equipmentTypes).indexOf(equipmentPart);
 
@@ -281,7 +293,8 @@ public class CharacterService {
                         String medalInfo = equipmentInfo[21];
                         String poketInfo = equipmentInfo[22];
                         String heartInfo = equipmentInfo[23];
-                        String titleInfo = jsonNode.get("title").get("title_description").toString();
+                        String titleInfo = equipmentInfo[32];
+//                        String titleInfo = jsonNode.get("title").get("title_description").toString();
                         String dragonHat = equipmentInfo[24];
                         String dragonPendant = equipmentInfo[25];
                         String dragonWing = equipmentInfo[26];
@@ -335,22 +348,19 @@ public class CharacterService {
                 int titleDamage = 0;
 
                 ObjectMapper objectMapper = new ObjectMapper();
-                InfoTitle = charactersItemEquip.getTitleInfo();
-                if (InfoTitle != null) {
+                try {
+                    jsonInfo =  objectMapper.readTree(charactersItemEquip.getTitleInfo());
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+                if (jsonInfo != null) {
                     CharactersItemInfoDTO charactersItemInfoDTO = new CharactersItemInfoDTO();
                     Optional<CharactersInfo> charactersInfoOptional = charactersInfoRepository.findByCharactersName(request.getCharactersName());
                     CharactersInfo charactersInfo = charactersInfoOptional.get();
 
-                    charactersItemInfoDTO.processTitle(InfoTitle);
-//                    charactersItemInfoDTO.setBossDamage(charactersItemInfoDTO.getBossDamageTitlePer());
-//                    charactersItemInfoDTO.setDamage(charactersItemInfoDTO.getDamageTitlePer());
-//                    charactersItemInfoDTO.setStr(charactersItemInfoDTO.getStrTitleStat());
-//                    charactersItemInfoDTO.setDex(charactersItemInfoDTO.getDexTitleStat());
-//                    charactersItemInfoDTO.setIntel(charactersItemInfoDTO.getIntTitleStat());
-//                    charactersItemInfoDTO.setLuk(charactersItemInfoDTO.getLukTitleStat());
-//                    charactersItemInfoDTO.setAttactPower(charactersItemInfoDTO.getAtTitleStat());
-//                    charactersItemInfoDTO.setMagicPower(charactersItemInfoDTO.getMgTitleStat());
-//                    charactersItemInfoDTO.setAllStat(charactersItemInfoDTO.getAllStatTitle());
+                    charactersItemInfoDTO.processTitle(jsonInfo);
                     charactersItemInfoDTO.setCharactersMainSubStat(charactersInfo.getCharacter_class());
 
                     titleMainStat = charactersItemInfoDTO.getMainStat();
@@ -1392,7 +1402,8 @@ public class CharacterService {
 
                 CharactersItemEquip charactersItemEquip = charactersItemEquipOptional.get();
                 JsonNode jsonInfo = null;
-                String InfoTitle = null;
+                JsonNode InfoTitle = null;
+
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -1512,9 +1523,7 @@ public class CharacterService {
                             break;
                         case "title":
                             if (charactersItemEquip.getTitleInfo() != null) {
-                                InfoTitle = charactersItemEquip.getTitleInfo();
-                                System.out.println("InfoTitle"+InfoTitle);
-                                System.out.println("InfoTitle"+InfoTitle.toString());
+                                InfoTitle = objectMapper.readTree(charactersItemEquip.getTitleInfo());
                             }
                             break;
                     }
@@ -2598,17 +2607,20 @@ public class CharacterService {
                 Double itemDamage = (double) charactersItemTotalStatInfoDTO.getDamage();
                 Double itemBossDamage = (double) charactersItemTotalStatInfoDTO.getBossDamage();
                 Double itemCriticalDamage = (double) charactersItemTotalStatInfoDTO.getCriticalDamage();
+
                 //아이템 세트효과
                 int itemSetAllStat = itemSetEffectDTO.getAllStat();
                 int itemSetAtMgPower = itemSetEffectDTO.getAtMgPower();
                 int itemSetDamage = itemSetEffectDTO.getDamage();
                 int itemSetCriticalDamage = itemSetEffectDTO.getCriticalDamage();
+
                 //유니온 아티팩트
                 int artiAllStat = charactersArtiInfoDTO.getArtiAllStat();
                 int artiAtMgPower = charactersArtiInfoDTO.getArtiAtMgPower();
                 Double artiDamage = charactersArtiInfoDTO.getArtiDamage();
                 Double artiBossDamage = charactersArtiInfoDTO.getArtiBossDamage();
                 Double artiCriticalDamage = charactersArtiInfoDTO.getArtiCriticalDamage();
+
                 //유니온 점령
                 int unionOccupiedMainStat = 0;
                 int unionOccupiedSubStat = 0;
@@ -2619,6 +2631,7 @@ public class CharacterService {
                 int unionOccupiedDex = charactersUnionInfoDTO.getUnionOccupiedDex();
                 int unionOccupiedInt = charactersUnionInfoDTO.getUnionOccupiedInt();
                 int unionOccupiedLuk = charactersUnionInfoDTO.getUnionOccupiedLuk();
+
                 //유니온 공격대
                 int unionRaiderMainStat = 0;
                 int unionRaiderSubStat = 0;
@@ -2629,6 +2642,7 @@ public class CharacterService {
                 int unionRaiderAtMgPower = charactersUnionInfoDTO.getUnionRaiderAtMgPower();
                 Double unionRaiderBossDamage = charactersUnionInfoDTO.getUnionRaiderBossDamage();
                 Double unionRaiderCriticalDamage = charactersUnionInfoDTO.getUnionRaiderCriticalDamage();
+
                 //하이퍼스탯
                 int hyperStatMainStat = 0;
                 int hyperStatSubStat = 0;
@@ -2640,6 +2654,7 @@ public class CharacterService {
                 Double hyperStatDamage = charactersHyperStatInfoDTO.getHyperStatDamage();
                 Double hyperStatBossDamage = charactersHyperStatInfoDTO.getHyperStatBossDamage();
                 Double hyperStatCriticalDamage = charactersHyperStatInfoDTO.getHyperStatCriticalDamage();
+
                 //어빌리티
                 int abilityStatMainStat = 0;
                 int abilityStatSubStat = 0;
@@ -2655,19 +2670,23 @@ public class CharacterService {
                 int abilityStatLukPer = charactersAbilityInfoDTO.getAbilityLukPer();
                 int abilityStatAtMgPower = charactersAbilityInfoDTO.getAbilityAtMgPower();
                 Double abilityStatBossDamage = charactersAbilityInfoDTO.getAbilityBossDamage();
+
                 //심볼
                 int simbolStatMainStat = 0;
                 int simbolStatStr = charactersSimbolInfoDTO.getSimbolStr();
                 int simbolStatDex = charactersSimbolInfoDTO.getSimbolDex();
                 int simbolStatInt = charactersSimbolInfoDTO.getSimbolInt();
                 int simbolStatLuk = charactersSimbolInfoDTO.getSimbolLuk();
+
                 //펫장비
                 int petAtMgPower = 0;
                 int petMgPower = charactersPetEquipInfoDTO.getPetMg();
                 int petAtPower = charactersPetEquipInfoDTO.getPetAt();
+
                 //0차 스킬
                 int skillStatAtMgPower = charactersSkillStatInfoDTO.getSkillStatAtMgPower();
                 boolean isFree = charactersSkillStatInfoDTO.isFree();
+
                 //캐시 아이템 스탯
                 int cashItemMainStat = 0;
                 int cashItemSubStat = 0;
@@ -2678,6 +2697,7 @@ public class CharacterService {
                 int cashItemLuk = charactersCashItemInfoDTO.getCashItemLuk();
                 int cashItemAtPower = charactersCashItemInfoDTO.getCashItemAtPower();
                 int cashItemMgPower = charactersCashItemInfoDTO.getCashItemMgPower();
+
                 //헥사 스텟
                 int hexaStatMainStat = charactersHexaStatInfoDTO.getHexaStatMainStat();
                 int hexaStatAtMgPower = charactersHexaStatInfoDTO.getHexaStatAtMgPower();
@@ -2686,30 +2706,172 @@ public class CharacterService {
                 Double hexaStatBossDamage = charactersHexaStatInfoDTO.getHexaStatBossDamage();
 
 
+                if (Arrays.asList("히어로", "팔라딘", "다크나이트", "소울마스터", "미하일", "블래스터", "데몬슬레이어", "아란", "카이저", "아델", "제로", "바이퍼", "캐논마스터", "스트라이커", "은월", "아크").contains(charactersClass)) {
+                    //주스탯 힘 부스탯 덱스 직업 전사,해적(너클,캐논슈터)
 
-
-                if (Arrays.asList("바이퍼", "히어로").contains(charactersClass)) {
-                    //주스탯 힘 부스탯 덱스 직업
+                    //AP배분 스텟
+                    mainStatAP =apStr;
+                    subStatAP =apDex;
+                    //장비 아이템 - 메인 서브 적용되어 있음
+                    //아이템 세트효과 - 메인 서브 구분 필요 x
+                    //유니온 아티팩트 - 메인 서브 구분 필요 x
+                    //유니온 점령
                     unionOccupiedMainStat = unionOccupiedStr;
                     unionOccupiedSubStat = unionOccupiedDex;
+                    //유니온 공격대
                     unionRaiderMainStat = unionRaiderStr;
                     unionRaiderSubStat = unionRaiderDex;
+                    //하이퍼스탯
                     hyperStatMainStat = hyperStatStr;
                     hyperStatSubStat = hyperStatDex;
+                    //어빌리티
                     abilityStatMainStat = abilityStatStr;
                     abilityStatSubStat = abilityStatDex;
                     abilityStatMainStatPer = abilityStatStrPer;
                     abilityStatSubStatPer = abilityStatDexPer;
+                    //심볼
                     simbolStatMainStat = simbolStatStr;
+                    //펫장비
                     petAtMgPower = petAtPower;
+                    //0차 스킬 - 메인 서브 구분 필요 x
+                    //캐시 아이템 스탯
                     cashItemMainStat=cashItemStr;
                     cashItemSubStat=cashItemDex;
                     cashItemAtMgPower=cashItemAtPower;
-                    mainStatAP = apStr;
-                    subStatAP = apDex;
-                } else if (Arrays.asList("듀얼블레이더", "나이트로드").contains(charactersClass)) {
+                    //헥사 스텟 - 메인 서브 적용되어 있음
 
+                } else if (Arrays.asList("아크메이지(불,독)", "아크메이지(썬,콜)", "비숍", "플레임위자드", "배틀메이지", "에반", "루미너스", "일리움", "라라", "키네시스").contains(charactersClass)) {                    //주 인 부 럭 = 법사
+                    //AP배분 스텟
+                    mainStatAP =apInt;
+                    subStatAP =apLuk;
+                    //장비 아이템 - 메인 서브 적용되어 있음
+                    //아이템 세트효과 - 메인 서브 구분 필요 x
+                    //유니온 아티팩트 - 메인 서브 구분 필요 x
+                    //유니온 점령
+                    unionOccupiedMainStat = unionOccupiedInt;
+                    unionOccupiedSubStat = unionOccupiedLuk;
+                    //유니온 공격대
+                    unionRaiderMainStat = unionRaiderInt;
+                    unionRaiderSubStat = unionRaiderLuk;
+                    //하이퍼스탯
+                    hyperStatMainStat = hyperStatInt;
+                    hyperStatSubStat = hyperStatLuk;
+                    //어빌리티
+                    abilityStatMainStat = abilityStatInt;
+                    abilityStatSubStat = abilityStatLuk;
+                    abilityStatMainStatPer = abilityStatIntPer;
+                    abilityStatSubStatPer = abilityStatLukPer;
+                    //심볼
+                    simbolStatMainStat = simbolStatInt;
+                    //펫장비
+                    petAtMgPower = petMgPower;
+                    //0차 스킬 - 메인 서브 구분 필요 x
+                    //캐시 아이템 스탯
+                    cashItemMainStat=cashItemInt;
+                    cashItemSubStat=cashItemLuk;
+                    cashItemAtMgPower=cashItemMgPower;
+                    //헥사 스텟 - 메인 서브 적용되어 있음
+
+                }else if (Arrays.asList("보우마스터", "신궁", "패스파인더", "윈드브레이커", "와일드헌터", "메르세데스", "카인", "캡틴", "메카닉", "엔젤릭버스터").contains(charactersClass)) {
+                    //주 덱 부 힘 = 궁수(패스파인더,, 해적 덱스(건, 소울슈터)
+                    //AP배분 스텟
+                    mainStatAP =apDex;
+                    subStatAP =apStr;
+                    //장비 아이템 - 메인 서브 적용되어 있음
+                    //아이템 세트효과 - 메인 서브 구분 필요 x
+                    //유니온 아티팩트 - 메인 서브 구분 필요 x
+                    //유니온 점령
+                    unionOccupiedMainStat = unionOccupiedDex;
+                    unionOccupiedSubStat = unionOccupiedStr;
+                    //유니온 공격대
+                    unionRaiderMainStat = unionRaiderDex;
+                    unionRaiderSubStat = unionRaiderStr;
+                    //하이퍼스탯
+                    hyperStatMainStat = hyperStatDex;
+                    hyperStatSubStat = hyperStatStr;
+                    //어빌리티
+                    abilityStatMainStat = abilityStatDex;
+                    abilityStatSubStat = abilityStatStr;
+                    abilityStatMainStatPer = abilityStatDexPer;
+                    abilityStatSubStatPer = abilityStatStrPer;
+                    //심볼
+                    simbolStatMainStat = simbolStatDex;
+                    //펫장비
+                    petAtMgPower = petAtPower;
+                    //0차 스킬 - 메인 서브 구분 필요 x
+                    //캐시 아이템 스탯
+                    cashItemMainStat=cashItemDex;
+                    cashItemSubStat=cashItemStr;
+                    cashItemAtMgPower=cashItemAtPower;
+                    //헥사 스텟 - 메인 서브 적용되어 있음
+                }else if (Arrays.asList("나이트로드", "팬텀", "나이트워커", "칼리", "호영").contains(charactersClass)) {
+                    //주 럭 부 덱 = 도적
+                    //AP배분 스텟
+                    mainStatAP =apLuk;
+                    subStatAP =apDex;
+                    //장비 아이템 - 메인 서브 적용되어 있음
+                    //아이템 세트효과 - 메인 서브 구분 필요 x
+                    //유니온 아티팩트 - 메인 서브 구분 필요 x
+                    //유니온 점령
+                    unionOccupiedMainStat = unionOccupiedLuk;
+                    unionOccupiedSubStat = unionOccupiedDex;
+                    //유니온 공격대
+                    unionRaiderMainStat = unionRaiderLuk;
+                    unionRaiderSubStat = unionRaiderDex;
+                    //하이퍼스탯
+                    hyperStatMainStat = hyperStatLuk;
+                    hyperStatSubStat = hyperStatDex;
+                    //어빌리티
+                    abilityStatMainStat = abilityStatLuk;
+                    abilityStatSubStat = abilityStatDex;
+                    abilityStatMainStatPer = abilityStatLukPer;
+                    abilityStatSubStatPer = abilityStatDexPer;
+                    //심볼
+                    simbolStatMainStat = simbolStatLuk;
+                    //펫장비
+                    petAtMgPower = petAtPower;
+                    //0차 스킬 - 메인 서브 구분 필요 x
+                    //캐시 아이템 스탯
+                    cashItemMainStat=cashItemLuk;
+                    cashItemSubStat=cashItemDex;
+                    cashItemAtMgPower=cashItemAtPower;
+                    //헥사 스텟 - 메인 서브 적용되어 있음
+                }else if (Arrays.asList("듀얼블레이드", "카데나", "섀도어").contains(charactersClass)) {
+                    //주 럭 부 힘,덱 = 듀얼블레이드 카 세
+                    //AP배분 스텟
+                    mainStatAP =apLuk;
+                    subStatAP =apDex+apStr;
+                    //장비 아이템 - 메인 서브 적용되어 있음
+                    //아이템 세트효과 - 메인 서브 구분 필요 x
+                    //유니온 아티팩트 - 메인 서브 구분 필요 x
+                    //유니온 점령
+                    unionOccupiedMainStat = unionOccupiedLuk;
+                    unionOccupiedSubStat = unionOccupiedDex+unionOccupiedStr;
+                    //유니온 공격대
+                    unionRaiderMainStat = unionRaiderLuk;
+                    unionRaiderSubStat = unionRaiderDex+unionRaiderStr;
+                    //하이퍼스탯
+                    hyperStatMainStat = hyperStatLuk;
+                    hyperStatSubStat = hyperStatDex+hyperStatStr;
+                    //어빌리티
+                    abilityStatMainStat = abilityStatLuk;
+                    abilityStatSubStat = abilityStatDex+abilityStatStr;
+                    abilityStatMainStatPer = abilityStatLukPer;
+                    abilityStatSubStatPer = abilityStatDexPer+abilityStatStrPer;
+                    //심볼
+                    simbolStatMainStat = simbolStatLuk;
+                    //펫장비
+                    petAtMgPower = petAtPower;
+                    //0차 스킬 - 메인 서브 구분 필요 x
+                    //캐시 아이템 스탯
+                    cashItemMainStat=cashItemLuk;
+                    cashItemSubStat=cashItemDex+cashItemStr;
+                    cashItemAtMgPower=cashItemAtPower;
+                    //헥사 스텟 - 메인 서브 적용되어 있음
+                }else if (Arrays.asList("데몬어벤져", "제논").contains(charactersClass)) {
+                    //아직 미구현
                 }
+
                 mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat+cashItemMainStat +mainStatAP;
                 mainStatPer = itemMainStatPer + abilityStatMainStatPer;
 
@@ -2849,6 +3011,7 @@ public class CharacterService {
             finalDamage = 1.0;
         }
 
+        System.out.println("finalDamage :"+finalDamage);
         double finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
         double finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
         double finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;

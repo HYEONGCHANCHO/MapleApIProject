@@ -1,6 +1,8 @@
 package com.mapleApiTest.projectOne.dto.character.request;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import javax.persistence.Column;
 
 public class CharactersItemEquipDTO {
@@ -30,6 +32,7 @@ public class CharactersItemEquipDTO {
     private String medalInfo;
     private String poketInfo;
     private String heartInfo;
+//    private JsonNode titleInfo;
     private String titleInfo;
     private String dragonHat;
     private String dragonPendant;
