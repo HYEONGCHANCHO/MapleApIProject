@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CharactersItemInfoDTO {
 
@@ -82,7 +84,7 @@ public class CharactersItemInfoDTO {
     int atTitleStat = 0;
     int mgTitleStat = 0;
     //    int criticalDamageTitle = 0;
-    int bossDamageTitlePer = 0;
+    double bossDamageTitlePer = 0;
     int damageTitlePer = 0;
 
     int strTitlePer = 0;
@@ -273,75 +275,116 @@ public class CharactersItemInfoDTO {
     }
 
     public void processTitle(JsonNode title) {
+//        System.out.println("title !!!!!!"+title);
+//        System.out.println("title st !!!!!!"+title.toString());
+//        System.out.println("title 11 !!!!!!"+title.get("title_description").toString());
+//        System.out.println("title0 !!!!!!"+title.get(0));
+//        System.out.println("title01 !!!!!!"+title.get(1));
+//        System.out.println("title0 2!!!!!!"+title.get(2));
+//        System.out.println("title0 3!!!!!!"+title.get(3));
+        System.out.println("title0 3!!!!!!"+title.get("date_expire"));
 
-        if (title.get("date_expire") == null) {
-            if (title.get("title_name").toString().contains("궁극의 유니온")) {
-                bossDamageTitlePer = 30;
-                atTitleStat = 30;
-                mgTitleStat = 30;
-                strTitleStat = 0;
-                dexTitleStat = 0;
-                lukTitleStat = 0;
-                intTitleStat = 0;
-            } else if (title.get("title_name").toString().contains("쑥쑥새싹")) {
-                bossDamageTitlePer = 0;
-                atTitleStat = 5;
-                mgTitleStat = 5;
-                strTitleStat = 10;
-                dexTitleStat = 10;
-                lukTitleStat = 10;
-                intTitleStat = 10;
-            } else if (title.get("title_name").toString().contains("Infinite Flame")) {
-                bossDamageTitlePer = 20;
-                atTitleStat = 30;
-                mgTitleStat = 30;
-                strTitleStat = 30;
-                dexTitleStat = 30;
-                lukTitleStat = 30;
-                intTitleStat = 30;
-            } else if (title.get("title_name").toString().contains("Eternal Flame")) {
-                bossDamageTitlePer = 20;
-                atTitleStat = 30;
-                mgTitleStat = 30;
-                strTitleStat = 30;
-                dexTitleStat = 30;
-                lukTitleStat = 30;
-                intTitleStat = 30;
-            } else if (title.get("title_name").toString().contains("예티X핑크빈")) {
-                bossDamageTitlePer = 10;
-                atTitleStat = 10;
-                mgTitleStat = 10;
-                strTitleStat = 20;
-                dexTitleStat = 20;
-                lukTitleStat = 20;
-                intTitleStat = 20;
-            } else if (title.get("title_name").toString().contains("MVP 레드")) {
-                bossDamageTitlePer = 0;
-                atTitleStat = 10;
-                mgTitleStat = 10;
-                strTitleStat = 10;
-                dexTitleStat = 10;
-                lukTitleStat = 10;
-                intTitleStat = 10;
-            } else if (title.get("title_name").toString().contains("엘 페일")) {
-                bossDamageTitlePer = 30;
-                atTitleStat = 30;
-                mgTitleStat = 30;
-                strTitleStat = 0;
-                dexTitleStat = 0;
-                lukTitleStat = 0;
-                intTitleStat = 0;
-            } else if (title.get("title_name").toString().contains("엘 클리어")) {
-                bossDamageTitlePer = 0;
-                atTitleStat = 30;
-                mgTitleStat = 30;
-                strTitleStat = 0;
-                dexTitleStat = 0;
-                lukTitleStat = 0;
-                intTitleStat = 0;
+        if (title.get("date_expire").toString().equals("null")) {
+            String titleDescription = title.get("title_description").toString();
+            System.out.println("title0 1!!!!!!"+titleDescription);
+
+            Pattern pattern = Pattern.compile("(\\D+)(\\d+(?:\\.\\d+)?)");
+            Matcher matcher = pattern.matcher(titleDescription);
+            while (matcher.find()) {
+                String stringItem = matcher.group(1).trim();
+                System.out.println("stringItem: " + stringItem);
+                double numberItem = Double.parseDouble(matcher.group(2));
+                System.out.println("numberItem: " + numberItem);
+                // 문자열이 "올스탯", "보스 공격시 데미지", "공격력/마력"인 경우에만 변수에 저장
+                if (stringItem.contains("올스탯")) {
+                    strTitleStat = (int)numberItem;
+                    dexTitleStat = (int)numberItem;
+                    lukTitleStat = (int)numberItem;
+                    intTitleStat = (int)numberItem;
+                } else if (stringItem.contains("보스 몬스터 공격 시 데미지")) {
+                    bossDamageTitlePer = numberItem;
+                } else if (stringItem.contains("공격력") || stringItem.contains("마력")) {
+                    atTitleStat = (int)numberItem;
+                    mgTitleStat = (int)numberItem;
+                }
             }
         }
-        }
+    }
+
+
+
+
+
+
+//
+//        if (title.get("date_expire") == null) {
+//            if (title.get("title_name").toString().contains("궁극의 유니온")) {
+//                bossDamageTitlePer = 30;
+//                atTitleStat = 30;
+//                mgTitleStat = 30;
+//                strTitleStat = 0;
+//                dexTitleStat = 0;
+//                lukTitleStat = 0;
+//                intTitleStat = 0;
+//            } else if (title.get("title_name").toString().contains("쑥쑥새싹")) {
+//                bossDamageTitlePer = 0;
+//                atTitleStat = 5;
+//                mgTitleStat = 5;
+//                strTitleStat = 10;
+//                dexTitleStat = 10;
+//                lukTitleStat = 10;
+//                intTitleStat = 10;
+//            } else if (title.get("title_name").toString().contains("Infinite Flame")) {
+//                bossDamageTitlePer = 20;
+//                atTitleStat = 30;
+//                mgTitleStat = 30;
+//                strTitleStat = 30;
+//                dexTitleStat = 30;
+//                lukTitleStat = 30;
+//                intTitleStat = 30;
+//            } else if (title.get("title_name").toString().contains("Eternal Flame")) {
+//                bossDamageTitlePer = 20;
+//                atTitleStat = 30;
+//                mgTitleStat = 30;
+//                strTitleStat = 30;
+//                dexTitleStat = 30;
+//                lukTitleStat = 30;
+//                intTitleStat = 30;
+//            } else if (title.get("title_name").toString().contains("예티X핑크빈")) {
+//                bossDamageTitlePer = 10;
+//                atTitleStat = 10;
+//                mgTitleStat = 10;
+//                strTitleStat = 20;
+//                dexTitleStat = 20;
+//                lukTitleStat = 20;
+//                intTitleStat = 20;
+//            } else if (title.get("title_name").toString().contains("MVP 레드")) {
+//                bossDamageTitlePer = 0;
+//                atTitleStat = 10;
+//                mgTitleStat = 10;
+//                strTitleStat = 10;
+//                dexTitleStat = 10;
+//                lukTitleStat = 10;
+//                intTitleStat = 10;
+//            } else if (title.get("title_name").toString().contains("엘 페일")) {
+//                bossDamageTitlePer = 30;
+//                atTitleStat = 30;
+//                mgTitleStat = 30;
+//                strTitleStat = 0;
+//                dexTitleStat = 0;
+//                lukTitleStat = 0;
+//                intTitleStat = 0;
+//            } else if (title.get("title_name").toString().contains("엘 클리어")) {
+//                bossDamageTitlePer = 0;
+//                atTitleStat = 30;
+//                mgTitleStat = 30;
+//                strTitleStat = 0;
+//                dexTitleStat = 0;
+//                lukTitleStat = 0;
+//                intTitleStat = 0;
+//            }
+//        }
+//        }
 
 //        if (title != null) {
 //            String[] titleParts = title.split("\\\\n");
@@ -547,7 +590,7 @@ public int getAllStatTitle(){
         }
 
 
-public int getBossDamageTitlePer(){
+public double getBossDamageTitlePer(){
         return bossDamageTitlePer;
         }
 

@@ -214,7 +214,7 @@ public class CharacterService {
                         = webClient.get().uri(uriBuilder -> uriBuilder.path(Url).queryParam("ocid", ocid).build()).retrieve().bodyToMono(JsonNode.class).flatMap(jsonNode -> {
                     try {
 
-                        String[] equipmentTypes = {"모자", "상의", "하의", "망토", "신발", "장갑", "어깨장식", "얼굴장식", "눈장식", "귀고리", "펜던트", "펜던트2", "벨트", "반지1", "반지2", "반지3", "반지4", "무기", "보조무기", "엠블렘", "뱃지", "훈장", "포켓 아이템", "기계 심장", "드래곤 모자", "드래곤 펜던트", "드래곤 날개장식", "드래곤 꼬리장식", "메카닉 엔진", "메카닉 암", "메카닉 레그", "메카닉 트랜지스터","칭호"};
+                        String[] equipmentTypes = {"모자", "상의", "하의", "망토", "신발", "장갑", "어깨장식", "얼굴장식", "눈장식", "귀고리", "펜던트", "펜던트2", "벨트", "반지1", "반지2", "반지3", "반지4", "무기", "보조무기", "엠블렘", "뱃지", "훈장", "포켓 아이템", "기계 심장", "드래곤 모자", "드래곤 펜던트", "드래곤 날개장식", "드래곤 꼬리장식", "메카닉 엔진", "메카닉 암", "메카닉 레그", "메카닉 트랜지스터", "칭호"};
 
                         String[] equipmentInfo = new String[equipmentTypes.length];
 
@@ -234,17 +234,18 @@ public class CharacterService {
                             if (index >= 0) {
                                 equipmentInfo[index] = equipmentNode.toString();
                             }
-                        }   for (JsonNode equipmentNode : itemEquipmentNodeTitle) {
-                            // "item_equipment_part" 값 가져오기
-                            String equipmentPart = "칭호";
-                            // "equipmentTypes" 배열에서 일치하는 값의 인덱스 찾기
-                            int index = Arrays.asList(equipmentTypes).indexOf(equipmentPart);
-
-                            // "equipmentTypes" 배열에 있는 값과 일치하는 경우에만 데이터 할당
-                            if (index >= 0) {
-                                equipmentInfo[index] = equipmentNode.toString();
-                            }
                         }
+//                        for (JsonNode equipmentNode : itemEquipmentNodeTitle) {
+//                            // "item_equipment_part" 값 가져오기
+//                            String equipmentPart = "칭호";
+//                            // "equipmentTypes" 배열에서 일치하는 값의 인덱스 찾기
+//                            int index = Arrays.asList(equipmentTypes).indexOf(equipmentPart);
+//
+//                            // "equipmentTypes" 배열에 있는 값과 일치하는 경우에만 데이터 할당
+//                            if (index >= 0) {
+//                                equipmentInfo[index] = equipmentNode.toString();
+//                            }
+//                        }
                         for (JsonNode equipmentNode : itemEquipmentNodeDragon) {
                             // "item_equipment_part" 값 가져오기
                             String equipmentPart = equipmentNode.get("item_equipment_slot").asText();
@@ -293,8 +294,8 @@ public class CharacterService {
                         String medalInfo = equipmentInfo[21];
                         String poketInfo = equipmentInfo[22];
                         String heartInfo = equipmentInfo[23];
-                        String titleInfo = equipmentInfo[32];
-//                        String titleInfo = jsonNode.get("title").get("title_description").toString();
+                        String titleInfo = itemEquipmentNodeTitle.toString();
+
                         String dragonHat = equipmentInfo[24];
                         String dragonPendant = equipmentInfo[25];
                         String dragonWing = equipmentInfo[26];
@@ -344,12 +345,12 @@ public class CharacterService {
                 int titleMainStat = 0;
                 int titleSubStat = 0;
                 int titleAtMgStat = 0;
-                int titleBossDamage = 0;
+                double titleBossDamage = 0.0;
                 int titleDamage = 0;
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                    jsonInfo =  objectMapper.readTree(charactersItemEquip.getTitleInfo());
+                    jsonInfo = objectMapper.readTree(charactersItemEquip.getTitleInfo());
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -369,11 +370,11 @@ public class CharacterService {
                     titleBossDamage = charactersItemInfoDTO.getBossDamageTitlePer();
                     titleDamage = charactersItemInfoDTO.getDamageTitlePer();
 
-                    System.out.println("titleMainStat"+titleMainStat);
-                    System.out.println("titleSubStat"+titleSubStat);
-                    System.out.println("titleAtMgStat"+titleAtMgStat);
-                    System.out.println("titleBossDamage"+titleBossDamage);
-                    System.out.println("titleDamage"+titleDamage);
+                    System.out.println("titleMainStat" + titleMainStat);
+                    System.out.println("titleSubStat" + titleSubStat);
+                    System.out.println("titleAtMgStat" + titleAtMgStat);
+                    System.out.println("titleBossDamage" + titleBossDamage);
+                    System.out.println("titleDamage" + titleDamage);
                 }
 
                 int mainStat = 0;
@@ -385,23 +386,23 @@ public class CharacterService {
                 double bossDamage = 0.0;
                 double damage = 0;
                 double criticalDamage = 0;
-                System.out.println("mainStat"+mainStat);
-                System.out.println("subStat"+subStat);
-                System.out.println("atMgStat"+atMgStat);
-                System.out.println("bossDamage"+bossDamage);
-                System.out.println("damage"+damage);
+                System.out.println("mainStat" + mainStat);
+                System.out.println("subStat" + subStat);
+                System.out.println("atMgStat" + atMgStat);
+                System.out.println("bossDamage" + bossDamage);
+                System.out.println("damage" + damage);
 
-                mainStat =mainStat+ titleMainStat;
-                subStat = subStat+ titleSubStat;
-                atMgStat =atMgStat+ titleAtMgStat;
-                bossDamage =bossDamage+titleBossDamage;
-                damage =damage+ titleDamage;
+                mainStat = mainStat + titleMainStat;
+                subStat = subStat + titleSubStat;
+                atMgStat = atMgStat + titleAtMgStat;
+                bossDamage = bossDamage + titleBossDamage;
+                damage = damage + titleDamage;
 
-                System.out.println("mainStat"+mainStat);
-                System.out.println("subStat"+subStat);
-                System.out.println("atMgStat"+atMgStat);
-                System.out.println("bossDamage"+bossDamage);
-                System.out.println("damage"+damage);
+                System.out.println("mainStat" + mainStat);
+                System.out.println("subStat" + subStat);
+                System.out.println("atMgStat" + atMgStat);
+                System.out.println("bossDamage" + bossDamage);
+                System.out.println("damage" + damage);
 
                 for (String equipmentType : equipmentTypes) {
                     try {
@@ -1628,12 +1629,12 @@ public class CharacterService {
                         } else if (setName.contains("세트")) {
                             if (setEffectNode.get("total_set_count").asInt() > 2) {
 
-                                for(JsonNode cashSetNode : setEffectNode.get("set_effect_info")) {
+                                for (JsonNode cashSetNode : setEffectNode.get("set_effect_info")) {
 
-                                    if(cashSetNode.get("set_option").toString().contains("올스탯 : +10")){
+                                    if (cashSetNode.get("set_option").toString().contains("올스탯 : +10")) {
                                         //마라벨 효과
-                                         cashSetCount = setEffectNode.get("total_set_count").asInt();
-                                    } else if(setEffectNode.get("total_set_count").asInt()==5){
+                                        cashSetCount = setEffectNode.get("total_set_count").asInt();
+                                    } else if (setEffectNode.get("total_set_count").asInt() == 5) {
                                         //스라벨 풀셋일때
                                         cashSetCount = 3;
                                     }
@@ -2328,10 +2329,16 @@ public class CharacterService {
 
                     int skillStatAllStat = 0;
                     int skillStatAtMgPower = 0;
+
                     boolean isFree = false;
                     int value = 0;
                     int jungBless = 0;
                     int yujeBless = 0;
+
+                    double eventAllStat = 0.0;
+                    double eventAtMgPower = 0.0;
+                    double eventBossDamage = 0.0;
+
                     for (JsonNode nthSkillNode : jsonNode.get("character_skill")) {
                         String skillName = nthSkillNode.get("skill_name").toString();
                         if (skillName.contains("정령의 축복")) {
@@ -2351,8 +2358,30 @@ public class CharacterService {
                             skillStatAtMgPower += value;
                         } else if (skillName.contains("파괴의 얄다바오트")) {
                             isFree = true;
+                        } else if (skillName.contains("궁극의 콜라보")) {
+                            String skillEffect = nthSkillNode.get("skill_effect").toString();
+                            Pattern pattern = Pattern.compile("(\\D+)(\\d+(?:\\.\\d+)?)");
+                            Matcher matcher = pattern.matcher(skillEffect);
+                            while (matcher.find()) {
+                                String stringItem = matcher.group(1).trim();
+                                System.out.println("stringItem: " + stringItem);
+                                double numberItem = Double.parseDouble(matcher.group(2));
+                                System.out.println("numberItem: " + numberItem);
+                                // 문자열이 "올스탯", "보스 공격시 데미지", "공격력/마력"인 경우에만 변수에 저장
+                                if (stringItem.contains("올스탯")) {
+                                    eventAllStat = numberItem;
+                                } else if (stringItem.contains("보스 몬스터 공격 시 데미지")) {
+                                    eventBossDamage = numberItem;
+                                } else if (stringItem.contains("공격력") || stringItem.contains("마력")) {
+                                    eventAtMgPower = numberItem;
+                                }
+                            }
                         }
                     }
+                    System.out.println("eventAllStat :" + eventAllStat);
+                    System.out.println("eventBossDamage :" + eventBossDamage);
+                    System.out.println("eventAtMgPower :" + eventAtMgPower);
+
 
                     if (jungBless < yujeBless) {
                         skillStatAtMgPower += yujeBless;
@@ -2363,7 +2392,7 @@ public class CharacterService {
                     System.out.println("skillStatAllStat :" + skillStatAllStat);
                     System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
                     System.out.println("isFree :" + isFree);
-                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName, skillStatAllStat, skillStatAtMgPower, isFree);
+                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName, skillStatAllStat, skillStatAtMgPower, eventAllStat, eventAtMgPower,eventBossDamage,  isFree);
 
                     return Mono.just(charactersSkillStatInfoDTO);
 
@@ -2509,26 +2538,26 @@ public class CharacterService {
 
                     for (JsonNode cashItemNode : jsonNode.get("cash_item_equipment_base")) {
 
-                        for(JsonNode cashItemOptionNode : cashItemNode.get("cash_item_option")) {
-                            String cashItemOption = cashItemOptionNode.get("option_type").toString() ;
-                                int cashItemStat =  cashItemOptionNode.get("option_value").asInt();
+                        for (JsonNode cashItemOptionNode : cashItemNode.get("cash_item_option")) {
+                            String cashItemOption = cashItemOptionNode.get("option_type").toString();
+                            int cashItemStat = cashItemOptionNode.get("option_value").asInt();
 
-                                // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
-                                if (cashItemOption.contains("공격력")) {
-                                    cashItemAtPower += cashItemStat;
-                                } else if (cashItemOption.contains("마력")) {
-                                    cashItemMgPower += cashItemStat;
-                                } else if (cashItemOption.contains("STR")) {
-                                    cashItemStr += cashItemStat;
-                                } else if (cashItemOption.contains("DEX")) {
-                                    cashItemtDex += cashItemStat;
-                                } else if (cashItemOption.contains("LUK")) {
-                                    cashItemLuk += cashItemStat;
-                                } else if (cashItemOption.contains("INT")) {
-                                    cashItemInt += cashItemStat;
-                                }
+                            // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
+                            if (cashItemOption.contains("공격력")) {
+                                cashItemAtPower += cashItemStat;
+                            } else if (cashItemOption.contains("마력")) {
+                                cashItemMgPower += cashItemStat;
+                            } else if (cashItemOption.contains("STR")) {
+                                cashItemStr += cashItemStat;
+                            } else if (cashItemOption.contains("DEX")) {
+                                cashItemtDex += cashItemStat;
+                            } else if (cashItemOption.contains("LUK")) {
+                                cashItemLuk += cashItemStat;
+                            } else if (cashItemOption.contains("INT")) {
+                                cashItemInt += cashItemStat;
                             }
                         }
+                    }
 
                     System.out.println("cashItemAtPower :" + cashItemAtPower);
                     System.out.println("cashItemMgPower :" + cashItemMgPower);
@@ -2562,7 +2591,7 @@ public class CharacterService {
     ///////////
     @Async("characterThreadPool")
     @Transactional       //캐릭터 전체 스탯 종합
-    public CompletableFuture<CharactersTotalStatInfoDTO> getCharactersTotalStatInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO, CharactersItemEquipDTO charactersItemEquipDTO, CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO, CharactersSetEffectInfoDTO charactersSetEffectInfoDTO, ItemSetEffectDTO itemSetEffectDTO, CharactersArtiInfoDTO charactersArtiInfoDTO, CharactersUnionInfoDTO charactersUnionInfoDTO, CharactersHyperStatInfoDTO charactersHyperStatInfoDTO, CharactersAbilityInfoDTO charactersAbilityInfoDTO, CharactersSimbolInfoDTO charactersSimbolInfoDTO, CharactersPetEquipInfoDTO charactersPetEquipInfoDTO, CharactersSkillStatInfoDTO charactersSkillStatInfoDTO,CharactersCashItemInfoDTO charactersCashItemInfoDTO,CharactersHexaStatInfoDTO charactersHexaStatInfoDTO) {
+    public CompletableFuture<CharactersTotalStatInfoDTO> getCharactersTotalStatInfo(String charactersName, String ocid, CharactersInfoDTO charactersInfoDTO, CharactersStatInfoDTO charactersStatInfoDTO, CharactersItemEquipDTO charactersItemEquipDTO, CharactersItemTotalStatInfoDTO charactersItemTotalStatInfoDTO, CharactersSetEffectInfoDTO charactersSetEffectInfoDTO, ItemSetEffectDTO itemSetEffectDTO, CharactersArtiInfoDTO charactersArtiInfoDTO, CharactersUnionInfoDTO charactersUnionInfoDTO, CharactersHyperStatInfoDTO charactersHyperStatInfoDTO, CharactersAbilityInfoDTO charactersAbilityInfoDTO, CharactersSimbolInfoDTO charactersSimbolInfoDTO, CharactersPetEquipInfoDTO charactersPetEquipInfoDTO, CharactersSkillStatInfoDTO charactersSkillStatInfoDTO, CharactersCashItemInfoDTO charactersCashItemInfoDTO, CharactersHexaStatInfoDTO charactersHexaStatInfoDTO) {
         return CompletableFuture.supplyAsync(() -> {
             if (rateLimiter.tryAcquire()) {
 
@@ -2595,8 +2624,8 @@ public class CharacterService {
                 int apDex = charactersStatInfoDTO.getApDex();
                 int apInt = charactersStatInfoDTO.getApInt();
                 int apLuk = charactersStatInfoDTO.getApLuk();
-                int mainStatAP =0;
-                int subStatAP=0;
+                int mainStatAP = 0;
+                int subStatAP = 0;
                 //장비 아이템
                 int itemMainStat = charactersItemTotalStatInfoDTO.getMainStat();
                 int itemMainStatPer = charactersItemTotalStatInfoDTO.getMainStatPer();
@@ -2686,7 +2715,9 @@ public class CharacterService {
                 //0차 스킬
                 int skillStatAtMgPower = charactersSkillStatInfoDTO.getSkillStatAtMgPower();
                 boolean isFree = charactersSkillStatInfoDTO.isFree();
-
+                double eventAllStat = charactersSkillStatInfoDTO.getSkillStatAllStat();
+                double eventAtMgPower = charactersSkillStatInfoDTO.getEventAtMgPower();
+                double eventBossDamage = charactersSkillStatInfoDTO.getEventBossDamage();
                 //캐시 아이템 스탯
                 int cashItemMainStat = 0;
                 int cashItemSubStat = 0;
@@ -2710,8 +2741,8 @@ public class CharacterService {
                     //주스탯 힘 부스탯 덱스 직업 전사,해적(너클,캐논슈터)
 
                     //AP배분 스텟
-                    mainStatAP =apStr;
-                    subStatAP =apDex;
+                    mainStatAP = apStr;
+                    subStatAP = apDex;
                     //장비 아이템 - 메인 서브 적용되어 있음
                     //아이템 세트효과 - 메인 서브 구분 필요 x
                     //유니온 아티팩트 - 메인 서브 구분 필요 x
@@ -2735,15 +2766,15 @@ public class CharacterService {
                     petAtMgPower = petAtPower;
                     //0차 스킬 - 메인 서브 구분 필요 x
                     //캐시 아이템 스탯
-                    cashItemMainStat=cashItemStr;
-                    cashItemSubStat=cashItemDex;
-                    cashItemAtMgPower=cashItemAtPower;
+                    cashItemMainStat = cashItemStr;
+                    cashItemSubStat = cashItemDex;
+                    cashItemAtMgPower = cashItemAtPower;
                     //헥사 스텟 - 메인 서브 적용되어 있음
 
                 } else if (Arrays.asList("아크메이지(불,독)", "아크메이지(썬,콜)", "비숍", "플레임위자드", "배틀메이지", "에반", "루미너스", "일리움", "라라", "키네시스").contains(charactersClass)) {                    //주 인 부 럭 = 법사
                     //AP배분 스텟
-                    mainStatAP =apInt;
-                    subStatAP =apLuk;
+                    mainStatAP = apInt;
+                    subStatAP = apLuk;
                     //장비 아이템 - 메인 서브 적용되어 있음
                     //아이템 세트효과 - 메인 서브 구분 필요 x
                     //유니온 아티팩트 - 메인 서브 구분 필요 x
@@ -2767,16 +2798,16 @@ public class CharacterService {
                     petAtMgPower = petMgPower;
                     //0차 스킬 - 메인 서브 구분 필요 x
                     //캐시 아이템 스탯
-                    cashItemMainStat=cashItemInt;
-                    cashItemSubStat=cashItemLuk;
-                    cashItemAtMgPower=cashItemMgPower;
+                    cashItemMainStat = cashItemInt;
+                    cashItemSubStat = cashItemLuk;
+                    cashItemAtMgPower = cashItemMgPower;
                     //헥사 스텟 - 메인 서브 적용되어 있음
 
-                }else if (Arrays.asList("보우마스터", "신궁", "패스파인더", "윈드브레이커", "와일드헌터", "메르세데스", "카인", "캡틴", "메카닉", "엔젤릭버스터").contains(charactersClass)) {
+                } else if (Arrays.asList("보우마스터", "신궁", "패스파인더", "윈드브레이커", "와일드헌터", "메르세데스", "카인", "캡틴", "메카닉", "엔젤릭버스터").contains(charactersClass)) {
                     //주 덱 부 힘 = 궁수(패스파인더,, 해적 덱스(건, 소울슈터)
                     //AP배분 스텟
-                    mainStatAP =apDex;
-                    subStatAP =apStr;
+                    mainStatAP = apDex;
+                    subStatAP = apStr;
                     //장비 아이템 - 메인 서브 적용되어 있음
                     //아이템 세트효과 - 메인 서브 구분 필요 x
                     //유니온 아티팩트 - 메인 서브 구분 필요 x
@@ -2800,15 +2831,15 @@ public class CharacterService {
                     petAtMgPower = petAtPower;
                     //0차 스킬 - 메인 서브 구분 필요 x
                     //캐시 아이템 스탯
-                    cashItemMainStat=cashItemDex;
-                    cashItemSubStat=cashItemStr;
-                    cashItemAtMgPower=cashItemAtPower;
+                    cashItemMainStat = cashItemDex;
+                    cashItemSubStat = cashItemStr;
+                    cashItemAtMgPower = cashItemAtPower;
                     //헥사 스텟 - 메인 서브 적용되어 있음
-                }else if (Arrays.asList("나이트로드", "팬텀", "나이트워커", "칼리", "호영").contains(charactersClass)) {
+                } else if (Arrays.asList("나이트로드", "팬텀", "나이트워커", "칼리", "호영").contains(charactersClass)) {
                     //주 럭 부 덱 = 도적
                     //AP배분 스텟
-                    mainStatAP =apLuk;
-                    subStatAP =apDex;
+                    mainStatAP = apLuk;
+                    subStatAP = apDex;
                     //장비 아이템 - 메인 서브 적용되어 있음
                     //아이템 세트효과 - 메인 서브 구분 필요 x
                     //유니온 아티팩트 - 메인 서브 구분 필요 x
@@ -2832,87 +2863,87 @@ public class CharacterService {
                     petAtMgPower = petAtPower;
                     //0차 스킬 - 메인 서브 구분 필요 x
                     //캐시 아이템 스탯
-                    cashItemMainStat=cashItemLuk;
-                    cashItemSubStat=cashItemDex;
-                    cashItemAtMgPower=cashItemAtPower;
+                    cashItemMainStat = cashItemLuk;
+                    cashItemSubStat = cashItemDex;
+                    cashItemAtMgPower = cashItemAtPower;
                     //헥사 스텟 - 메인 서브 적용되어 있음
-                }else if (Arrays.asList("듀얼블레이드", "카데나", "섀도어").contains(charactersClass)) {
+                } else if (Arrays.asList("듀얼블레이드", "카데나", "섀도어").contains(charactersClass)) {
                     //주 럭 부 힘,덱 = 듀얼블레이드 카 세
                     //AP배분 스텟
-                    mainStatAP =apLuk;
-                    subStatAP =apDex+apStr;
+                    mainStatAP = apLuk;
+                    subStatAP = apDex + apStr;
                     //장비 아이템 - 메인 서브 적용되어 있음
                     //아이템 세트효과 - 메인 서브 구분 필요 x
                     //유니온 아티팩트 - 메인 서브 구분 필요 x
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedLuk;
-                    unionOccupiedSubStat = unionOccupiedDex+unionOccupiedStr;
+                    unionOccupiedSubStat = unionOccupiedDex + unionOccupiedStr;
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderLuk;
-                    unionRaiderSubStat = unionRaiderDex+unionRaiderStr;
+                    unionRaiderSubStat = unionRaiderDex + unionRaiderStr;
                     //하이퍼스탯
                     hyperStatMainStat = hyperStatLuk;
-                    hyperStatSubStat = hyperStatDex+hyperStatStr;
+                    hyperStatSubStat = hyperStatDex + hyperStatStr;
                     //어빌리티
                     abilityStatMainStat = abilityStatLuk;
-                    abilityStatSubStat = abilityStatDex+abilityStatStr;
+                    abilityStatSubStat = abilityStatDex + abilityStatStr;
                     abilityStatMainStatPer = abilityStatLukPer;
-                    abilityStatSubStatPer = abilityStatDexPer+abilityStatStrPer;
+                    abilityStatSubStatPer = abilityStatDexPer + abilityStatStrPer;
                     //심볼
                     simbolStatMainStat = simbolStatLuk;
                     //펫장비
                     petAtMgPower = petAtPower;
                     //0차 스킬 - 메인 서브 구분 필요 x
                     //캐시 아이템 스탯
-                    cashItemMainStat=cashItemLuk;
-                    cashItemSubStat=cashItemDex+cashItemStr;
-                    cashItemAtMgPower=cashItemAtPower;
+                    cashItemMainStat = cashItemLuk;
+                    cashItemSubStat = cashItemDex + cashItemStr;
+                    cashItemAtMgPower = cashItemAtPower;
                     //헥사 스텟 - 메인 서브 적용되어 있음
-                }else if (Arrays.asList("데몬어벤져", "제논").contains(charactersClass)) {
+                } else if (Arrays.asList("데몬어벤져", "제논").contains(charactersClass)) {
                     //아직 미구현
                 }
 
-                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat+cashItemMainStat +mainStatAP;
+                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat + cashItemMainStat + mainStatAP+(int)eventAllStat;
                 mainStatPer = itemMainStatPer + abilityStatMainStatPer;
 
-                mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat+hexaStatMainStat;
+                mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat + hexaStatMainStat;
 
-                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat+cashItemSubStat+subStatAP;
+                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP+(int)eventAllStat;
 
                 subStatPer = itemSubStatPer + abilityStatSubStatPer;
 
                 subNonStat = unionRaiderSubStat + hyperStatSubStat + abilityStatSubStat;
 
-                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower+cashItemAtMgPower+hexaStatAtMgPower+unionOccupiedAtMgPower+unionRaiderAtMgPower+hyperStatAtMgPower;
+                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower + cashItemAtMgPower + hexaStatAtMgPower + unionOccupiedAtMgPower + unionRaiderAtMgPower + hyperStatAtMgPower+(int)eventAtMgPower;
 
 
                 atMgPowerPer = itemAtMgPowerPer;
 
-                damage = itemDamage + artiDamage+hexaStatDamage+hyperStatDamage;
+                damage = itemDamage + artiDamage + hexaStatDamage + hyperStatDamage;
 
-                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage+hexaStatBossDamage+itemSetDamage+hyperStatBossDamage+unionRaiderBossDamage;
+                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage + hexaStatBossDamage + itemSetDamage + hyperStatBossDamage + unionRaiderBossDamage+eventBossDamage;
                 //아이템 세트데미지는 보공이라 여기가 맞음
 
-                criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage+hexaStatCriticalDamage+hyperStatCriticalDamage+unionRaiderCriticalDamage;
+                criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage + hexaStatCriticalDamage + hyperStatCriticalDamage + unionRaiderCriticalDamage;
 
-                System.out.println("\n\n\n\n"+"mainStat :" + mainStat);
+                System.out.println("\n\n\n\n" + "mainStat :" + mainStat);
                 System.out.println("itemMainStat :" + itemMainStat);
                 System.out.println("artiAllStat :" + artiAllStat);
                 System.out.println("itemSetAllStat :" + itemSetAllStat);
                 System.out.println("unionOccupiedMainStat :" + unionOccupiedMainStat);
                 System.out.println("mainStatAP :" + mainStatAP);
-                System.out.println("cashItemMainStat :" + cashItemMainStat+"\n");
+                System.out.println("cashItemMainStat :" + cashItemMainStat + "\n");
 
                 System.out.println("mainStatPer :" + mainStatPer);
                 System.out.println("itemMainStatPer :" + itemMainStatPer);
-                System.out.println("abilityStatMainStatPer :" + abilityStatMainStatPer+"\n");
+                System.out.println("abilityStatMainStatPer :" + abilityStatMainStatPer + "\n");
 
                 System.out.println("mainNonStat :" + mainNonStat);
                 System.out.println("unionRaiderMainStat :" + unionRaiderMainStat);
                 System.out.println("hyperStatMainStat :" + hyperStatMainStat);
                 System.out.println("abilityStatMainStat :" + abilityStatMainStat);
                 System.out.println("hexaStatMainStat :" + hexaStatMainStat);
-                System.out.println("simbolStatMainStat :" + simbolStatMainStat+"\n");
+                System.out.println("simbolStatMainStat :" + simbolStatMainStat + "\n");
 
                 System.out.println("subStat :" + subStat);
                 System.out.println("itemSubStat :" + itemSubStat);
@@ -2920,17 +2951,17 @@ public class CharacterService {
                 System.out.println("artiAllStat :" + artiAllStat);
                 System.out.println("subStatAP :" + subStatAP);
                 System.out.println("unionOccupiedSubStat :" + unionOccupiedSubStat);
-                System.out.println("cashItemSubStat :" + cashItemSubStat+"\n");
+                System.out.println("cashItemSubStat :" + cashItemSubStat + "\n");
 //칭호부분 안더해짐 메인 서브 둘다
 
                 System.out.println("subStatPer :" + subStatPer);
                 System.out.println("itemSubStatPer :" + itemSubStatPer);
-                System.out.println("abilityStatSubStatPer :" + abilityStatSubStatPer+"\n");
+                System.out.println("abilityStatSubStatPer :" + abilityStatSubStatPer + "\n");
 
                 System.out.println("subNonStat :" + subNonStat);
                 System.out.println("unionRaiderSubStat :" + unionRaiderSubStat);
                 System.out.println("hyperStatSubStat :" + hyperStatSubStat);
-                System.out.println("abilityStatSubStat :" + abilityStatSubStat+"\n");
+                System.out.println("abilityStatSubStat :" + abilityStatSubStat + "\n");
 
                 System.out.println("atMgPower :" + atMgPower);
                 System.out.println("itemAtMgPower :" + itemAtMgPower);
@@ -2943,17 +2974,17 @@ public class CharacterService {
                 System.out.println("unionOccupiedAtMgPower :" + unionOccupiedAtMgPower);
                 System.out.println("unionRaiderAtMgPower :" + unionRaiderAtMgPower);
                 System.out.println("hyperStatAtMgPower :" + hyperStatAtMgPower);
-                System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower+"\n");
+                System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower + "\n");
 //공격력 세트효과 이상함 여기도 칭호 손봐야할듯
 
                 System.out.println("atMgPowerPer :" + atMgPowerPer);
-                System.out.println("itemAtMgPowerPer :" + itemAtMgPowerPer+"\n");
+                System.out.println("itemAtMgPowerPer :" + itemAtMgPowerPer + "\n");
 
                 System.out.println("damage :" + damage);
                 System.out.println("itemDamage :" + itemDamage);
                 System.out.println("artiDamage :" + artiDamage);
                 System.out.println("hyperStatDamage :" + hyperStatDamage);
-                System.out.println("hexaStatDamage :" + hexaStatDamage+"\n");
+                System.out.println("hexaStatDamage :" + hexaStatDamage + "\n");
 
                 System.out.println("bossDamage :" + bossDamage);
                 System.out.println("itemBossDamage :" + itemBossDamage);
@@ -2963,7 +2994,7 @@ public class CharacterService {
                 System.out.println("hexaStatBossDamage :" + hexaStatBossDamage);
                 System.out.println("hyperStatBossDamage :" + hyperStatBossDamage);
                 System.out.println("unionRaiderBossDamage :" + unionRaiderBossDamage);
-                System.out.println("itemSetDamage :" + itemSetDamage+"\n");
+                System.out.println("itemSetDamage :" + itemSetDamage + "\n");
 
                 System.out.println("criticalDamage :" + criticalDamage);
                 System.out.println("itemCriticalDamage :" + itemCriticalDamage);
@@ -2972,7 +3003,7 @@ public class CharacterService {
                 System.out.println("hyperStatCriticalDamage :" + hyperStatCriticalDamage);
                 System.out.println("unionRaiderCriticalDamage :" + unionRaiderCriticalDamage);
                 System.out.println("unionOccupiedCriticalDamage :" + unionOccupiedCriticalDamage);
-                System.out.println("hexaStatCriticalDamage :" + hexaStatCriticalDamage+"\n");
+                System.out.println("hexaStatCriticalDamage :" + hexaStatCriticalDamage + "\n");
 
                 CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = new CharactersTotalStatInfoDTO(charactersName, mainStat, mainStatPer, mainNonStat, subStat, subStatPer, subNonStat, atMgPower, atMgPowerPer, damage, bossDamage, criticalDamage, isFree, charactersApiCombat);
 
@@ -3011,7 +3042,7 @@ public class CharacterService {
             finalDamage = 1.0;
         }
 
-        System.out.println("finalDamage :"+finalDamage);
+        System.out.println("finalDamage :" + finalDamage);
         double finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
         double finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
         double finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;

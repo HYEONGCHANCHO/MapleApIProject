@@ -16,7 +16,7 @@ public class CharactersItemStatInfoDTO {
     int potentialSubStatPer;
     int potentialAtMgStat;
     int potentialAtMgPer;
-    int bossDamage;
+    double bossDamage;
     int damage;
     int criticalDamage;
 
@@ -27,7 +27,7 @@ public class CharactersItemStatInfoDTO {
     public CharactersItemStatInfoDTO() {
     }
 
-    public CharactersItemStatInfoDTO(String item_equipment_slot, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int bossDamage, int damage) {
+    public CharactersItemStatInfoDTO(String item_equipment_slot, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, double bossDamage, int damage) {
         this.item_equipment_slot = item_equipment_slot;
         this.mainStat = mainStat;
         this.subStat = subStat;
@@ -38,7 +38,7 @@ public class CharactersItemStatInfoDTO {
         this.damage = damage;
     }
 
-    public CharactersItemStatInfoDTO(String item_equipment_slot, String itemName, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int potentialMainStat, int potentialSubStat, int potentialMainStatPer, int potentialSubStatPer, int potentialAtMgStat, int potentialAtMgPer, int bossDamage, int damage, int criticalDamage, int potentialBossDamagePer, int potentialDamagePer, int potentialCriticalDamage) {
+    public CharactersItemStatInfoDTO(String item_equipment_slot, String itemName, int mainStat, int subStat, int mainStatPer, int subStatPer, int atMgStat, int potentialMainStat, int potentialSubStat, int potentialMainStatPer, int potentialSubStatPer, int potentialAtMgStat, int potentialAtMgPer, double bossDamage, int damage, int criticalDamage, int potentialBossDamagePer, int potentialDamagePer, int potentialCriticalDamage) {
         this.item_equipment_slot = item_equipment_slot;
         this.itemName = itemName;
         this.mainStat = mainStat;
@@ -180,7 +180,7 @@ public class CharactersItemStatInfoDTO {
         this.potentialAtMgPer = potentialAtMgPer;
     }
 
-    public int getBossDamage() {
+    public double getBossDamage() {
         return bossDamage;
     }
 
