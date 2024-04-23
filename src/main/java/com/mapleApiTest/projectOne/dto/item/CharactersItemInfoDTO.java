@@ -132,7 +132,9 @@ public class CharactersItemInfoDTO {
                                 mgPotentialPer += number;
                                 break;
                             case '크':
-                                criticalDamagePotential += number;
+                                if (potential.charAt(5) == '데') {
+                                    criticalDamagePotential += number;                                }
+
                                 break;
                             case '보':
                                 potentialBossDamagePer += number;
@@ -283,8 +285,10 @@ public class CharactersItemInfoDTO {
 //        System.out.println("title0 2!!!!!!"+title.get(2));
 //        System.out.println("title0 3!!!!!!"+title.get(3));
         System.out.println("title0 3!!!!!!"+title.get("date_expire"));
+        System.out.println("title0 3!!!!!!"+title.get("date_option_expire"));
 
-        if (title.get("date_expire").toString().equals("null")) {
+
+         if (!title.get("date_option_expire").asText().equals("expired")) {
             String titleDescription = title.get("title_description").toString();
             System.out.println("title0 1!!!!!!"+titleDescription);
 
@@ -309,6 +313,11 @@ public class CharactersItemInfoDTO {
                 }
             }
         }
+
+//        atTitleStat+= 23; //토비
+//        atTitleStat+= 9; //티타늄 화살
+
+
     }
 
 

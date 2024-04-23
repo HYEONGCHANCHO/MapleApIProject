@@ -305,7 +305,8 @@ public class CharacterService {
                         String mechanicLeg = equipmentInfo[30];
                         String mechanicTran = equipmentInfo[31];
 
-
+                        System.out.println(weaponInfo + "aaaaaaaaa");
+                        System.out.println(subWeaponInfo + "aaaaaaaaa");
                         CharactersItemEquip charactersItemEquip = new CharactersItemEquip(request.getCharactersName(), hatInfo, topInfo, bottomInfo, capeInfo, shoesInfo, glovesInfo, shoulderInfo, faceInfo, eyeInfo, earInfo, pendantOneInfo, pendantTwoInfo, beltInfo, ringOneInfo, ringTwoInfo, ringThreeInfo, ringFourInfo, weaponInfo, subWeaponInfo, emblemInfo, badgeInfo, medalInfo, poketInfo, heartInfo, titleInfo, dragonHat, dragonPendant, dragonWing, dragonTail, mechanicEngine, mechanicArm, mechanicLeg, mechanicTran);
                         charactersItemEquipRepository.save(charactersItemEquip);
                         CharactersItemEquipDTO charactersItemEquipDTO = new CharactersItemEquipDTO(request.getCharactersName(), hatInfo, topInfo, bottomInfo, capeInfo, shoesInfo, glovesInfo, shoulderInfo, faceInfo, eyeInfo, earInfo, pendantOneInfo, pendantTwoInfo, beltInfo, ringOneInfo, ringTwoInfo, ringThreeInfo, ringFourInfo, weaponInfo, subWeaponInfo, emblemInfo, badgeInfo, medalInfo, poketInfo, heartInfo, titleInfo, dragonHat, dragonPendant, dragonWing, dragonTail, mechanicEngine, mechanicArm, mechanicLeg, mechanicTran);
@@ -407,7 +408,7 @@ public class CharacterService {
                 for (String equipmentType : equipmentTypes) {
                     try {
                         objectMapper = new ObjectMapper();
-
+                        jsonInfo = null;
                         switch (equipmentType) {
                             case "hat":
                                 jsonInfo = objectMapper.readTree(charactersItemEquip.getHatInfo());
@@ -552,8 +553,10 @@ public class CharacterService {
 
                     int weaponAtMgStat = 0;
                     CharactersItemStatInfoDTO charactersItemStatInfoDTO = new CharactersItemStatInfoDTO();
-
-                    if (jsonInfo != null) {
+                    if (jsonInfo == null) { //장비 빈부위 스탯 초기화
+                        charactersItemStatInfoDTO = new CharactersItemStatInfoDTO(charactersItemInfoDTO.getItem_equipment_slot(), charactersItemInfoDTO.getItemName(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                        System.out.println("dsdsdsdsd" + charactersItemInfoDTO.getItem_equipment_slot());
+                    } else if (jsonInfo != null) {
 
                         charactersItemInfoDTO.setItem_equipment_slot(jsonInfo.get("item_equipment_slot").asText());
                         charactersItemInfoDTO.setItemName(jsonInfo.get("item_name").asText());
@@ -2051,7 +2054,7 @@ public class CharacterService {
                             HyperStatCriticalDamage += value + doubleValue;
                         } else if (stat_increase.contains("보스 몬스터 공격 시 데미지")) {
                             HyperStatBossDamage += value + doubleValue;
-                        } else if (stat_increase.contains("데미지")) {
+                        } else if (stat_increase.contains("데미지") && !stat_increase.contains("크리티컬 데미지") && !stat_increase.contains("보스 몬스터 공격 시 데미지") && !stat_increase.contains("일반 몬스터 공격 시 데미지")) {
                             HyperStatDamage += value + doubleValue;
                         }
 
@@ -2121,11 +2124,16 @@ public class CharacterService {
                         int levelAtMgValue = 0;
                         double doubleValue = 0.0;
 
-                        String[] parts = stat_increase.split(",");
-
-                        System.out.println("stat_increase: " + stat_increase);
+                        String[] parts;
+                        if (stat_increase.contains(",")) {
+                            parts = stat_increase.split("\\s*,\\s*");
+                        } else {
+                            parts = new String[]{stat_increase};
+                        }
 
                         for (String part : parts) {
+                            System.out.println("part :" + part);
+
                             String[] tokens = part.split("\\s+");
                             for (String token : tokens) {
                                 if (token.matches("\\d+레벨")) { //
@@ -2144,29 +2152,42 @@ public class CharacterService {
                             }
 
                             // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
-                            if (stat_increase.contains("레벨마다 공격력") || stat_increase.contains("레벨마다 마력")) {
+                            if (part.contains("레벨마다 공격력") || part.contains("레벨마다 마력")) {
                                 System.out.println("abilityAtMgPower :" + abilityAtMgPower);
                                 abilityAtMgPower += charactersLevel / levelAtMgValue;
                                 System.out.println("abilityAtMgPower :" + abilityAtMgPower);
-                            } else if (stat_increase.contains("공격력") || stat_increase.contains("마력")) {
+                            } else if (part.contains("공격력") || part.contains("마력")) {
                                 abilityAtMgPower += value;
-                            } else if (stat_increase.contains("STR")) {
-                                abilityStr += value;
-                            } else if (stat_increase.contains("DEX")) {
-                                abilityDex += value;
-                            } else if (stat_increase.contains("LUK")) {
-                                abilityLuk += value;
-                            } else if (stat_increase.contains("INT")) {
-                                abilityInt += value;
-                            } else if (stat_increase.contains("AP를 직접 투자한 STR의")) {
+                            } else if (part.contains("AP를 직접 투자한 STR의")) {
                                 abilityDexPer += value;
-                            } else if (stat_increase.contains("AP를 직접 투자한 DEX의")) {
+                            } else if (part.contains("AP를 직접 투자한 DEX의")) {
                                 abilityStrPer += value;
-                            } else if (stat_increase.contains("AP를 직접 투자한 INT의")) {
+                            } else if (part.contains("AP를 직접 투자한 INT의")) {
                                 abilityLukPer += value;
-                            } else if (stat_increase.contains("AP를 직접 투자한 LUK의")) {
+                            } else if (part.contains("AP를 직접 투자한 LUK의")) {
                                 abilityIntPer += value;
-                            } else if (stat_increase.contains("모든 능력치")) {
+                            } else if (part.contains("STR")) {
+                                abilityStr += value;
+                            } else if (part.contains("DEX")) {
+                                System.out.println("abilityDex :" + abilityDex);
+                                System.out.println("value :" + value);
+
+                                abilityDex += value;
+                                System.out.println("abilityDex :" + abilityDex);
+                                System.out.println("value :" + value);
+
+                            } else if (part.contains("LUK")) {
+                                System.out.println("abilityLuk :" + abilityLuk);
+                                System.out.println("value :" + value);
+
+                                abilityLuk += value;
+
+                                System.out.println("abilityLuk :" + abilityLuk);
+                                System.out.println("value :" + value);
+
+                            } else if (part.contains("INT")) {
+                                abilityInt += value;
+                            } else if (part.contains("모든 능력치")) {
                                 abilityStr += value;
                                 abilityDex += value;
                                 abilityLuk += value;
@@ -2174,6 +2195,7 @@ public class CharacterService {
                             } else if (stat_increase.contains("보스 몬스터 공격 시 데미지")) {
                                 abilityBossDamage += value + doubleValue;
                             }
+
                         }
                     }
                     System.out.println("abilityStr :" + abilityStr);
@@ -2392,7 +2414,7 @@ public class CharacterService {
                     System.out.println("skillStatAllStat :" + skillStatAllStat);
                     System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
                     System.out.println("isFree :" + isFree);
-                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName, skillStatAllStat, skillStatAtMgPower, eventAllStat, eventAtMgPower,eventBossDamage,  isFree);
+                    CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName, skillStatAllStat, skillStatAtMgPower, eventAllStat, eventAtMgPower, eventBossDamage, isFree);
 
                     return Mono.just(charactersSkillStatInfoDTO);
 
@@ -2903,25 +2925,25 @@ public class CharacterService {
                     //아직 미구현
                 }
 
-                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat + cashItemMainStat + mainStatAP+(int)eventAllStat;
+                mainStat = itemMainStat + itemSetAllStat + artiAllStat + unionOccupiedMainStat + cashItemMainStat + mainStatAP + (int) eventAllStat;
                 mainStatPer = itemMainStatPer + abilityStatMainStatPer;
 
                 mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat + hexaStatMainStat;
 
-                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP+(int)eventAllStat;
+                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP + (int) eventAllStat;
 
                 subStatPer = itemSubStatPer + abilityStatSubStatPer;
 
                 subNonStat = unionRaiderSubStat + hyperStatSubStat + abilityStatSubStat;
 
-                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower + cashItemAtMgPower + hexaStatAtMgPower + unionOccupiedAtMgPower + unionRaiderAtMgPower + hyperStatAtMgPower+(int)eventAtMgPower;
+                atMgPower = itemAtMgPower + itemSetAtMgPower + artiAtMgPower + abilityStatAtMgPower + petAtMgPower + skillStatAtMgPower + cashItemAtMgPower + hexaStatAtMgPower + unionOccupiedAtMgPower + unionRaiderAtMgPower + hyperStatAtMgPower + (int) eventAtMgPower;
 
 
                 atMgPowerPer = itemAtMgPowerPer;
 
                 damage = itemDamage + artiDamage + hexaStatDamage + hyperStatDamage;
 
-                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage + hexaStatBossDamage + itemSetDamage + hyperStatBossDamage + unionRaiderBossDamage+eventBossDamage;
+                bossDamage = itemBossDamage + artiBossDamage + unionOccupiedBossDamage + abilityStatBossDamage + hexaStatBossDamage + itemSetDamage + hyperStatBossDamage + unionRaiderBossDamage + eventBossDamage;
                 //아이템 세트데미지는 보공이라 여기가 맞음
 
                 criticalDamage = itemCriticalDamage + itemSetCriticalDamage + artiCriticalDamage + unionOccupiedCriticalDamage + hexaStatCriticalDamage + hyperStatCriticalDamage + unionRaiderCriticalDamage;
