@@ -625,10 +625,10 @@ public class CharacterService {
                             int weaponAtPowerAdd = jsonInfo.get("item_add_option").get("attack_power").asInt();
                             int weaponMgPowerAdd = jsonInfo.get("item_add_option").get("magic_power").asInt();
 
-                            int weaponAtPowerStarForce = jsonInfo.get("item_starforce_option").get("attack_power").asInt();
+                            int weaponAtPowerStarForce = jsonInfo.get("item_starforce_option").get("attack_power").asInt(); // 스타포스 상승치
                             int weaponMgPowerStarForce = jsonInfo.get("item_starforce_option").get("magic_power").asInt();
 
-                            int weaponAtPowerEtc = jsonInfo.get("item_etc_option").get("attack_power").asInt();
+                            int weaponAtPowerEtc = jsonInfo.get("item_etc_option").get("attack_power").asInt(); //작
                             int weaponMgPowerEtc = jsonInfo.get("item_etc_option").get("magic_power").asInt();
 
                             int weaponAtPower = jsonInfo.get("item_total_option").get("attack_power").asInt();
@@ -837,7 +837,7 @@ public class CharacterService {
                             int papnirBowAddAtPower[] = {66, 52, 39, 29, 20};
                             int absolBowAddAtPower[] = {99, 77, 59, 43, 29};
                             int arcaneBowAddAtPower[] = {170, 133, 101, 73, 50};
-                            int jenesisBowAddAtPower[] = {170, 133, 101, 73, 50};
+                            int jenesisBowAddAtPower[] = {196, 153, 116, 84, 58};
                             int weaponAddGrade = 0;
                             //기본+스타포스
                             int jenesisBowAtPower = 318;
@@ -968,7 +968,7 @@ public class CharacterService {
                                     }
                                 }
 
-                                changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc;
+                                changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc+weaponAtMgStatStarForce;
 
                             } else if (weaponName.charAt(0) == '아') {
 
