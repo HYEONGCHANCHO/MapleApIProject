@@ -968,7 +968,7 @@ public class CharacterService {
                                     }
                                 }
 
-                                changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc+weaponAtMgStatStarForce;
+                                changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc + weaponAtMgStatStarForce;
 
                             } else if (weaponName.charAt(0) == '아') {
 
@@ -1888,7 +1888,8 @@ public class CharacterService {
                     int UnionOccupiedDex = 0;
                     int UnionOccupiedInt = 0;
                     int UnionOccupiedLuk = 0;
-                    int UnionOccupiedAtMgPower = 0;
+                    int UnionOccupiedAtPower = 0;
+                    int UnionOccupiedMgPower = 0;
                     Double UnionOccupiedCriticalDamage = 0.0;
                     Double UnionOccupiedBossDamage = 0.0;
 
@@ -1920,10 +1921,14 @@ public class CharacterService {
                             }
 
                             // 추출된 숫자에 따라 적절한 변수에 값을 누적하여 저장
-                            if (part.contains("공격력") || part.contains("마력")) {
-                                System.out.println("UnionOccupiedAtMgPower :" + UnionOccupiedAtMgPower);
-                                UnionOccupiedAtMgPower += value;
-                                System.out.println("UnionOccupiedAtMgPower :" + UnionOccupiedAtMgPower);
+                            if (part.contains("공격력")) {
+                                System.out.println("UnionOccupiedAtPower :" + UnionOccupiedAtPower);
+                                UnionOccupiedAtPower += value;
+                                System.out.println("UnionOccupiedAtPower :" + UnionOccupiedAtPower);
+                            } else if (part.contains("마력")) {
+                                System.out.println("UnionOccupiedMgPower :" + UnionOccupiedMgPower);
+                                UnionOccupiedMgPower += value;
+                                System.out.println("UnionOccupiedMgPower :" + UnionOccupiedMgPower);
                             } else if (part.contains("STR") && part.contains("DEX") && part.contains("LUK")) {
                                 UnionOccupiedStr += value;
                                 UnionOccupiedDex += value;
@@ -1946,7 +1951,7 @@ public class CharacterService {
                     }
 
 
-                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower, UnionRaiderCriticalDamage, UnionRaiderBossDamage, UnionOccupiedStr, UnionOccupiedDex, UnionOccupiedInt, UnionOccupiedLuk, UnionOccupiedAtMgPower, UnionOccupiedCriticalDamage, UnionOccupiedBossDamage);
+                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower, UnionRaiderCriticalDamage, UnionRaiderBossDamage, UnionOccupiedStr, UnionOccupiedDex, UnionOccupiedInt, UnionOccupiedLuk, UnionOccupiedAtPower,UnionOccupiedMgPower, UnionOccupiedCriticalDamage, UnionOccupiedBossDamage);
 
                     System.out.println("UnionRaiderStr :" + UnionRaiderStr);
                     System.out.println("UnionRaiderDex :" + UnionRaiderDex);
@@ -1959,7 +1964,8 @@ public class CharacterService {
                     System.out.println("UnionOccupiedDex" + UnionOccupiedDex);
                     System.out.println("UnionOccupiedInt" + UnionOccupiedInt);
                     System.out.println("UnionOccupiedLuk" + UnionOccupiedLuk);
-                    System.out.println("UnionOccupiedAtMgPower" + UnionOccupiedAtMgPower);
+                    System.out.println("UnionOccupiedAtPower" + UnionOccupiedAtPower);
+                    System.out.println("UnionOccupiedMgPower" + UnionOccupiedMgPower);
                     System.out.println("UnionOccupiedCriticalDamage" + UnionOccupiedCriticalDamage);
                     System.out.println("UnionOccupiedBossDamage" + UnionOccupiedBossDamage);
 
@@ -2106,6 +2112,10 @@ public class CharacterService {
                     int abilityDex = 0;
                     int abilityInt = 0;
                     int abilityLuk = 0;
+                    int abilityStrAp = 0;
+                    int abilityDexAp = 0;
+                    int abilityIntAp = 0;
+                    int abilityLukAp = 0;
                     int abilityStrPer = 0;
                     int abilityDexPer = 0;
                     int abilityIntPer = 0;
@@ -2159,13 +2169,13 @@ public class CharacterService {
                             } else if (part.contains("공격력") || part.contains("마력")) {
                                 abilityAtMgPower += value;
                             } else if (part.contains("AP를 직접 투자한 STR의")) {
-                                abilityDexPer += value;
+                                abilityDexAp += apStr*value/100;
                             } else if (part.contains("AP를 직접 투자한 DEX의")) {
-                                abilityStrPer += value;
+                                abilityStrAp += apDex*value/100;
                             } else if (part.contains("AP를 직접 투자한 INT의")) {
-                                abilityLukPer += value;
+                                abilityLukAp += apInt*value/100;
                             } else if (part.contains("AP를 직접 투자한 LUK의")) {
-                                abilityIntPer += value;
+                                abilityIntAp += apLuk*value/100;
                             } else if (part.contains("STR")) {
                                 abilityStr += value;
                             } else if (part.contains("DEX")) {
@@ -2202,6 +2212,10 @@ public class CharacterService {
                     System.out.println("abilityDex :" + abilityDex);
                     System.out.println("abilityLuk :" + abilityLuk);
                     System.out.println("abilityInt" + abilityInt);
+                    System.out.println("abilityStrAp :" + abilityStrAp);
+                    System.out.println("abilityDexAp :" + abilityDexAp);
+                    System.out.println("abilityLukAp :" + abilityLukAp);
+                    System.out.println("abilityIntAp" + abilityIntAp);
                     System.out.println("abilityStrPer" + abilityStrPer);
                     System.out.println("abilityDexPer" + abilityDexPer);
                     System.out.println("abilityIntPer" + abilityIntPer);
@@ -2209,7 +2223,7 @@ public class CharacterService {
                     System.out.println("abilityAtMgPower" + abilityAtMgPower);
                     System.out.println("abilityBossDamage" + abilityBossDamage);
 
-                    CharactersAbilityInfoDTO charactersAbilityInfoDTO = new CharactersAbilityInfoDTO(charactersName, abilityStr, abilityDex, abilityInt, abilityLuk, abilityStrPer, abilityDexPer, abilityIntPer, abilityLukPer, abilityAtMgPower, abilityBossDamage);
+                    CharactersAbilityInfoDTO charactersAbilityInfoDTO = new CharactersAbilityInfoDTO(charactersName, abilityStr, abilityDex, abilityInt, abilityLuk,abilityStrAp, abilityDexAp, abilityIntAp, abilityLukAp, abilityStrPer, abilityDexPer, abilityIntPer, abilityLukPer, abilityAtMgPower, abilityBossDamage);
 
                     return Mono.just(charactersAbilityInfoDTO);
 
@@ -2475,41 +2489,54 @@ public class CharacterService {
                         Double subDamage[] = {0.75, 1.5, 2.25, 3.0, 3.75, 4.5, 5.25, 6.0, 6.75, 7.5};
                         int subAtMgPower[] = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50};
                         int subMainStat[] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
-
-                        if (mainStatName.contains("보스 데미지 증가")) {
-                            hexaStatBossDamage += mainBossDamage[mainStatLevel - 1];
-                        } else if (mainStatName.contains("주력 스탯 증가")) {
-                            hexaStatMainStat += mainMainStat[mainStatLevel - 1];
-                        } else if (mainStatName.contains("데미지 증가")) {
-                            hexaStatDamage += mainDamage[mainStatLevel - 1];
-                        } else if (mainStatName.contains("크리티컬 데미지 증가")) {
-                            hexaStatCriticalDamage += mainCriticalDamage[mainStatLevel - 1];
-                        } else if (mainStatName.contains("공격력 증가")) {
-                            hexaStatAtMgPower += mainAtMgPower[mainStatLevel - 1];
+                        if (mainStatLevel != 0) {
+                            if (mainStatName.contains("보스 데미지 증가")) {
+                                hexaStatBossDamage += mainBossDamage[mainStatLevel - 1];
+                            } else if (mainStatName.contains("주력 스탯 증가")) {
+                                hexaStatMainStat += mainMainStat[mainStatLevel - 1];
+                            } else if (mainStatName.contains("크리티컬 데미지 증가")) {
+                                hexaStatCriticalDamage += mainCriticalDamage[mainStatLevel - 1];
+                            } else if (mainStatName.contains("데미지 증가")) {
+                                hexaStatDamage += mainDamage[mainStatLevel - 1];
+                            } else if (mainStatName.contains("공격력 증가")) {
+                                hexaStatAtMgPower += mainAtMgPower[mainStatLevel - 1];
+                            } else if (mainStatName.contains("마력 증가")) {
+                                hexaStatAtMgPower += mainAtMgPower[mainStatLevel - 1];
+                            }
                         }
 
-                        if (sub_stat_name_1.contains("보스 데미지 증가")) {
-                            hexaStatBossDamage += subBossDamage[SubStatOneLevel - 1];
-                        } else if (sub_stat_name_1.contains("주력 스탯 증가")) {
-                            hexaStatMainStat += subMainStat[SubStatOneLevel - 1];
-                        } else if (sub_stat_name_1.contains("데미지 증가")) {
-                            hexaStatDamage += subDamage[SubStatOneLevel - 1];
-                        } else if (sub_stat_name_1.contains("크리티컬 데미지 증가")) {
-                            hexaStatCriticalDamage += subCriticalDamage[SubStatOneLevel - 1];
-                        } else if (sub_stat_name_1.contains("공격력 증가")) {
-                            hexaStatAtMgPower += subAtMgPower[SubStatOneLevel - 1];
+                        if (SubStatOneLevel != 0) {
+
+                            if (sub_stat_name_1.contains("보스 데미지 증가")) {
+                                hexaStatBossDamage += subBossDamage[SubStatOneLevel - 1];
+                            } else if (sub_stat_name_1.contains("주력 스탯 증가")) {
+                                hexaStatMainStat += subMainStat[SubStatOneLevel - 1];
+                            } else if (sub_stat_name_1.contains("크리티컬 데미지 증가")) {
+                                hexaStatCriticalDamage += subCriticalDamage[SubStatOneLevel - 1];
+                            } else if (sub_stat_name_1.contains("데미지 증가")) {
+                                hexaStatDamage += subDamage[SubStatOneLevel - 1];
+                            } else if (sub_stat_name_1.contains("공격력 증가")) {
+                                hexaStatAtMgPower += subAtMgPower[SubStatOneLevel - 1];
+                            }else if (sub_stat_name_1.contains("마력 증가")) {
+                                hexaStatAtMgPower += subAtMgPower[SubStatOneLevel - 1];
+                            }
                         }
 
-                        if (sub_stat_name_2.contains("보스 데미지 증가")) {
-                            hexaStatBossDamage += subBossDamage[SubStatTwoLevel - 1];
-                        } else if (sub_stat_name_2.contains("주력 스탯 증가")) {
-                            hexaStatMainStat += subMainStat[SubStatTwoLevel - 1];
-                        } else if (sub_stat_name_2.contains("데미지 증가")) {
-                            hexaStatDamage += subDamage[SubStatTwoLevel - 1];
-                        } else if (sub_stat_name_2.contains("크리티컬 데미지 증가")) {
-                            hexaStatCriticalDamage += subCriticalDamage[SubStatTwoLevel - 1];
-                        } else if (sub_stat_name_2.contains("공격력 증가")) {
-                            hexaStatAtMgPower += subAtMgPower[SubStatTwoLevel - 1];
+                        if (SubStatTwoLevel != 0) {
+
+                            if (sub_stat_name_2.contains("보스 데미지 증가")) {
+                                hexaStatBossDamage += subBossDamage[SubStatTwoLevel - 1];
+                            } else if (sub_stat_name_2.contains("주력 스탯 증가")) {
+                                hexaStatMainStat += subMainStat[SubStatTwoLevel - 1];
+                            } else if (sub_stat_name_2.contains("크리티컬 데미지 증가")) {
+                                hexaStatCriticalDamage += subCriticalDamage[SubStatTwoLevel - 1];
+                            } else if (sub_stat_name_2.contains("데미지 증가")) {
+                                hexaStatDamage += subDamage[SubStatTwoLevel - 1];
+                            } else if (sub_stat_name_2.contains("공격력 증가")) {
+                                hexaStatAtMgPower += subAtMgPower[SubStatTwoLevel - 1];
+                            }else if (sub_stat_name_2.contains("마력 증가")) {
+                                hexaStatAtMgPower += subAtMgPower[SubStatTwoLevel - 1];
+                            }
                         }
 
                     }
@@ -2675,7 +2702,9 @@ public class CharacterService {
                 //유니온 점령
                 int unionOccupiedMainStat = 0;
                 int unionOccupiedSubStat = 0;
-                int unionOccupiedAtMgPower = charactersUnionInfoDTO.getUnionOccupiedAtMgPower();
+                int unionOccupiedAtMgPower = 0;
+                int unionOccupiedAtPower = charactersUnionInfoDTO.getUnionOccupiedAtPower();
+                int unionOccupiedMgPower = charactersUnionInfoDTO.getUnionOccupiedMgPower();
                 Double unionOccupiedBossDamage = charactersUnionInfoDTO.getUnionOccupiedBossDamage();
                 Double unionOccupiedCriticalDamage = charactersUnionInfoDTO.getUnionOccupiedCriticalDamage();
                 int unionOccupiedStr = charactersUnionInfoDTO.getUnionOccupiedStr();
@@ -2709,12 +2738,17 @@ public class CharacterService {
                 //어빌리티
                 int abilityStatMainStat = 0;
                 int abilityStatSubStat = 0;
+                int abilityStatSubStatAp = 0;
                 int abilityStatMainStatPer = 0;
                 int abilityStatSubStatPer = 0;
                 int abilityStatStr = charactersAbilityInfoDTO.getAbilityStr();
                 int abilityStatDex = charactersAbilityInfoDTO.getAbilityDex();
                 int abilityStatInt = charactersAbilityInfoDTO.getAbilityInt();
                 int abilityStatLuk = charactersAbilityInfoDTO.getAbilityLuk();
+                int abilityStatStrAp = charactersAbilityInfoDTO.getAbilityStrAp();
+                int abilityStatDexAp = charactersAbilityInfoDTO.getAbilityDexAp();
+                int abilityStatIntAp = charactersAbilityInfoDTO.getAbilityIntAp();
+                int abilityStatLukAp = charactersAbilityInfoDTO.getAbilityLukAp();
                 int abilityStatStrPer = charactersAbilityInfoDTO.getAbilityStrPer();
                 int abilityStatDexPer = charactersAbilityInfoDTO.getAbilityDexPer();
                 int abilityStatIntPer = charactersAbilityInfoDTO.getAbilityIntPer();
@@ -2737,7 +2771,7 @@ public class CharacterService {
                 //0차 스킬
                 int skillStatAtMgPower = charactersSkillStatInfoDTO.getSkillStatAtMgPower();
                 boolean isFree = charactersSkillStatInfoDTO.isFree();
-                double eventAllStat = charactersSkillStatInfoDTO.getSkillStatAllStat();
+                double eventAllStat = charactersSkillStatInfoDTO.getEventAllStat();
                 double eventAtMgPower = charactersSkillStatInfoDTO.getEventAtMgPower();
                 double eventBossDamage = charactersSkillStatInfoDTO.getEventBossDamage();
                 //캐시 아이템 스탯
@@ -2771,6 +2805,7 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedStr;
                     unionOccupiedSubStat = unionOccupiedDex;
+                    unionOccupiedAtMgPower =unionOccupiedAtPower;
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderStr;
                     unionRaiderSubStat = unionRaiderDex;
@@ -2780,6 +2815,7 @@ public class CharacterService {
                     //어빌리티
                     abilityStatMainStat = abilityStatStr;
                     abilityStatSubStat = abilityStatDex;
+                    abilityStatSubStatAp = abilityStatDexAp;
                     abilityStatMainStatPer = abilityStatStrPer;
                     abilityStatSubStatPer = abilityStatDexPer;
                     //심볼
@@ -2803,6 +2839,8 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedInt;
                     unionOccupiedSubStat = unionOccupiedLuk;
+                    unionOccupiedAtMgPower =unionOccupiedMgPower;
+
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderInt;
                     unionRaiderSubStat = unionRaiderLuk;
@@ -2812,6 +2850,7 @@ public class CharacterService {
                     //어빌리티
                     abilityStatMainStat = abilityStatInt;
                     abilityStatSubStat = abilityStatLuk;
+                    abilityStatSubStatAp = abilityStatLukAp;
                     abilityStatMainStatPer = abilityStatIntPer;
                     abilityStatSubStatPer = abilityStatLukPer;
                     //심볼
@@ -2836,6 +2875,8 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedDex;
                     unionOccupiedSubStat = unionOccupiedStr;
+                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderDex;
                     unionRaiderSubStat = unionRaiderStr;
@@ -2845,6 +2886,7 @@ public class CharacterService {
                     //어빌리티
                     abilityStatMainStat = abilityStatDex;
                     abilityStatSubStat = abilityStatStr;
+                    abilityStatSubStatAp = abilityStatStrAp;
                     abilityStatMainStatPer = abilityStatDexPer;
                     abilityStatSubStatPer = abilityStatStrPer;
                     //심볼
@@ -2868,6 +2910,8 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedLuk;
                     unionOccupiedSubStat = unionOccupiedDex;
+                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderLuk;
                     unionRaiderSubStat = unionRaiderDex;
@@ -2877,6 +2921,7 @@ public class CharacterService {
                     //어빌리티
                     abilityStatMainStat = abilityStatLuk;
                     abilityStatSubStat = abilityStatDex;
+                    abilityStatSubStatAp = abilityStatDexAp;
                     abilityStatMainStatPer = abilityStatLukPer;
                     abilityStatSubStatPer = abilityStatDexPer;
                     //심볼
@@ -2900,6 +2945,8 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedLuk;
                     unionOccupiedSubStat = unionOccupiedDex + unionOccupiedStr;
+                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderLuk;
                     unionRaiderSubStat = unionRaiderDex + unionRaiderStr;
@@ -2909,6 +2956,7 @@ public class CharacterService {
                     //어빌리티
                     abilityStatMainStat = abilityStatLuk;
                     abilityStatSubStat = abilityStatDex + abilityStatStr;
+                    abilityStatSubStatAp = abilityStatDexAp + abilityStatStrAp;
                     abilityStatMainStatPer = abilityStatLukPer;
                     abilityStatSubStatPer = abilityStatDexPer + abilityStatStrPer;
                     //심볼
@@ -2930,7 +2978,7 @@ public class CharacterService {
 
                 mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat + hexaStatMainStat;
 
-                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP + (int) eventAllStat;
+                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP + (int) eventAllStat+abilityStatSubStatAp;
 
                 subStatPer = itemSubStatPer + abilityStatSubStatPer;
 
@@ -2954,7 +3002,9 @@ public class CharacterService {
                 System.out.println("itemSetAllStat :" + itemSetAllStat);
                 System.out.println("unionOccupiedMainStat :" + unionOccupiedMainStat);
                 System.out.println("mainStatAP :" + mainStatAP);
-                System.out.println("cashItemMainStat :" + cashItemMainStat + "\n");
+                System.out.println("cashItemMainStat :" + cashItemMainStat);
+                System.out.println("(int)eventAllStat :" + (int) eventAllStat);
+                System.out.println("eventAllStat :" + eventAllStat + "\n");
 
                 System.out.println("mainStatPer :" + mainStatPer);
                 System.out.println("itemMainStatPer :" + itemMainStatPer);
@@ -2965,7 +3015,10 @@ public class CharacterService {
                 System.out.println("hyperStatMainStat :" + hyperStatMainStat);
                 System.out.println("abilityStatMainStat :" + abilityStatMainStat);
                 System.out.println("hexaStatMainStat :" + hexaStatMainStat);
-                System.out.println("simbolStatMainStat :" + simbolStatMainStat + "\n");
+                System.out.println("simbolStatMainStat :" + simbolStatMainStat);
+                System.out.println("(int)eventAllStat :" + (int) eventAllStat);
+                System.out.println("eventAllStat :" + eventAllStat + "\n");
+
 
                 System.out.println("subStat :" + subStat);
                 System.out.println("itemSubStat :" + itemSubStat);
@@ -2973,6 +3026,7 @@ public class CharacterService {
                 System.out.println("artiAllStat :" + artiAllStat);
                 System.out.println("subStatAP :" + subStatAP);
                 System.out.println("unionOccupiedSubStat :" + unionOccupiedSubStat);
+                System.out.println("abilityStatSubStatAp :" + abilityStatSubStatAp);
                 System.out.println("cashItemSubStat :" + cashItemSubStat + "\n");
 //칭호부분 안더해짐 메인 서브 둘다
 
@@ -2996,6 +3050,7 @@ public class CharacterService {
                 System.out.println("unionOccupiedAtMgPower :" + unionOccupiedAtMgPower);
                 System.out.println("unionRaiderAtMgPower :" + unionRaiderAtMgPower);
                 System.out.println("hyperStatAtMgPower :" + hyperStatAtMgPower);
+                System.out.println("eventAtMgPower :" + (int)eventAtMgPower);
                 System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower + "\n");
 //공격력 세트효과 이상함 여기도 칭호 손봐야할듯
 
@@ -3016,6 +3071,7 @@ public class CharacterService {
                 System.out.println("hexaStatBossDamage :" + hexaStatBossDamage);
                 System.out.println("hyperStatBossDamage :" + hyperStatBossDamage);
                 System.out.println("unionRaiderBossDamage :" + unionRaiderBossDamage);
+                System.out.println("eventBossDamage :" + eventBossDamage);
                 System.out.println("itemSetDamage :" + itemSetDamage + "\n");
 
                 System.out.println("criticalDamage :" + criticalDamage);

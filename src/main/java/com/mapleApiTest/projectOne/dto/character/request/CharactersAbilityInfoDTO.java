@@ -8,6 +8,10 @@ public class CharactersAbilityInfoDTO{
     int abilityDex ;
     int abilityInt ;
     int abilityLuk ;
+    int abilityStrAp ;
+    int abilityDexAp ;
+    int abilityIntAp ;
+    int abilityLukAp ;
     int abilityStrPer = 0;
     int abilityDexPer = 0;
     int abilityIntPer = 0;
@@ -16,12 +20,16 @@ public class CharactersAbilityInfoDTO{
     Double abilityBossDamage ;
 
 
-    public CharactersAbilityInfoDTO(String charactersName, int abilityStr, int abilityDex, int abilityInt, int abilityLuk, int abilityStrPer, int abilityDexPer, int abilityIntPer, int abilityLukPer, int abilityAtMgPower, Double abilityBossDamage) {
+    public CharactersAbilityInfoDTO(String charactersName, int abilityStr, int abilityDex, int abilityInt, int abilityLuk,int abilityStrAp, int abilityDexAp, int abilityIntAp, int abilityLukAp, int abilityStrPer, int abilityDexPer, int abilityIntPer, int abilityLukPer, int abilityAtMgPower, Double abilityBossDamage) {
         this.charactersName = charactersName;
         this.abilityStr = abilityStr;
         this.abilityDex = abilityDex;
         this.abilityInt = abilityInt;
         this.abilityLuk = abilityLuk;
+        this.abilityStrAp = abilityStrAp;
+        this.abilityDexAp = abilityDexAp;
+        this.abilityIntAp = abilityIntAp;
+        this.abilityLukAp = abilityLukAp;
         this.abilityStrPer = abilityStrPer;
         this.abilityDexPer = abilityDexPer;
         this.abilityIntPer = abilityIntPer;
@@ -72,5 +80,21 @@ public class CharactersAbilityInfoDTO{
 
     public Double getAbilityBossDamage() {
         return abilityBossDamage;
+    }
+
+    public int getAbilityStrAp() {
+        return abilityStrAp;
+    }
+
+    public int getAbilityDexAp() {
+        return abilityDexAp;
+    }
+
+    public int getAbilityIntAp() {
+        return abilityIntAp;
+    }
+
+    public int getAbilityLukAp() {
+        return abilityLukAp;
     }
 }

@@ -15,14 +15,15 @@ public class CharactersUnionInfoDTO {
     int UnionOccupiedDex ;
     int UnionOccupiedInt ;
     int UnionOccupiedLuk ;
-    int UnionOccupiedAtMgPower ;
+    int UnionOccupiedAtPower ;
+    int UnionOccupiedMgPower ;
     Double UnionOccupiedCriticalDamage ;
     Double UnionOccupiedBossDamage ;
 
     public CharactersUnionInfoDTO() {
     }
 
-    public CharactersUnionInfoDTO(String charactersName, int unionRaiderStr, int unionRaiderDex, int unionRaiderInt, int unionRaiderLuk, int unionRaiderAtMgPower, Double unionRaiderCriticalDamage, Double unionRaiderBossDamage, int unionOccupiedStr, int unionOccupiedDex, int unionOccupiedInt, int unionOccupiedLuk, int unionOccupiedAtMgPower, Double unionOccupiedCriticalDamage, Double unionOccupiedBossDamage) {
+    public CharactersUnionInfoDTO(String charactersName, int unionRaiderStr, int unionRaiderDex, int unionRaiderInt, int unionRaiderLuk, int unionRaiderAtMgPower, Double unionRaiderCriticalDamage, Double unionRaiderBossDamage, int unionOccupiedStr, int unionOccupiedDex, int unionOccupiedInt, int unionOccupiedLuk, int unionOccupiedAtPower,int unionOccupiedMgPower, Double unionOccupiedCriticalDamage, Double unionOccupiedBossDamage) {
         this.charactersName = charactersName;
         UnionRaiderStr = unionRaiderStr;
         UnionRaiderDex = unionRaiderDex;
@@ -35,7 +36,8 @@ public class CharactersUnionInfoDTO {
         UnionOccupiedDex = unionOccupiedDex;
         UnionOccupiedInt = unionOccupiedInt;
         UnionOccupiedLuk = unionOccupiedLuk;
-        UnionOccupiedAtMgPower = unionOccupiedAtMgPower;
+        UnionOccupiedAtPower = unionOccupiedAtPower;
+        UnionOccupiedMgPower = unionOccupiedMgPower;
         UnionOccupiedCriticalDamage = unionOccupiedCriticalDamage;
         UnionOccupiedBossDamage = unionOccupiedBossDamage;
     }
@@ -136,12 +138,18 @@ public class CharactersUnionInfoDTO {
         UnionOccupiedLuk = unionOccupiedLuk;
     }
 
-    public int getUnionOccupiedAtMgPower() {
-        return UnionOccupiedAtMgPower;
+    public int getUnionOccupiedAtPower() {
+        return UnionOccupiedAtPower;
     }
 
-    public void setUnionOccupiedAtMgPower(int unionOccupiedAtMgPower) {
-        UnionOccupiedAtMgPower = unionOccupiedAtMgPower;
+    public void setUnionOccupiedAtPower(int unionOccupiedAtPower) {
+        UnionOccupiedAtPower = unionOccupiedAtPower;
+    }   public int getUnionOccupiedMgPower() {
+        return UnionOccupiedMgPower;
+    }
+
+    public void setUnionOccupiedMgPower(int unionOccupiedMgPower) {
+        UnionOccupiedMgPower = unionOccupiedMgPower;
     }
 
     public Double getUnionOccupiedCriticalDamage() {
