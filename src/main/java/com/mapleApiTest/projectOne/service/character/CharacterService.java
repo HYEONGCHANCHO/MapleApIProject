@@ -841,6 +841,8 @@ public class CharacterService {
                             int weaponAddGrade = 0;
                             //기본+스타포스
                             int jenesisBowAtPower = 318;
+                            int jenesisBowStarForceAtMg = 246;
+                            int jenesisWeaponAtMgStatEtc = 72;
 
 
                             if (weaponName.charAt(0) == '제') {
@@ -968,7 +970,12 @@ public class CharacterService {
                                     }
                                 }
 
-                                changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + weaponAtMgStatEtc + weaponAtMgStatStarForce;
+                                changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + jenesisWeaponAtMgStatEtc + jenesisBowStarForceAtMg;
+
+                                System.out.println("changedWeaponAtMgStat :"+changedWeaponAtMgStat);
+                                System.out.println("jenesisBowAddAtPower[weaponAddGrade] :"+jenesisBowAddAtPower[weaponAddGrade]);
+                                System.out.println("jenesisWeaponAtMgStatEtc :"+jenesisWeaponAtMgStatEtc);
+                                System.out.println("jenesisBowStarForceAtMg : "+jenesisBowStarForceAtMg);
 
                             } else if (weaponName.charAt(0) == '아') {
 
@@ -2386,12 +2393,15 @@ public class CharacterService {
                             if (skillEffect.contains("공격력") || skillEffect.contains("마력")) {
                                 Pattern pattern = Pattern.compile("(\\d+)"); // 숫자를 추출하는 패턴
                                 Matcher matcher = pattern.matcher(skillEffect);
+
                                 while (matcher.find()) {
                                     int extractedValue = Integer.parseInt(matcher.group());
                                     value = extractedValue; // 추출한 숫자를 누적하여 저장
+
                                 }
                             }
                             skillStatAtMgPower += value;
+
                         } else if (skillName.contains("파괴의 얄다바오트")) {
                             isFree = true;
                         } else if (skillName.contains("궁극의 콜라보")) {
@@ -2421,13 +2431,17 @@ public class CharacterService {
 
                     if (jungBless < yujeBless) {
                         skillStatAtMgPower += yujeBless;
+
                     } else {
                         skillStatAtMgPower += jungBless;
+
                     }
 
                     System.out.println("skillStatAllStat :" + skillStatAllStat);
                     System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
                     System.out.println("isFree :" + isFree);
+                    System.out.println("skillStatAtMgPower :" + skillStatAtMgPower);
+
                     CharactersSkillStatInfoDTO charactersSkillStatInfoDTO = new CharactersSkillStatInfoDTO(charactersName, skillStatAllStat, skillStatAtMgPower, eventAllStat, eventAtMgPower, eventBossDamage, isFree);
 
                     return Mono.just(charactersSkillStatInfoDTO);
@@ -2934,8 +2948,8 @@ public class CharacterService {
                     cashItemSubStat = cashItemDex;
                     cashItemAtMgPower = cashItemAtPower;
                     //헥사 스텟 - 메인 서브 적용되어 있음
-                } else if (Arrays.asList("듀얼블레이드", "카데나", "섀도어").contains(charactersClass)) {
-                    //주 럭 부 힘,덱 = 듀얼블레이드 카 세
+                } else if (Arrays.asList("듀얼블레이더", "카데나", "섀도어").contains(charactersClass)) {
+                    //주 럭 부 힘,덱 = 듀얼블레이더 카 세
                     //AP배분 스텟
                     mainStatAP = apLuk;
                     subStatAP = apDex + apStr;

@@ -580,8 +580,18 @@ public class CharactersItemInfoDTO {
             potentialSubStatPer = dexPotentialPer + allStatPotentialPer;
             potentialAtMgStat = atPotentialStat;
             potentialAtMgPer = atPotentialPer;
-        } else if (Arrays.asList("듀얼블레이드", "카데나", "섀도어").contains(charactersClass)) {
-
+        } else if (Arrays.asList("듀얼블레이더", "카데나", "섀도어").contains(charactersClass)) {
+            mainStat = luk + excepLuk + lukTitleStat + allStatTitle;
+            subStat = dex + excepDex + dexTitleStat + allStatTitle+ str + excepStr +strTitleStat;
+            mainStatPer = allStat + lukTitlePer + allStatTitlePer;
+            subStatPer = allStat + dexTitlePer + allStatTitlePer + strTitlePer;
+            atMgStat = attactPower + excepAtPower + atTitleStat;
+            potentialMainStat = lukPotentialStat + allStatPotential;
+            potentialSubStat = dexPotentialStat + allStatPotential+strPotentialStat;
+            potentialMainStatPer = lukPotentialPer + allStatPotentialPer;
+            potentialSubStatPer = dexPotentialPer + allStatPotentialPer+strPotentialPer;
+            potentialAtMgStat = atPotentialStat;
+            potentialAtMgPer = atPotentialPer;
         } else if (Arrays.asList("데몬어벤져", "제논").contains(charactersClass)) {
             //아직 미구현
 
