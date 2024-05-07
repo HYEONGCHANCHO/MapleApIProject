@@ -4,6 +4,7 @@ package com.mapleApiTest.projectOne.dto.character.request;
 public class CharactersTotalStatInfoDTO {
 
     private String charactersName;
+    private String charactersClass;
     private int mainStat;
     private int mainStatPer;
     private int mainNonStat;
@@ -18,8 +19,9 @@ public class CharactersTotalStatInfoDTO {
     private boolean isFree;
     private int apiCombat;
 
-    public CharactersTotalStatInfoDTO(String charactersName, int mainStat, int mainStatPer, int mainNonStat, int subStat, int subStatPer, int subNonStat, int atMgPower, int atMgPowerPer, Double damage, Double bossDamage, Double criticalDamage, boolean isFree, int apiCombat) {
+    public CharactersTotalStatInfoDTO(String charactersName,String charactersClass, int mainStat, int mainStatPer, int mainNonStat, int subStat, int subStatPer, int subNonStat, int atMgPower, int atMgPowerPer, Double damage, Double bossDamage, Double criticalDamage, boolean isFree, int apiCombat) {
         this.charactersName = charactersName;
+        this.charactersClass = charactersClass;
         this.mainStat = mainStat;
         this.mainStatPer = mainStatPer;
         this.mainNonStat = mainNonStat;
@@ -41,6 +43,14 @@ public class CharactersTotalStatInfoDTO {
 
     public void setCharactersName(String charactersName) {
         this.charactersName = charactersName;
+    }
+
+    public String getCharactersClass() {
+        return charactersClass;
+    }
+
+    public void setCharactersClass(String charactersClass) {
+        this.charactersClass = charactersClass;
     }
 
     public int getMainStat() {

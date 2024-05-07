@@ -21,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
@@ -972,10 +973,10 @@ public class CharacterService {
 
                                 changedWeaponAtMgStat = jenesisBowAtPower + jenesisBowAddAtPower[weaponAddGrade] + jenesisWeaponAtMgStatEtc + jenesisBowStarForceAtMg;
 
-                                System.out.println("changedWeaponAtMgStat :"+changedWeaponAtMgStat);
-                                System.out.println("jenesisBowAddAtPower[weaponAddGrade] :"+jenesisBowAddAtPower[weaponAddGrade]);
-                                System.out.println("jenesisWeaponAtMgStatEtc :"+jenesisWeaponAtMgStatEtc);
-                                System.out.println("jenesisBowStarForceAtMg : "+jenesisBowStarForceAtMg);
+                                System.out.println("changedWeaponAtMgStat :" + changedWeaponAtMgStat);
+                                System.out.println("jenesisBowAddAtPower[weaponAddGrade] :" + jenesisBowAddAtPower[weaponAddGrade]);
+                                System.out.println("jenesisWeaponAtMgStatEtc :" + jenesisWeaponAtMgStatEtc);
+                                System.out.println("jenesisBowStarForceAtMg : " + jenesisBowStarForceAtMg);
 
                             } else if (weaponName.charAt(0) == '아') {
 
@@ -1958,7 +1959,7 @@ public class CharacterService {
                     }
 
 
-                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower, UnionRaiderCriticalDamage, UnionRaiderBossDamage, UnionOccupiedStr, UnionOccupiedDex, UnionOccupiedInt, UnionOccupiedLuk, UnionOccupiedAtPower,UnionOccupiedMgPower, UnionOccupiedCriticalDamage, UnionOccupiedBossDamage);
+                    CharactersUnionInfoDTO charactersUnionInfoDTO = new CharactersUnionInfoDTO(charactersName, UnionRaiderStr, UnionRaiderDex, UnionRaiderInt, UnionRaiderLuk, UnionRaiderAtMgPower, UnionRaiderCriticalDamage, UnionRaiderBossDamage, UnionOccupiedStr, UnionOccupiedDex, UnionOccupiedInt, UnionOccupiedLuk, UnionOccupiedAtPower, UnionOccupiedMgPower, UnionOccupiedCriticalDamage, UnionOccupiedBossDamage);
 
                     System.out.println("UnionRaiderStr :" + UnionRaiderStr);
                     System.out.println("UnionRaiderDex :" + UnionRaiderDex);
@@ -2176,13 +2177,13 @@ public class CharacterService {
                             } else if (part.contains("공격력") || part.contains("마력")) {
                                 abilityAtMgPower += value;
                             } else if (part.contains("AP를 직접 투자한 STR의")) {
-                                abilityDexAp += apStr*value/100;
+                                abilityDexAp += apStr * value / 100;
                             } else if (part.contains("AP를 직접 투자한 DEX의")) {
-                                abilityStrAp += apDex*value/100;
+                                abilityStrAp += apDex * value / 100;
                             } else if (part.contains("AP를 직접 투자한 INT의")) {
-                                abilityLukAp += apInt*value/100;
+                                abilityLukAp += apInt * value / 100;
                             } else if (part.contains("AP를 직접 투자한 LUK의")) {
-                                abilityIntAp += apLuk*value/100;
+                                abilityIntAp += apLuk * value / 100;
                             } else if (part.contains("STR")) {
                                 abilityStr += value;
                             } else if (part.contains("DEX")) {
@@ -2230,7 +2231,7 @@ public class CharacterService {
                     System.out.println("abilityAtMgPower" + abilityAtMgPower);
                     System.out.println("abilityBossDamage" + abilityBossDamage);
 
-                    CharactersAbilityInfoDTO charactersAbilityInfoDTO = new CharactersAbilityInfoDTO(charactersName, abilityStr, abilityDex, abilityInt, abilityLuk,abilityStrAp, abilityDexAp, abilityIntAp, abilityLukAp, abilityStrPer, abilityDexPer, abilityIntPer, abilityLukPer, abilityAtMgPower, abilityBossDamage);
+                    CharactersAbilityInfoDTO charactersAbilityInfoDTO = new CharactersAbilityInfoDTO(charactersName, abilityStr, abilityDex, abilityInt, abilityLuk, abilityStrAp, abilityDexAp, abilityIntAp, abilityLukAp, abilityStrPer, abilityDexPer, abilityIntPer, abilityLukPer, abilityAtMgPower, abilityBossDamage);
 
                     return Mono.just(charactersAbilityInfoDTO);
 
@@ -2531,7 +2532,7 @@ public class CharacterService {
                                 hexaStatDamage += subDamage[SubStatOneLevel - 1];
                             } else if (sub_stat_name_1.contains("공격력 증가")) {
                                 hexaStatAtMgPower += subAtMgPower[SubStatOneLevel - 1];
-                            }else if (sub_stat_name_1.contains("마력 증가")) {
+                            } else if (sub_stat_name_1.contains("마력 증가")) {
                                 hexaStatAtMgPower += subAtMgPower[SubStatOneLevel - 1];
                             }
                         }
@@ -2548,7 +2549,7 @@ public class CharacterService {
                                 hexaStatDamage += subDamage[SubStatTwoLevel - 1];
                             } else if (sub_stat_name_2.contains("공격력 증가")) {
                                 hexaStatAtMgPower += subAtMgPower[SubStatTwoLevel - 1];
-                            }else if (sub_stat_name_2.contains("마력 증가")) {
+                            } else if (sub_stat_name_2.contains("마력 증가")) {
                                 hexaStatAtMgPower += subAtMgPower[SubStatTwoLevel - 1];
                             }
                         }
@@ -2819,7 +2820,7 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedStr;
                     unionOccupiedSubStat = unionOccupiedDex;
-                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+                    unionOccupiedAtMgPower = unionOccupiedAtPower;
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderStr;
                     unionRaiderSubStat = unionRaiderDex;
@@ -2853,7 +2854,7 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedInt;
                     unionOccupiedSubStat = unionOccupiedLuk;
-                    unionOccupiedAtMgPower =unionOccupiedMgPower;
+                    unionOccupiedAtMgPower = unionOccupiedMgPower;
 
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderInt;
@@ -2889,7 +2890,7 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedDex;
                     unionOccupiedSubStat = unionOccupiedStr;
-                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+                    unionOccupiedAtMgPower = unionOccupiedAtPower;
 
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderDex;
@@ -2924,7 +2925,7 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedLuk;
                     unionOccupiedSubStat = unionOccupiedDex;
-                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+                    unionOccupiedAtMgPower = unionOccupiedAtPower;
 
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderLuk;
@@ -2959,7 +2960,7 @@ public class CharacterService {
                     //유니온 점령
                     unionOccupiedMainStat = unionOccupiedLuk;
                     unionOccupiedSubStat = unionOccupiedDex + unionOccupiedStr;
-                    unionOccupiedAtMgPower =unionOccupiedAtPower;
+                    unionOccupiedAtMgPower = unionOccupiedAtPower;
 
                     //유니온 공격대
                     unionRaiderMainStat = unionRaiderLuk;
@@ -2992,7 +2993,7 @@ public class CharacterService {
 
                 mainNonStat = unionRaiderMainStat + hyperStatMainStat + abilityStatMainStat + simbolStatMainStat + hexaStatMainStat;
 
-                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP + (int) eventAllStat+abilityStatSubStatAp;
+                subStat = itemSubStat + itemSetAllStat + artiAllStat + unionOccupiedSubStat + cashItemSubStat + subStatAP + (int) eventAllStat + abilityStatSubStatAp;
 
                 subStatPer = itemSubStatPer + abilityStatSubStatPer;
 
@@ -3064,7 +3065,7 @@ public class CharacterService {
                 System.out.println("unionOccupiedAtMgPower :" + unionOccupiedAtMgPower);
                 System.out.println("unionRaiderAtMgPower :" + unionRaiderAtMgPower);
                 System.out.println("hyperStatAtMgPower :" + hyperStatAtMgPower);
-                System.out.println("eventAtMgPower :" + (int)eventAtMgPower);
+                System.out.println("eventAtMgPower :" + (int) eventAtMgPower);
                 System.out.println("hexaStatAtMgPower :" + hexaStatAtMgPower + "\n");
 //공격력 세트효과 이상함 여기도 칭호 손봐야할듯
 
@@ -3097,7 +3098,7 @@ public class CharacterService {
                 System.out.println("unionOccupiedCriticalDamage :" + unionOccupiedCriticalDamage);
                 System.out.println("hexaStatCriticalDamage :" + hexaStatCriticalDamage + "\n");
 
-                CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = new CharactersTotalStatInfoDTO(charactersName, mainStat, mainStatPer, mainNonStat, subStat, subStatPer, subNonStat, atMgPower, atMgPowerPer, damage, bossDamage, criticalDamage, isFree, charactersApiCombat);
+                CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = new CharactersTotalStatInfoDTO(charactersName, charactersClass, mainStat, mainStatPer, mainNonStat, subStat, subStatPer, subNonStat, atMgPower, atMgPowerPer, damage, bossDamage, criticalDamage, isFree, charactersApiCombat);
 
                 return charactersTotalStatInfoDTO;
             } else {
@@ -3128,27 +3129,122 @@ public class CharacterService {
         int apiCombat = charactersTotalStatInfoDTO.getApiCombat();
         double finalDamage = 1.0;
 
+        String charactersClass = charactersTotalStatInfoDTO.getCharactersClass();
+        String finalCombat = null;
+        double finalMainStat = 0.0;
+        double finalSubStat = 0.0;
+        double finalStat = 0.0;
+        double finalAtMgPower = 0.0;
+        double finalCriticalDamage = 0.0;
+        double finalBossDamage = 0.0;
+        double finalCombatE = 0.0;
+
+        BigDecimal finalCombatBD;
+
+
         if (isFree) {
             finalDamage = 1.1;
         } else {
             finalDamage = 1.0;
         }
 
-        System.out.println("finalDamage :" + finalDamage);
-        double finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
-        double finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
-        double finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
-        double finalAtMgPower = Math.floor(atMgPower * ((100 + atMgPowerPer) / 100.0));
-        double finalCriticalDamage = (135 + criticalDamage) / 100.0;
-        double finalBossDamage = (100 + damage + bossDamage) / 100.0;
+        int bullet[] = {22, 10, 20, 18, 16, 14, 12, 0};
+        int arrow[] = {9, 7, 5, 3, 0};
+        int javelin[] = {29, 25, 23, 15, 28, 27, 21, 19, 17, 0};
+        int i = 0;
+        if (charactersClass.contains("나이트로드") || charactersClass.contains("나이트워커")) {
 
-        double finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
-        BigDecimal finalCombatBD = new BigDecimal(finalCombatE);
-        String finalCombat = finalCombatBD.toPlainString();
+            while (i < javelin.length && apiCombat != (int) finalCombatE) {
+                System.out.println("finalDamage :" + finalDamage);
+                finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
+                finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
+                finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+                finalAtMgPower = Math.floor((atMgPower + javelin[i]) * ((100 + atMgPowerPer) / 100.0));
+                finalCriticalDamage = (135 + criticalDamage) / 100.0;
+                finalBossDamage = (100 + damage + bossDamage) / 100.0;
 
-        System.out.println(apiCombat + "<=api전투력");
-        System.out.println(finalCombat + "<=계산한 전투력");
+                finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+                finalCombatBD = new BigDecimal(finalCombatE);
+                finalCombat = finalCombatBD.toPlainString();
+                i++;
+                System.out.println(apiCombat + "<=api전투력");
+                System.out.println(finalCombat + "<=계산한 전투력");
+            }
 
+
+        } else if (charactersClass.contains("보우마스터") || charactersClass.contains("윈드브레이커") || charactersClass.contains("신궁") || charactersClass.contains("와일드헌터")) {
+
+            while (i < arrow.length && apiCombat != (int) finalCombatE) {
+                System.out.println("finalDamage :" + finalDamage);
+                finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
+                finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
+                finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+                finalAtMgPower = Math.floor((atMgPower + arrow[i]) * ((100 + atMgPowerPer) / 100.0));
+                System.out.println(finalAtMgPower + "<=finalAtMgPower");
+                System.out.println(arrow[i] + "<=arrow[i]");
+
+                finalCriticalDamage = (135 + criticalDamage) / 100.0;
+                finalBossDamage = (100 + damage + bossDamage) / 100.0;
+
+                finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+                finalCombatBD = new BigDecimal(finalCombatE);
+                finalCombat = finalCombatBD.toPlainString();
+                i++;
+                System.out.println(apiCombat + "<=api전투력");
+                System.out.println(finalCombat + "<=계산한 전투력");
+                System.out.println(finalCombatE + "<=finalCombatE");
+            }
+
+
+        } else if (charactersClass.contains("캡틴")) {
+
+            while (i < bullet.length && apiCombat != (int) finalCombatE) {
+                System.out.println("finalDamage :" + finalDamage);
+                finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
+                finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
+                finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+                finalAtMgPower = Math.floor((atMgPower + bullet[i]) * ((100 + atMgPowerPer) / 100.0));
+                finalCriticalDamage = (135 + criticalDamage) / 100.0;
+                finalBossDamage = (100 + damage + bossDamage) / 100.0;
+
+                finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+                finalCombatBD = new BigDecimal(finalCombatE);
+                finalCombat = finalCombatBD.toPlainString();
+                i++;
+                System.out.println(apiCombat + "<=api전투력");
+                System.out.println(finalCombat + "<=계산한 전투력");
+            }
+
+        } else {
+            System.out.println("finalDamage :" + finalDamage);
+            finalMainStat = Math.floor((mainStat) * ((100 + mainStatPer) / 100.0) + mainNonStat);
+            finalSubStat = Math.floor((subStat) * ((100 + subStatPer) / 100.0) + subNonStat);
+            finalStat = ((finalMainStat * 4) + finalSubStat) / 100.0;
+            finalAtMgPower = Math.floor(atMgPower * ((100 + atMgPowerPer) / 100.0));
+            finalCriticalDamage = (135 + criticalDamage) / 100.0;
+            finalBossDamage = (100 + damage + bossDamage) / 100.0;
+
+            finalCombatE = Math.floor(finalStat * finalAtMgPower * finalCriticalDamage * finalBossDamage * finalDamage);
+            finalCombatBD = new BigDecimal(finalCombatE);
+            finalCombat = finalCombatBD.toPlainString();
+
+
+            System.out.println(apiCombat + "<=api전투력");
+            System.out.println(finalAtMgPower + "<=finalAtMgPower");
+            System.out.println(finalCombat + "<=계산한 전투력");
+        }
+
+
+        System.out.println(i + "<=i");
+        if (apiCombat == (int) finalCombatE) {
+            System.out.println(finalCombat + "<=전투력 일치");
+        } else {
+            System.out.println(apiCombat + "<=api전투력");
+            System.out.println(finalCombat + "<=계산한 전투력");
+            System.out.println((apiCombat - (int) finalCombatE) + "<=전투력 차이 수치");
+            System.out.println((apiCombat - (int) finalCombatE) * 100 / apiCombat + "<=전투력 차이 %");
+            System.out.println(String.format("%.2f", (apiCombat - finalCombatE) / apiCombat * 100) + "<=전투력 차이 %");
+        }
         return finalCombat;
     }
 
