@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Result</title>
+</head>
+<body>
+<h1>Character Total Stat Info</h1>
+<div>
+    <p>Characters Name: <span th:text="${charactersTotalStatInfoDTO.charactersName}"></span></p>
+    <!-- 다른 캐릭터 정보 필드를 표시할 수 있음 -->
+</div>
+
+<h1>Character Combat Info</h1>
+<div>
+    <p>Combat Power: <span th:text="${charactersCombat}"></span></p>
+    <!-- 다른 전투력 정보 필드를 표시할 수 있음 -->
+</div>
+
+<div>
+    <!-- 예시로 추가한 캐릭터 장비 정보 표시 -->
+    <p>Character Name: ${charactersItemEquipDTO.charactersName}</p>
+    <p>Hat Info: <span th:text="${charactersItemEquipDTO.hatInfo}"></span></p>
+    <p>Strength: <span th:text="${charactersItemEquipDTO.hatInfo.str}"></span></p>
+    <!-- 다른 전투력 정보 필드를 표시할 수 있음 -->
+</div>
+
+</body>
+</html>

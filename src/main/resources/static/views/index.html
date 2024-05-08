@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+</head>
+<body>
+<h1>Enter Nickname</h1>
+<form id="searchForm">
+    <label for="charactersName">Nickname:</label>
+    <input type="text" id="charactersName" name="charactersName" required>
+    <button type="submit">Search</button>
+</form>
+
+<script>
+     fetch('/CharactersTotalStatInfo?charactersName=' + encodeURIComponent(charactersName))
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // 받은 데이터를 기반으로 적절한 페이지로 이동
+    window.location.href = '/views/searchResult';
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+    </script>
+</body>
+</html>

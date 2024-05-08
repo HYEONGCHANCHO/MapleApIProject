@@ -2428,13 +2428,19 @@ public class CharacterService {
                     System.out.println("eventAllStat :" + eventAllStat);
                     System.out.println("eventBossDamage :" + eventBossDamage);
                     System.out.println("eventAtMgPower :" + eventAtMgPower);
+                    System.out.println("jungBless :" + jungBless);
+                    System.out.println("yujeBless :" + yujeBless);
 
 
                     if (jungBless < yujeBless) {
                         skillStatAtMgPower += yujeBless;
+                        System.out.println("skillStatAtMgPower-- :" + skillStatAtMgPower);
+
 
                     } else {
                         skillStatAtMgPower += jungBless;
+                        System.out.println("skillStatAtMgPower-2222- :" + skillStatAtMgPower);
+
 
                     }
 
