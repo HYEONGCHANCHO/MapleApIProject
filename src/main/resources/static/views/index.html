@@ -3,31 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
+    <title>Fetch Data</title>
 </head>
 <body>
 <h1>Enter Nickname</h1>
 <form id="searchForm">
     <label for="charactersName">Nickname:</label>
     <input type="text" id="charactersName" name="charactersName" required>
-    <button type="submit">Search</button>
+    <button type="button" onclick="searchCharacters()">Search</button>
 </form>
 
+<!--<form id="searchForm2">-->
+<!--    <label for="equipmentType">부위:</label>-->
+<!--    <input type="text" id="equipmentType" name="equipmentType" required>-->
+<!--    <button type="button" onclick="searchEquipmentType()">Search</button>-->
+<!--</form>-->
+<form id="searchForm2">
+
+<button type="button" onclick="searchEquipmentType('hat')">hat</button>
+<button type="button" onclick="searchEquipmentType('top')">상의</button>
+<button type="button" onclick="searchEquipmentType('bottom')">하의</button>
+</form>
+
+<div id="result">부위:모자</div>
+<div id="result2"></div>
+
 <script>
-     fetch('/CharactersTotalStatInfo?charactersName=' + encodeURIComponent(charactersName))
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    // 받은 데이터를 기반으로 적절한 페이지로 이동
-    window.location.href = '/views/searchResult';
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-    </script>
+
+        function searchCharacters() {
+            var charactersName = document.getElementById('charactersName').value;
+
+            fetch('/search?charactersName=' + encodeURIComponent(charactersName))
+                .then(response => response.json())
+                .then(data => {
+                    // 받은 데이터를 화면에 표시
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = '';
+
+                    // 모든 DTO 데이터 표시
+                    data.forEach(dto => {
+                        var dtoDiv = document.createElement('div');
+                        dtoDiv.innerHTML = '<p>Characters Name: ' + dto.charactersName + '</p>' +'<p>Characters api 전투력: ' + dto.hatInfo + '</p>';
+                        resultDiv.appendChild(dtoDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function searchEquipmentType(equipmentType) {
+                    var charactersName = document.getElementById('charactersName').value;
+            fetch('/CharactersEquipInfo?charactersName=' + encodeURIComponent(charactersName)+'&equipmentType=' + encodeURIComponent(equipmentType))
+                .then(response => response.json())
+                .then(data => {
+                    // 받은 데이터를 화면에 표시
+                    var resultDiv2 = document.getElementById('result2');
+                    resultDiv2.innerHTML = '';
+                        var dtoDiv2 = document.createElement('div');
+                        dtoDiv2.innerHTML = '<p>mainStat: ' + data.mainStat + '</p>';
+                        resultDiv2.appendChild(dtoDiv2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+</script>
 </body>
 </html>

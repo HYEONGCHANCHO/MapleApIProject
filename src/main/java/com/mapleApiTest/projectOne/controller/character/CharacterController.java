@@ -1,6 +1,5 @@
 package com.mapleApiTest.projectOne.controller.character;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mapleApiTest.dropItemChoice.Service.DropItemChoiceService;
 import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSetEffectDTO;
 import com.mapleApiTest.projectOne.dto.character.request.*;
@@ -8,17 +7,15 @@ import com.mapleApiTest.projectOne.dto.character.request.*;
 import com.mapleApiTest.projectOne.dto.item.*;
 import com.mapleApiTest.projectOne.service.character.CharacterService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 public class CharacterController {
@@ -93,7 +90,7 @@ public class CharacterController {
                 characterService.getCharactersStatInfo(getCharactersInfo, apiKey, ocid).join();
         CharactersItemEquipDTO charactersItemEquipDTO = characterService.getCharactersItemEquip(getCharactersInfo, apiKey, ocid).join();
 
-        return characterService.getCharactersItemInfo(getCharactersInfo, equipmentType);
+        return characterService.getCharactersItemStatInfo(getCharactersInfo, equipmentType);
     }
 
     @GetMapping("/CharactersSetEffect")
@@ -265,7 +262,7 @@ public class CharacterController {
      return "v2";
     }
     @GetMapping("/search")
-    public String searchCharacter(Model model, @RequestParam String charactersName) {
+    public List<Object> searchCharacter(Model model, @RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
@@ -308,18 +305,22 @@ public class CharacterController {
         // getCharactersCombat 메서드를 호출하여 캐릭터 전투력 정보 가져오기
 //        String charactersCombat = characterService.getCharactersCombat(charactersTotalStatInfoDTO);
 
-        // 모델에 데이터를 추가하여 HTML에서 사용할 수 있도록 함
-        model.addAttribute("charactersTotalStatInfoDTO", charactersTotalStatInfoDTO);
-        model.addAttribute("charactersItemEquipDTO", charactersItemEquipDTO);
-//        model.addAttribute("charactersCombat", charactersCombat);
 
-        return "searchResult"; // 검색 결과를 보여줄 HTML 페이지의 이름
+
+
+        List<Object> dtos = new ArrayList<>();
+        dtos.add(charactersStatInfoDTO);
+        dtos.add(charactersItemEquipDTO);
+        dtos.add(charactersTotalStatInfoDTO);
+        return dtos;
+
+//        return "searchResult"; // 검색 결과를 보여줄 HTML 페이지의 이름
     }
 
 
     ////////////////////////////////////////////////////////
     @GetMapping("/calCharactersCombat")
-    public String getCharactersCombat(@RequestParam String charactersName) {
+    public String getCharactersCombat(Model model,@RequestParam String charactersName) {
         GetCharactersInfo getCharactersInfo = new GetCharactersInfo(charactersName);
         CompletableFuture<String> CompletableFutureOcid = characterService.getCharacterOcid(getCharactersInfo);
         String ocid = CompletableFutureOcid.join();
@@ -342,6 +343,7 @@ public class CharacterController {
         CharactersHexaStatInfoDTO charactersHexaStatInfoDTO = characterService.getCharactersHexaStatInfo(charactersName, ocid).join();
 
 
+        model.addAttribute("charactersItemEquipDTO", charactersItemEquipDTO);
 
         CharactersTotalStatInfoDTO charactersTotalStatInfoDTO = characterService.getCharactersTotalStatInfo(charactersName, ocid, charactersInfoDTO, charactersStatInfoDTO, charactersItemEquipDTO, charactersItemTotalStatInfoDTO, charactersSetEffectInfoDTO, itemSetEffectDTO, charactersArtiInfoDTO, charactersUnionInfoDTO, charactersHyperStatInfoDTO, charactersAbilityInfoDTO, charactersSimbolInfoDTO, charactersPetEquipInfoDTO, charactersSkillStatInfoDTO, charactersCashItemInfoDTO,charactersHexaStatInfoDTO).join();
         System.out.println("111111177");
