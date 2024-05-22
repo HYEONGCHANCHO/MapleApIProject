@@ -461,13 +461,13 @@ public class CharacterController {
 //        return characterService.getCharactersChangeCombat(getCharactersTotalChangedInfoDTO, getCharactersInfo, itemLevel, starForce, itemUpgrade);
 //    }
 
-    @GetMapping("/choiceItem") //드메템 컨트롤러
-    public void choiceItem(@RequestParam int limitPrice, int goalMesoNum, int goalDropNum) {
-
-        DropItemChoiceService dropItemChoiceService = new DropItemChoiceService();
-        dropItemChoiceService.dropItemChoice(limitPrice, goalMesoNum, goalDropNum);
-
-    }
+//    @GetMapping("/choiceItem") //드메템 컨트롤러
+//    public void choiceItem(@RequestParam int limitPrice, int goalMesoNum, int goalDropNum) {
+//
+//        DropItemChoiceService dropItemChoiceService = new DropItemChoiceService();
+//        dropItemChoiceService.dropItemChoice(limitPrice, goalMesoNum, goalDropNum);
+//
+//    }
 
 
 }
