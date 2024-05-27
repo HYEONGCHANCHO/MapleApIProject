@@ -1,0 +1,55 @@
+#version: '3'
+#services:
+#  mysql:
+#    image: mysql:8.0.33
+#    ports:
+#      - 3306:3306
+#    volumes:
+#      - ./db/mysql/data:/var/lib/mysql
+#      - ./db/mysql/init:/docker-entrypoint-initdb.d
+#    command:
+#      - '--character-set-server=utf8mb4'
+#      - '--collation-server=utf8mb4_unicode_ci'
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 62845		# 구성활 MySQL의 root 비밀번호
+#      MYSQL_DATABASE: mapleCombat
+#
+#  maple-combat :
+#    build: .
+#    container_name: maple-combat
+#    ports:
+#       - "8080:8080"
+#    environment:
+#        SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mapleCombat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+#        SPRING_DATASOURCE_USERNAME: root
+#        SPRING_DATASOURCE_PASSWORD: 62845
+#        SPRING_JPA_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8InnoDBDialect
+#    volumes:
+#      - ./src/main/resources/application.yml:/config/application.yml
+#    depends_on:
+#      - mysql
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0.33
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    environment:
+      MYSQL_ROOT_PASSWORD: 62845
+      MYSQL_DATABASE: mapleCombat
+
+  maple-combat:
+    build: .
+    container_name: maple-combat
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/main/resources/application.yml:/config/application.yml
+    depends_on:
+      - mysql
