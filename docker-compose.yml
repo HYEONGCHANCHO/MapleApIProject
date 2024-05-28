@@ -31,25 +31,32 @@
 version: '3'
 services:
   mysql:
-    image: mysql:8.0.33
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./db/mysql/data:/var/lib/mysql
-      - ./db/mysql/init:/docker-entrypoint-initdb.d
-    command:
-      - '--character-set-server=utf8mb4'
-      - '--collation-server=utf8mb4_unicode_ci'
+    image: mysql:latest
+    container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: 62845
       MYSQL_DATABASE: mapleCombat
-
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 62845
+    ports:
+      - "3306:3306"
+#    volumes:
+#      - ./db/mysql/data:/var/lib/mysql
+#      - ./db/mysql/init:/docker-entrypoint-initdb.d
+#    command:
+#      - '--character-set-server=utf8mb4'
+#      - '--collation-server=utf8mb4_unicode_ci'
   maple-combat:
-    build: .
-    container_name: maple-combat
+    image: 2024-msg-server:1.1
+#    image: openjdk
+    container_name: maple-combat-container
     ports:
       - "8080:8080"
-    volumes:
-      - ./src/main/resources/application.yml:/config/application.yml
+#    volumes:
+#      - ./src/main/resources/application.yml:/config/application.yml
     depends_on:
       - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/mapleCombat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 62845

@@ -21,21 +21,20 @@
 #EXPOSE 8080
 #
 #ENTRYPOINT ["java","-jar","/app.jar"]
-FROM bellsoft/liberica-openjdk-alpine:11
+#FROM bellsoft/liberica-openjdk-alpine:11
+#FROM openjdk:11-alpine
+#FROM openjdk:11-jdk-alpine
+FROM openjdk:11-jdk-slim
 
 WORKDIR /app
-
-COPY . .
-
-#RUN ./gradlew clean build
 
 ARG JAR_FILE=build/libs/*.jar
 
 COPY ${JAR_FILE} app.jar
 
-COPY src/main/resources/application.yml /config/application.yml
+#COPY src/main/resources/application.yml /config/application.yml
 
-EXPOSE 8080
+#EXPOSE 8080
 
 #ENTRYPOINT ["java", "-jar", "/build/libs/*.jar", "--spring.config.location=file:/config/application.yml"]
 ENTRYPOINT ["java", "-jar", "app.jar"]
