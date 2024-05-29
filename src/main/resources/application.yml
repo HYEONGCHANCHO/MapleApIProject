@@ -25,13 +25,13 @@ external:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mapleCombat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/mapleCombat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: root
     password: 62845
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 #      ddl-auto: create
 #      dialect: org.hibernate.dialect.MySQL8Dialect
@@ -40,5 +40,7 @@ spring:
 #      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+#        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
+
