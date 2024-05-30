@@ -2416,11 +2416,11 @@ public class CharacterService {
                                 System.out.println("numberItem: " + numberItem);
                                 // 문자열이 "올스탯", "보스 공격시 데미지", "공격력/마력"인 경우에만 변수에 저장
                                 if (stringItem.contains("올스탯")) {
-                                    eventAllStat = numberItem;
+                                    eventAllStat += numberItem;
                                 } else if (stringItem.contains("보스 몬스터 공격 시 데미지")) {
-                                    eventBossDamage = numberItem;
+                                    eventBossDamage += numberItem;
                                 } else if (stringItem.contains("공격력") || stringItem.contains("마력")) {
-                                    eventAtMgPower = numberItem;
+                                    eventAtMgPower += numberItem;
                                 }
                             }
                         }

@@ -31,7 +31,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+#      ddl-auto: create
     show-sql: true
 #      ddl-auto: create
 #      dialect: org.hibernate.dialect.MySQL8Dialect
@@ -40,7 +41,7 @@ spring:
 #      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
 #        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 

@@ -31,7 +31,8 @@
 version: '3'
 services:
   mysql:
-    image: mysql:8.0.33
+#    image: mysql:8.0.33
+    image: mysql:latest
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: 62845
@@ -65,7 +66,7 @@ services:
 #      - ./src/main/resources/application.yml:/config/application.yml
     depends_on:
       - mysql
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mapleCombat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 62845
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mapleCombat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+#      SPRING_DATASOURCE_USERNAME: root
+#      SPRING_DATASOURCE_PASSWORD: 62845
