@@ -1,32 +1,32 @@
-package com.mapleApiTest.projectOne.service.character;
-
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.util.concurrent.RateLimiter;
-import com.mapleApiTest.projectOne.domain.character.*;
-import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
-import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSetEffectDTO;
-import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
-import com.mapleApiTest.projectOne.dto.character.request.*;
-import com.mapleApiTest.projectOne.dto.item.*;
-import com.mapleApiTest.projectOne.repository.character.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
-//@Service
-public class CharacterServiceOldRecord {
+//package com.mapleApiTest.projectOne.service.character;
+//
+//
+//import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.common.util.concurrent.RateLimiter;
+//import com.mapleApiTest.projectOne.domain.character.*;
+//import com.mapleApiTest.projectOne.dto.ItemInfo.HatStatInfoDTO;
+//import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSetEffectDTO;
+//import com.mapleApiTest.projectOne.dto.ItemInfo.ItemSimulationDTO;
+//import com.mapleApiTest.projectOne.dto.character.request.*;
+//import com.mapleApiTest.projectOne.dto.item.*;
+//import com.mapleApiTest.projectOne.repository.character.*;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.scheduling.annotation.Async;
+//import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.web.reactive.function.client.WebClient;
+//import reactor.core.publisher.Mono;
+//
+//import java.math.BigDecimal;
+//import java.math.RoundingMode;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.Optional;
+//import java.util.concurrent.CompletableFuture;
+//
+////@Service
+//public class CharacterServiceOldRecord {
 
 //    private final CharactersKeyRepository charactersKeyRepository;
 //    private final CharactersInfoRepository charactersInfoRepository;
@@ -1121,5 +1121,5 @@ public class CharacterServiceOldRecord {
 
 
 
-}
+//}
 
