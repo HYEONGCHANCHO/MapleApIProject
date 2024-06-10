@@ -2425,11 +2425,11 @@ public class CharacterService {
                             }
                         }
                     }
-                    System.out.println("eventAllStat :" + eventAllStat);
-                    System.out.println("eventBossDamage :" + eventBossDamage);
-                    System.out.println("eventAtMgPower :" + eventAtMgPower);
-                    System.out.println("jungBless :" + jungBless);
-                    System.out.println("yujeBless :" + yujeBless);
+//                    System.out.println("eventAllStat :" + eventAllStat);
+//                    System.out.println("eventBossDamage :" + eventBossDamage);
+//                    System.out.println("eventAtMgPower :" + eventAtMgPower);
+//                    System.out.println("jungBless :" + jungBless);
+//                    System.out.println("yujeBless :" + yujeBless);
 
 
                     if (jungBless < yujeBless) {
